@@ -23,6 +23,7 @@ pluginManagement {
         def agpVersion = "4.0.1"
         id("com.android.application") version agpVersion
         id("com.android.library") version agpVersion
+        id("com.github.dcendents.android-maven") version "2.1"
     }
 }
 
