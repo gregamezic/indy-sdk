@@ -1,0 +1,29 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google().mavenContent {
+            includeGroupByRegex("androidx.*")
+            includeGroupByRegex("com\\.google\\.android.*")
+            includeGroupByRegex("com\\.google\\.gms.*")
+            includeGroupByRegex("com\\.google\\.firebase.*")
+            includeGroupByRegex("com\\.android.*")
+            includeGroupByRegex("android\\.arch.*")
+        }
+    }
+
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "com.android.library") {
+            	useModule("com.android.tools.build:gradle:4.0.1")
+            }
+        }
+    }
+
+    plugins {
+        def agpVersion = "4.0.1"
+        id("com.android.application") version agpVersion
+        id("com.android.library") version agpVersion
+    }
+}
+
+rootProject.name = 'libindy-android'

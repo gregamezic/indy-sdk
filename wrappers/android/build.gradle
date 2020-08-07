@@ -1,0 +1,76 @@
+plugins {
+    id("com.android.library")
+    id("maven-publish")
+}
+
+android {
+    compileSdkVersion = 30
+    buildToolsVersion = "29.0.3"
+
+    defaultConfig {
+        minSdkVersion(21)
+        targetSdkVersion(30)
+        versionCode = 1
+        versionName = "0.1.1-SNAPSHOT"
+
+        ndk {
+            abiFilters "x86", "x86_64", "armeabi-v7a", "arm64-v8a"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    ndkVersion = "21.3.6528147"
+
+    externalNativeBuild {
+        cmake {
+//                version = "3.10.2"
+            path "CMakeLists.txt"
+        }
+    }
+
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'id.global.sdk.android'
+                artifactId = 'indy'
+                version = '0.1.1-SNAPSHOT'
+            }
+        }
+
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/blazsolar/indy-sdk")
+                credentials {
+                    username = project.findProperty("gpr.user") ?: null
+                    password = project.findProperty("gpr.key") ?: null
+                }
+            }
+        }
+    }
+}
+
+
+repositories {
+    mavenCentral()
+    google()
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+//    implementation('com.github.bright:slf4android:0.1.6') {
+//        transitive = true
+//    }
+    api("org.slf4j:slf4j-api:1.7.30")
+    api("net.java.dev.jna:jna:5.3.1@aar")
+    api("org.apache.commons:commons-lang3:3.11")
+}
