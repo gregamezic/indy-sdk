@@ -1,20 +1,20 @@
 package org.hyperledger.indy.sdk.anoncreds;
 
-import java.util.concurrent.CompletableFuture;
+import com.sun.jna.Callback;
 
 import org.hyperledger.indy.sdk.IndyException;
 import org.hyperledger.indy.sdk.IndyJava;
 import org.hyperledger.indy.sdk.LibIndy;
 import org.hyperledger.indy.sdk.ParamGuard;
-import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateSchemaResult;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateAndStoreCredentialDefResult;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateAndStoreRevocRegResult;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateCredentialResult;
+import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateSchemaResult;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.ProverCreateCredentialRequestResult;
 import org.hyperledger.indy.sdk.blob_storage.BlobStorageWriter;
 import org.hyperledger.indy.sdk.wallet.Wallet;
 
-import com.sun.jna.Callback;
+import java9.util.concurrent.CompletableFuture;
 
 import static org.hyperledger.indy.sdk.Callbacks.boolCallback;
 

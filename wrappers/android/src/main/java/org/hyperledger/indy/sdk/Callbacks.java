@@ -1,6 +1,6 @@
 package org.hyperledger.indy.sdk;
 
-import java.util.concurrent.CompletableFuture;
+import java9.util.concurrent.CompletableFuture;
 
 public class Callbacks extends IndyJava.API {
 

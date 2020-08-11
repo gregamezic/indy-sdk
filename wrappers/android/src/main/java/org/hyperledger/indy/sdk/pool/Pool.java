@@ -1,14 +1,15 @@
 package org.hyperledger.indy.sdk.pool;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import com.sun.jna.Callback;
 
 import org.hyperledger.indy.sdk.IndyException;
 import org.hyperledger.indy.sdk.IndyJava;
 import org.hyperledger.indy.sdk.LibIndy;
 import org.hyperledger.indy.sdk.ParamGuard;
 
-import com.sun.jna.Callback;
+import java.util.concurrent.ExecutionException;
+
+import java9.util.concurrent.CompletableFuture;
 
 /**
  * pool.rs API

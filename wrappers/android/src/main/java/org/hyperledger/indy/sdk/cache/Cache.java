@@ -8,7 +8,7 @@ import org.hyperledger.indy.sdk.ParamGuard;
 import org.hyperledger.indy.sdk.pool.Pool;
 import org.hyperledger.indy.sdk.wallet.Wallet;
 
-import java.util.concurrent.CompletableFuture;
+import java9.util.concurrent.CompletableFuture;
 
 /**
  * cache.rs API

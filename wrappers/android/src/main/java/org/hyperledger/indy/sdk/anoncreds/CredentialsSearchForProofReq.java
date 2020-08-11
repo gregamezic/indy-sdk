@@ -7,7 +7,7 @@ import org.hyperledger.indy.sdk.LibIndy;
 import org.hyperledger.indy.sdk.ParamGuard;
 import org.hyperledger.indy.sdk.wallet.Wallet;
 
-import java.util.concurrent.CompletableFuture;
+import java9.util.concurrent.CompletableFuture;
 
 public class CredentialsSearchForProofReq extends IndyJava.API implements AutoCloseable {
 	private final int searchHandle;

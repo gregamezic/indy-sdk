@@ -1,18 +1,17 @@
 package org.hyperledger.indy.sdk.ledger;
 
-import java.util.concurrent.CompletableFuture;
+import com.sun.jna.Callback;
 
 import org.hyperledger.indy.sdk.IndyException;
 import org.hyperledger.indy.sdk.IndyJava;
 import org.hyperledger.indy.sdk.LibIndy;
 import org.hyperledger.indy.sdk.ParamGuard;
+import org.hyperledger.indy.sdk.ledger.LedgerResults.ParseRegistryResponseResult;
+import org.hyperledger.indy.sdk.ledger.LedgerResults.ParseResponseResult;
 import org.hyperledger.indy.sdk.pool.Pool;
 import org.hyperledger.indy.sdk.wallet.Wallet;
 
-import org.hyperledger.indy.sdk.ledger.LedgerResults.ParseResponseResult;
-import org.hyperledger.indy.sdk.ledger.LedgerResults.ParseRegistryResponseResult;
-
-import com.sun.jna.Callback;
+import java9.util.concurrent.CompletableFuture;
 
 /**
  * ledger.rs API

@@ -8,7 +8,7 @@ android {
     buildToolsVersion = "29.0.3"
 
     defaultConfig {
-        minSdkVersion(21)
+        minSdkVersion(24)
         targetSdkVersion(30)
         versionCode = 1
         versionName = "0.1.1"
@@ -16,6 +16,8 @@ android {
         ndk {
             abiFilters "x86", "x86_64", "armeabi-v7a", "arm64-v8a"
         }
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
@@ -27,7 +29,6 @@ android {
 
     externalNativeBuild {
         cmake {
-//                version = "3.10.2"
             path "CMakeLists.txt"
         }
     }
@@ -73,4 +74,12 @@ dependencies {
     api("org.slf4j:slf4j-api:1.7.30")
     api("net.java.dev.jna:jna:5.3.1@aar")
     api("org.apache.commons:commons-lang3:3.11")
+    api("net.sourceforge.streamsupport:android-retrofuture:1.7.2")
+
+    androidTestImplementation("junit:junit:4.13")
+    androidTestImplementation("androidx.test:runner:1.2.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.1")
+    androidTestImplementation("commons-io:commons-io:2.7")
+    androidTestImplementation("org.bitcoinj:bitcoinj-core:0.15.8")
+    androidTestImplementation("com.google.code.gson:gson:2.8.6")
 }

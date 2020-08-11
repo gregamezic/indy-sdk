@@ -9,7 +9,7 @@ import org.hyperledger.indy.sdk.ParamGuard;
 import org.hyperledger.indy.sdk.crypto.CryptoResults.AuthDecryptResult;
 import org.hyperledger.indy.sdk.wallet.Wallet;
 
-import java.util.concurrent.CompletableFuture;
+import java9.util.concurrent.CompletableFuture;
 
 import static org.hyperledger.indy.sdk.Callbacks.boolCallback;
 
