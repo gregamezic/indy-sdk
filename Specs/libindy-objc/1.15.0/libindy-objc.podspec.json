@@ -17,7 +17,7 @@
         "ios": "10.0"
     },
     "ios": {
-        "vendored_frameworks": "Indy.framework"
+        "vendored_frameworks": "libindy-objc/Indy.framework"
     },
     "module_name": "Indy"
 }
