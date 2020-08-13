@@ -1,0 +1,23 @@
+{
+    "name": "libindy-objc",
+    "version": "1.15.0",
+    "summary": "Summary TODO.",
+    "homepage": "TODO",
+    "license": {
+        "type": "Apache License 2.0",
+        "file": "LICENSE"
+    },
+    "authors": {
+        "Daniel Hardman": "daniel.hardman@evernym.com"
+    },
+    "source": {
+        "http": "https://raw.githubusercontent.com/blazsolar/indy-sdk/master/wrappers/ios/data/1.15.0/libindy-objc.zip"
+    },
+    "platforms": {
+        "ios": "10.0"
+    },
+    "ios": {
+        "vendored_frameworks": "libindy-objc/Indy.framework"
+    },
+    "module_name": "Indy"
+}

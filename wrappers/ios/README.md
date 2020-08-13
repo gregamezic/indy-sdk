@@ -94,6 +94,12 @@ Cocoapod will search for spec files in the root Specs folder.
 
 Run Archive process for `Indy` target. Custom post-action shell script `universal_framework.sh` will be triggered and you get universal framework. Then put it to folder: `libindy-objc/Indy.framework` and upload to repo.
 
+### Debuging archive post script
+
+Archive post scripts are not integrated into xcode log outputs. Therefore you will not see output of that sctipt in xcode. The sctipt will write logs into ${TMPDIR}/Indy_archive.log. 
+
+Also script starts after archive is finished in xcode so while xcode indicates that everyrhing is done, the script may still be running in the background. 
+
 # Wrapper usage 
 
 Import header starting from 0.1.3:
