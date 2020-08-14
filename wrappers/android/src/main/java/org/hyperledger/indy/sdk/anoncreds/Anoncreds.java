@@ -1003,7 +1003,7 @@ public class Anoncreds extends IndyJava.API {
 				commandHandle,
 				walletHandle,
 				credId,
-				stringCb);
+				voidCb);
 
 		checkResult(future, result);
 
