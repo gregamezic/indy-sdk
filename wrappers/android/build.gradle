@@ -72,7 +72,7 @@ dependencies {
 //        transitive = true
 //    }
     api("org.slf4j:slf4j-api:1.7.30")
-    api("net.java.dev.jna:jna:5.3.1@aar")
+    api("net.java.dev.jna:jna:5.6.0@aar")
     api("org.apache.commons:commons-lang3:3.11")
     api("net.sourceforge.streamsupport:android-retrofuture:1.7.2")
 
