@@ -1,7 +1,5 @@
 package org.hyperledger.indy.sdk.anoncreds;
 
-import android.content.Context;
-
 import org.hyperledger.indy.sdk.AndroidInitHelper;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateAndStoreCredentialDefResult;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.ProverCreateCredentialRequestResult;
@@ -15,8 +13,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.Timeout;
 
 import java.util.concurrent.TimeUnit;
-
-import androidx.test.platform.app.InstrumentationRegistry;
 
 public class AnoncredsIntegrationTest {
 
@@ -103,8 +99,7 @@ public class AnoncredsIntegrationTest {
 
 	@Before
 	public void setUp() throws Exception {
-		Context instrumentationContext = InstrumentationRegistry.getInstrumentation().getContext();
-		AndroidInitHelper.init(instrumentationContext);
+		AndroidInitHelper.init();
 
 		initCommonWallet();
 	}

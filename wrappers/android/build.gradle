@@ -76,6 +76,11 @@ dependencies {
     api("org.apache.commons:commons-lang3:3.11")
     api("net.sourceforge.streamsupport:android-retrofuture:1.7.2")
 
+    testImplementation("junit:junit:4.13")
+    testImplementation("commons-io:commons-io:2.7")
+    testImplementation("org.bitcoinj:bitcoinj-core:0.15.8")
+    testImplementation("com.google.code.gson:gson:2.8.6")
+
     androidTestImplementation("junit:junit:4.13")
     androidTestImplementation("androidx.test:runner:1.2.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.1")

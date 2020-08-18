@@ -25,7 +25,7 @@ public class ExportWalletTest extends IndyIntegrationTestWithSingleWallet {
 
 	@Test
 	public void testExportWalletWorksForExistsPath() throws Exception {
-		assertTrue(new File(EXPORT_PATH).mkdir());
+		assertTrue(new File(EXPORT_PATH).mkdirs());
 
 		thrown.expect(ExecutionException.class);
 		thrown.expectCause(isA(IOException.class));

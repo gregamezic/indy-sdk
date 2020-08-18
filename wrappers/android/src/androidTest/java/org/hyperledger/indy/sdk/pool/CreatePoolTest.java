@@ -2,6 +2,7 @@ package org.hyperledger.indy.sdk.pool;
 
 import org.hyperledger.indy.sdk.IndyIntegrationTest;
 import org.hyperledger.indy.sdk.utils.PoolUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -11,7 +12,8 @@ import static org.junit.Assert.assertTrue;
 
 public class CreatePoolTest extends IndyIntegrationTest {
 
-	@Test
+	// TODO this will always fail as Android does not allow to write in root directory.
+	@Test @Ignore
 	public void testCreatePoolWorksForNullConfig() throws Exception {
 		File file = new File("testCreatePoolWorks.txn");
 		file.deleteOnExit();

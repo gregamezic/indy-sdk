@@ -1,7 +1,5 @@
 package org.hyperledger.indy.sdk;
 
-import android.content.Context;
-
 import org.hyperledger.indy.sdk.crypto.CryptoJSONParameters;
 import org.hyperledger.indy.sdk.did.DidJSONParameters;
 import org.hyperledger.indy.sdk.pool.Pool;
@@ -22,7 +20,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import static org.hyperledger.indy.sdk.utils.EnvironmentUtils.getIndyHomePath;
 import static org.hyperledger.indy.sdk.utils.EnvironmentUtils.getTmpPath;
@@ -115,8 +112,7 @@ public class IndyIntegrationTest {
 
 	@Before
 	public void setUp() throws Exception {
-		Context instrumentationContext = InstrumentationRegistry.getInstrumentation().getContext();
-		AndroidInitHelper.init(instrumentationContext);
+		AndroidInitHelper.init();
 
 		StorageUtils.cleanupStorage();
 		Pool.setProtocolVersion(PROTOCOL_VERSION).get();

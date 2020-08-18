@@ -1,13 +1,14 @@
 package org.hyperledger.indy.sdk;
 
-import android.content.Context;
 import android.system.ErrnoException;
 import android.system.Os;
 
+import androidx.test.platform.app.InstrumentationRegistry;
+
 public class AndroidInitHelper {
 
-    public static void init(Context context) throws ErrnoException {
-        String cacheDir = context.getCacheDir().getAbsolutePath();
+    public static void init() throws ErrnoException {
+        String cacheDir = InstrumentationRegistry.getInstrumentation().getContext().getCacheDir().getAbsolutePath();
 
         if (!cacheDir.equals("")) {
             Os.setenv("EXTERNAL_STORAGE", cacheDir, true);
