@@ -1,0 +1,126 @@
+static def getTestParameters(def parallelTests, def buildCacheTests, def gradleScan) {
+    def testParams = ["--console=verbose", "--no-daemon"]
+    if (parallelTests) {
+        testParams.add("--parallel")
+    }
+
+    if (buildCacheTests) {
+        testParams.add("--build-cache")
+    }
+
+    if (gradleScan) {
+        testParams.add("--scan")
+    }
+
+    // So CI dosn't do additional work. If it fails CI image should be updated.
+    testParams.add("-Pandroid.builder.sdkDownload=false")
+
+    return testParams.join(" ")
+}
+
+static def getTestPreTasks(def cleanTests) {
+
+    def extraTasks = []
+    if (cleanTests) {
+        extraTasks.add("clean")
+    }
+    return extraTasks.join(" ")
+}
+
+static def getCheckTasks(def branch) {
+    if (branch.startsWith("PR-")) {
+        return "vitalJvmTest"
+    } else {
+        return "vitalTest"
+    }
+}
+
+static def getConnectedCheckTasks(def branch) {
+    if (branch.startsWith("PR-")) {
+        return "vitalConnectedDebugAndroidTest"
+    } else {
+        return "vitalConnectedAndroidTest"
+    }
+}
+
+
+static def getLintTask(def debugBuild, def branch) {
+    if (debugBuild && branch.startsWith("PR-")) {
+        return ":target:mobile:app:lintCurrentStageDebug"
+    } else {
+        return ":target:mobile:app:lintCurrentProdRelease"
+    }
+}
+
+pipeline {
+    agent none
+
+    parameters {
+        choice(name: 'emulatorVersion', choices: ['30-google-x64', '29-google-x64', '28-playstore-x64'], description: 'Emulator version')
+        booleanParam(defaultValue: true, description: "If `--parallel` flag should be used for tests.", name: 'parallelTests')
+        booleanParam(defaultValue: false, description: "If build cache should be used for tests.", name: 'buildCacheTests')
+        booleanParam(defaultValue: false, description: "If build scan should be created for test steps.", name: 'gradleScan')
+        booleanParam(defaultValue: false, description: 'Indicates if clean command should be executed before tests.', name: 'cleanTests')
+        booleanParam(defaultValue: true, description: 'Only perform checks on debug', name: 'debugBuild')
+        booleanParam(defaultValue: false, description: 'Only perform checks on debug', name: 'lintTask')
+        booleanParam(defaultValue: false, description: 'Notify build failure on slack', name: 'notifyFailure')
+    }
+
+    triggers {
+        parameterizedCron(env.BRANCH_NAME.startsWith("develop") ? '0 4 * * * % lintTask=true;cleanTests=true;notifyFailure=true' : '')
+    }
+
+    options { timeout(time: 2, unit: 'HOURS') }
+
+    stages {
+        stage("Tests") {
+            parallel {
+                stage('Device Tests') {
+                    // This is tmp config until declerative pipeline does not support sidecard docker images
+                    //  https://issues.jenkins-ci.org/browse/JENKINS-46336?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
+                    agent { label 'docker' }
+
+                    options {
+                        timeout(time: 2, unit: "HOURS")
+                    }
+
+                    when {
+                        expression { skipCi() }
+                    }
+
+                    steps {
+                        sh "echo \"Node: ${NODE_NAME}\""
+                        script {
+                            docker.build('pool-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) config/docker/platform")
+                                    .withRun { poolImage ->
+
+                                        docker.image("us-docker.pkg.dev/android-emulator-268719/images/${params.emulatorVersion}:30.1.2")
+                                                .withRun("--device /dev/kvm  --link ${poolImage.id}:emulator") { emulatorImage ->
+
+                                                    docker.build('platform-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) config/docker/platform")
+                                                            .inside("-v \$HOME/.gradle:/home/jenkins/.gradle --link ${emulatorImage.id}:emulator") {
+                                                                sh "sleep 10 && adb connect emulator:5555"
+                                                                // Wait 10 seconds before connecting to device so we make sure docker image & emulator is spun up
+                                                                sh "wait-for-emulator"
+                                                                // connected check cannot run in parallel.
+                                                                sh "./gradlew ${getTestPreTasks(params.cleanTests)} ${getConnectedCheckTasks(env.BRANCH_NAME)} ${getTestParameters(params.parallelTests, params.buildCacheTests, params.gradleScan)}"
+                                                            }
+
+                                                }
+
+                                    }
+                        }
+                    }
+
+//                    post {
+//                        always {
+//                            junit '**/build/outputs/androidTest-results/connected/**/TEST-*.xml'
+//                        }
+//                    }
+                }
+
+            }
+        }
+    }
+
+}

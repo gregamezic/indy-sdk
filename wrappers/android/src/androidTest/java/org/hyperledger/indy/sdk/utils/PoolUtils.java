@@ -32,7 +32,7 @@ public class PoolUtils {
 
 	public static void writeTransactions(File file) throws IOException {
 ////		String testPoolIp = EnvironmentUtils.getTestPoolIP();
-		String testPoolIp = "172.17.0.2";
+		String testPoolIp = "pool";
 //
 //		// this data and pool_transactions_genesis must have the same data and IP addresses
 		String[] defaultTxns = new String[]{
