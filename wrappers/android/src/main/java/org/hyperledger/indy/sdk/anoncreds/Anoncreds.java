@@ -1,20 +1,20 @@
 package org.hyperledger.indy.sdk.anoncreds;
 
-import com.sun.jna.Callback;
+import java9.util.concurrent.CompletableFuture;
 
 import org.hyperledger.indy.sdk.IndyException;
 import org.hyperledger.indy.sdk.IndyJava;
 import org.hyperledger.indy.sdk.LibIndy;
 import org.hyperledger.indy.sdk.ParamGuard;
+import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateSchemaResult;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateAndStoreCredentialDefResult;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateAndStoreRevocRegResult;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateCredentialResult;
-import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateSchemaResult;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.ProverCreateCredentialRequestResult;
 import org.hyperledger.indy.sdk.blob_storage.BlobStorageWriter;
 import org.hyperledger.indy.sdk.wallet.Wallet;
 
-import java9.util.concurrent.CompletableFuture;
+import com.sun.jna.Callback;
 
 import static org.hyperledger.indy.sdk.Callbacks.boolCallback;
 
@@ -321,7 +321,7 @@ public class Anoncreds extends IndyJava.API {
 	 *
 	 * @throws IndyException Thrown if an error occurs when calling the underlying SDK.
 	 */
-	public static CompletableFuture<String>issuerRotateCredentialDefStart(
+	public static CompletableFuture<String> issuerRotateCredentialDefStart(
 			Wallet wallet,
 			String credDefId,
 			String configJson) throws IndyException {
@@ -358,7 +358,7 @@ public class Anoncreds extends IndyJava.API {
 	 *
 	 * @throws IndyException Thrown if an error occurs when calling the underlying SDK.
 	 */
-	public static CompletableFuture<Void>issuerRotateCredentialDefApply(
+	public static CompletableFuture<Void> issuerRotateCredentialDefApply(
 			Wallet wallet,
 			String credDefId) throws IndyException {
 

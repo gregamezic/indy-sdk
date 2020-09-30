@@ -1,17 +1,16 @@
 package org.hyperledger.indy.sdk;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java9.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import java9.util.concurrent.CompletableFuture;
 
 /**
  * Common functionality for the APIs, JSON parameters, and results used

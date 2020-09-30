@@ -1,15 +1,14 @@
 package org.hyperledger.indy.sdk.wallet;
 
-import com.sun.jna.Callback;
+import java9.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import org.hyperledger.indy.sdk.IndyException;
 import org.hyperledger.indy.sdk.IndyJava;
 import org.hyperledger.indy.sdk.LibIndy;
 import org.hyperledger.indy.sdk.ParamGuard;
 
-import java.util.concurrent.ExecutionException;
-
-import java9.util.concurrent.CompletableFuture;
+import com.sun.jna.Callback;
 
 /**
  * wallet.rs API
