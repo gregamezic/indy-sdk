@@ -52,6 +52,16 @@ static def getLintTask(def debugBuild, def branch) {
     }
 }
 
+def withDockerNetwork(Closure inner) {
+  try {
+    networkId = UUID.randomUUID().toString()
+    sh "docker network create ${networkId}"
+    inner.call(networkId)
+  } finally {
+    sh "docker network rm ${networkId}"
+  }
+}
+
 pipeline {
     agent none
 
@@ -91,15 +101,18 @@ pipeline {
                     steps {
                         sh "echo \"Node: ${NODE_NAME}\""
                         script {
-                            docker.build('pool-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) wrappers/android/config/docker/platform")
+                            withDockerNetwork { n ->
+
+                            }
+                            docker.build('pool-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) -f indy-pool.dockerfile ci")
                                     .withRun { poolImage ->
 
                                         sh "sleep 10"
 
                                         docker.image("us-docker.pkg.dev/android-emulator-268719/images/${params.emulatorVersion}:30.1.2")
-                                                .withRun("--device /dev/kvm  --link ${poolImage.id}:pool") { emulatorImage ->
+                                                .withRun("--device /dev/kvm --link ${poolImage.id}:pool") { emulatorImage ->
 
-                                                    docker.build('platform-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) config/docker/platform")
+                                                    docker.build('platform-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) wrappers/android/config/docker/platform")
                                                             .inside("-v \$HOME/.gradle:/home/jenkins/.gradle --link ${emulatorImage.id}:emulator") {
                                                                 sh "sleep 10 && adb connect emulator:5555"
                                                                 // Wait 10 seconds before connecting to device so we make sure docker image & emulator is spun up
