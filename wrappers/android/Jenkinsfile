@@ -101,7 +101,7 @@ pipeline {
                     steps {
                         sh "echo \"Node: ${NODE_NAME}\""
                         script {
-                            docker.build('pool-image', "-f indy-pool.dockerfile ./ci")
+                            docker.build('pool-image', "-f ci/indy-pool.dockerfile .")
                                     .withRun { poolImage ->
 
                                         sh "sleep 10"
