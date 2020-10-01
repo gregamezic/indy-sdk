@@ -36,11 +36,7 @@ static def getCheckTasks(def branch) {
 }
 
 static def getConnectedCheckTasks(def branch) {
-    if (branch.startsWith("PR-")) {
-        return "vitalConnectedDebugAndroidTest"
-    } else {
-        return "vitalConnectedAndroidTest"
-    }
+    retrun "connectedAndroidTest"
 }
 
 
