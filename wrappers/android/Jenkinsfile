@@ -101,7 +101,7 @@ pipeline {
                     steps {
                         sh "echo \"Node: ${NODE_NAME}\""
                         script {
-                            docker.build('pool-image', "-f ci/indy-pool.dockerfile .")
+                            docker.build('pool-image', "-f ci/indy-pool.dockerfile ./ci")
                                     .withRun { poolImage ->
 
                                         sh "sleep 10"
@@ -111,11 +111,13 @@ pipeline {
 
                                                     docker.build('platform-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) wrappers/android/config/docker/platform")
                                                             .inside("-v \$HOME/.gradle:/home/jenkins/.gradle --link ${emulatorImage.id}:emulator") {
-                                                                sh "sleep 10 && adb connect emulator:5555"
-                                                                // Wait 10 seconds before connecting to device so we make sure docker image & emulator is spun up
-                                                                sh "wait-for-emulator"
-                                                                // connected check cannot run in parallel.
-                                                                sh "./gradlew ${getTestPreTasks(params.cleanTests)} ${getConnectedCheckTasks(env.BRANCH_NAME)} ${getTestParameters(params.parallelTests, params.buildCacheTests, params.gradleScan)}"
+                                                                dir("wrappers/android") {
+                                                                    sh "sleep 10 && adb connect emulator:5555"
+                                                                    // Wait 10 seconds before connecting to device so we make sure docker image & emulator is spun up
+                                                                    sh "wait-for-emulator"
+                                                                    // connected check cannot run in parallel.
+                                                                    sh "./gradlew ${getTestPreTasks(params.cleanTests)} ${getConnectedCheckTasks(env.BRANCH_NAME)} ${getTestParameters(params.parallelTests, params.buildCacheTests, params.gradleScan)}"
+                                                                }
                                                             }
 
                                                 }
