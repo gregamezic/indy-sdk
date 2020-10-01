@@ -91,7 +91,7 @@ pipeline {
                     steps {
                         sh "echo \"Node: ${NODE_NAME}\""
                         script {
-                            docker.build('pool-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) config/docker/platform")
+                            docker.build('pool-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) wrappers/android/config/docker/platform")
                                     .withRun { poolImage ->
 
                                         docker.image("us-docker.pkg.dev/android-emulator-268719/images/${params.emulatorVersion}:30.1.2")
