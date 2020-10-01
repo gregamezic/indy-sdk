@@ -101,10 +101,7 @@ pipeline {
                     steps {
                         sh "echo \"Node: ${NODE_NAME}\""
                         script {
-                            withDockerNetwork { n ->
-
-                            }
-                            docker.build('pool-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) -f indy-pool.dockerfile ci")
+                            docker.build('pool-image', "-f indy-pool.dockerfile ./ci")
                                     .withRun { poolImage ->
 
                                         sh "sleep 10"
