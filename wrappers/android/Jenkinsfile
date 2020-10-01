@@ -95,16 +95,8 @@ pipeline {
                                     .withRun { poolImage ->
 
                                         docker.image("us-docker.pkg.dev/android-emulator-268719/images/${params.emulatorVersion}:30.1.2")
-                                                .withRun("--device /dev/kvm  --link ${poolImage.id}:pool") { emulatorImage ->
+                                                .withRun("--device /dev/kvm  --link ${poolImage.id}") { emulatorImage ->
 
-                                                    docker.build('platform-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) config/docker/platform")
-                                                            .inside("-v \$HOME/.gradle:/home/jenkins/.gradle --link ${emulatorImage.id}:emulator") {
-                                                                sh "sleep 10 && adb connect emulator:5555"
-                                                                // Wait 10 seconds before connecting to device so we make sure docker image & emulator is spun up
-                                                                sh "wait-for-emulator"
-                                                                // connected check cannot run in parallel.
-                                                                sh "./gradlew ${getTestPreTasks(params.cleanTests)} ${getConnectedCheckTasks(env.BRANCH_NAME)} ${getTestParameters(params.parallelTests, params.buildCacheTests, params.gradleScan)}"
-                                                            }
 
                                                 }
 
