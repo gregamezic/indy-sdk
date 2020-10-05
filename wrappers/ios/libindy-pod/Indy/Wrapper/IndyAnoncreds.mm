@@ -357,7 +357,7 @@
     }
 }
 
-+ (void)priverDeleteCredentialsWithId:(NSString *)credId
++ (void)proverDeleteCredentialsWithId:(NSString *)credId
                          walletHandle:(IndyHandle)walletHandle
                            completion:(void (^)(NSError * error))completion {
 

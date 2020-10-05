@@ -444,7 +444,7 @@ https://github.com/hyperledger/indy-hipe/blob/c761c583b1e01c1e9d3ceda2b03b35336f
  @param completion Callback that takes command result as parameter.
  Returns void
  */
-+ (void)priverDeleteCredentialsWithId:(NSString *)credId
++ (void)proverDeleteCredentialsWithId:(NSString *)credId
                          walletHandle:(IndyHandle)walletHandle
                            completion:(void (^)(NSError * error))completion;
 
