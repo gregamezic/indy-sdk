@@ -1,5 +1,6 @@
 package org.hyperledger.indy.sdk.demo;
 
+import org.hyperledger.indy.sdk.AndroidInitHelper;
 import org.hyperledger.indy.sdk.IndyIntegrationTest;
 import org.hyperledger.indy.sdk.InvalidStructureException;
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds;
@@ -28,8 +29,8 @@ import java.util.concurrent.TimeUnit;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.hyperledger.indy.sdk.utils.EnvironmentUtils.getIndyHomePath;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class AnoncredsDemoTest extends IndyIntegrationTest {
 
@@ -57,6 +58,8 @@ public class AnoncredsDemoTest extends IndyIntegrationTest {
 
 	@Before
 	public void createWallet() throws Exception {
+		AndroidInitHelper.init();
+
 		// Set protocol version
 		Pool.setProtocolVersion(PROTOCOL_VERSION).get();
 
