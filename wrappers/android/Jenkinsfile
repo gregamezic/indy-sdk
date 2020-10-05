@@ -123,6 +123,8 @@ pipeline {
                                                                     sh "adb forward tcp:9708 tcp:9708"
                                                                     // connected check cannot run in parallel.
                                                                     sh "./gradlew ${getTestPreTasks(params.cleanTests)} ${getConnectedCheckTasks(env.BRANCH_NAME)} ${getTestParameters(params.parallelTests, params.buildCacheTests, params.gradleScan)}"
+
+                                                                    sh "docker logs ${emulatorImage.id}"
                                                                 }
                                                             }
 
