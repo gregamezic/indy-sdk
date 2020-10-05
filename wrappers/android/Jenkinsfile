@@ -51,10 +51,10 @@ static def getLintTask(def debugBuild, def branch) {
 def withDockerNetwork(Closure inner) {
     try {
         def n = UUID.randomUUID().toString()
-        sh "docker network create --subnet 10.0.0.0/8 " + n
+        sh "docker network create --subnet 10.0.0.0/8 $n"
         inner.call(n)
     } finally {
-        sh "docker network rm " + n
+        sh "docker network rm $n"
     }
 }
 
@@ -133,11 +133,11 @@ pipeline {
                         }
                     }
 
-//                    post {
-//                        always {
-//                            junit '**/build/outputs/androidTest-results/connected/**/TEST-*.xml'
-//                        }
-//                    }
+                    post {
+                        always {
+                            junit 'wrappers/android/build/outputs/androidTest-results/connected/**/TEST-*.xml'
+                        }
+                    }
                 }
 
             }
