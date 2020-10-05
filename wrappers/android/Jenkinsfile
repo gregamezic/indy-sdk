@@ -58,6 +58,17 @@ def withDockerNetwork(Closure inner) {
   }
 }
 
+def withDockerNetwork(Closure inner) {
+    try {
+        networkId = UUID.randomUUID().toString()
+        sh "docker network create --subnet 10.0.0.0/8 ${networkId}"
+        inner.call(networkId)
+    } finally {
+        sh "docker network rm ${networkId}"
+    }
+}
+
+
 pipeline {
     agent none
 
@@ -97,18 +108,27 @@ pipeline {
                     steps {
                         sh "echo \"Node: ${NODE_NAME}\""
                         script {
-                            docker.build('pool-image', "--build-arg pool_ip=android_pool -f ci/indy-pool.dockerfile ./ci")
-                                    .withRun { poolImage ->
+                            withDockerNetwork { n ->
+                                docker.build('pool-image', "-build-arg pool_ip=10.0.0.2 -f ci/indy-pool.dockerfile ./ci")
+                                    .withRun("--ip=\"10.0.0.2\" --net=${n}") { poolImage ->
 
                                         sh "sleep 10"
 
                                         docker.image("us-docker.pkg.dev/android-emulator-268719/images/${params.emulatorVersion}:30.1.2")
-                                                .withRun("--device /dev/kvm --link ${poolImage.id}:android_pool") { emulatorImage ->
+                                                .withRun("--device /dev/kvm --ip=\"10.0.0.3\" --net=${n}") { emulatorImage ->
 
                                                     docker.build('platform-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) wrappers/android/config/docker/platform")
-                                                            .inside("-v \$HOME/.gradle:/home/jenkins/.gradle --link ${emulatorImage.id}:emulator") {
+                                                            .inside("-v \$HOME/.gradle:/home/jenkins/.gradle --ip=\"10.0.0.4\" --net=${n}") {
                                                                 dir("wrappers/android") {
                                                                     sh "sleep 10 && adb connect emulator:5555"
+                                                                    sh "adb forward tcp:9701 tcp:9701"
+                                                                    sh "adb forward tcp:9702 tcp:9702"
+                                                                    sh "adb forward tcp:9703 tcp:9703"
+                                                                    sh "adb forward tcp:9704 tcp:9704"
+                                                                    sh "adb forward tcp:9705 tcp:9705"
+                                                                    sh "adb forward tcp:9706 tcp:9706"
+                                                                    sh "adb forward tcp:9707 tcp:9707"
+                                                                    sh "adb forward tcp:9708 tcp:9708"
                                                                     // Wait 10 seconds before connecting to device so we make sure docker image & emulator is spun up
                                                                     sh "wait-for-emulator"
                                                                     // connected check cannot run in parallel.
@@ -119,6 +139,7 @@ pipeline {
                                                 }
 
                                     }
+                            }
                         }
                     }
 
