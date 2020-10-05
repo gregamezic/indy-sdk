@@ -11,7 +11,8 @@ public class AndroidInitHelper {
         String cacheDir = InstrumentationRegistry.getInstrumentation().getContext().getCacheDir().getAbsolutePath();
 
         if (!cacheDir.equals("")) {
-            Os.setenv("EXTERNAL_STORAGE", cacheDir, true);
+            Os.setenv("EXTERNAL_STORAGE", cacheDir + "/cache", true);
+            Os.setenv("TMPDIR", cacheDir + "/tmp", true);
 
             if (!LibIndy.isInitialized()) {
                 LibIndy.init();
