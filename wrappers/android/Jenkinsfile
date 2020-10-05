@@ -111,6 +111,8 @@ pipeline {
                                                             .inside("-v \$HOME/.gradle:/home/jenkins/.gradle --ip=\"10.0.0.4\" --net=$n") {
                                                                 dir("wrappers/android") {
                                                                     sh "sleep 10 && adb connect emulator:5555"
+                                                                    // Wait 10 seconds before connecting to device so we make sure docker image & emulator is spun up
+                                                                    sh "wait-for-emulator"
                                                                     sh "adb forward tcp:9701 tcp:9701"
                                                                     sh "adb forward tcp:9702 tcp:9702"
                                                                     sh "adb forward tcp:9703 tcp:9703"
@@ -119,8 +121,6 @@ pipeline {
                                                                     sh "adb forward tcp:9706 tcp:9706"
                                                                     sh "adb forward tcp:9707 tcp:9707"
                                                                     sh "adb forward tcp:9708 tcp:9708"
-                                                                    // Wait 10 seconds before connecting to device so we make sure docker image & emulator is spun up
-                                                                    sh "wait-for-emulator"
                                                                     // connected check cannot run in parallel.
                                                                     sh "./gradlew ${getTestPreTasks(params.cleanTests)} ${getConnectedCheckTasks(env.BRANCH_NAME)} ${getTestParameters(params.parallelTests, params.buildCacheTests, params.gradleScan)}"
                                                                 }
