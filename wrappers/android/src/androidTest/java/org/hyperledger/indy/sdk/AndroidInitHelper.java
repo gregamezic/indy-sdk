@@ -15,12 +15,20 @@ public class AndroidInitHelper {
         File cache = new File(cacheDir, "cache");
         File tmp = new File(cacheDir, "tmp");
 
-        if (!cache.mkdirs()) {
-            throw new IllegalArgumentException("Cache dir fail.");
+        if (!cache.exists()) {
+            if (!cache.mkdirs()) {
+                throw new IllegalArgumentException("Cache dir fail.");
+            }
+        } else if (!cache.isDirectory()) {
+            throw new IllegalArgumentException("Cache not a dirr.");
         }
 
-        if (!tmp.mkdirs()) {
-            throw new IllegalArgumentException("Tmp dir fail.");
+        if (!tmp.exists()) {
+            if (!tmp.mkdirs()) {
+                throw new IllegalArgumentException("Tmp dir fail.");
+            }
+        } else if (!tmp.isDirectory()) {
+            throw new IllegalArgumentException("Tmp not a dir.");
         }
 
         if (!cacheDir.equals("")) {
