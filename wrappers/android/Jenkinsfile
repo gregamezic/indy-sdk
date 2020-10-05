@@ -99,7 +99,7 @@ pipeline {
                         sh "echo \"Node: ${NODE_NAME}\""
                         script {
                             withDockerNetwork { n ->
-                                docker.build('pool-image', "-build-arg pool_ip=10.0.0.2 -f ci/indy-pool.dockerfile ./ci")
+                                docker.build('pool-image', "--build-arg pool_ip=10.0.0.2 -f ci/indy-pool.dockerfile ./ci")
                                     .withRun("--ip=\"10.0.0.2\" --net=${n}") { poolImage ->
 
                                         sh "sleep 10"
