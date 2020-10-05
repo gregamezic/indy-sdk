@@ -110,7 +110,7 @@ pipeline {
                                                     docker.build('platform-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) wrappers/android/config/docker/platform")
                                                             .inside("-v \$HOME/.gradle:/home/jenkins/.gradle --ip=\"10.0.0.4\" --net=$n") {
                                                                 dir("wrappers/android") {
-                                                                    sh "sleep 10 && adb connect emulator:5555"
+                                                                    sh "sleep 10 && adb connect 10.0.0.3:5555"
                                                                     // Wait 10 seconds before connecting to device so we make sure docker image & emulator is spun up
                                                                     sh "wait-for-emulator"
                                                                     sh "adb forward tcp:9701 tcp:9701"
