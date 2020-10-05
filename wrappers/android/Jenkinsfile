@@ -54,7 +54,7 @@ def withDockerNetwork(Closure inner) {
         sh "docker network create --subnet 10.0.0.0/8 " + n
         inner.call(n)
     } finally {
-        sh "docker network rm " + network
+        sh "docker network rm " + n
     }
 }
 
