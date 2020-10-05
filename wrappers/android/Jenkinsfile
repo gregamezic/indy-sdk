@@ -100,15 +100,15 @@ pipeline {
                         script {
                             withDockerNetwork { n ->
                                 docker.build('pool-image', "--build-arg pool_ip=10.0.0.2 -f ci/indy-pool.dockerfile ./ci")
-                                    .withRun("--ip=\"10.0.0.2\" --net=${n}") { poolImage ->
+                                    .withRun("--ip=\"10.0.0.2\" --net=$n") { poolImage ->
 
                                         sh "sleep 10"
 
                                         docker.image("us-docker.pkg.dev/android-emulator-268719/images/${params.emulatorVersion}:30.1.2")
-                                                .withRun("--device /dev/kvm --ip=\"10.0.0.3\" --net=${n}") { emulatorImage ->
+                                                .withRun("--device /dev/kvm --ip=\"10.0.0.3\" --net=$n") { emulatorImage ->
 
                                                     docker.build('platform-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) wrappers/android/config/docker/platform")
-                                                            .inside("-v \$HOME/.gradle:/home/jenkins/.gradle --ip=\"10.0.0.4\" --net=${n}") {
+                                                            .inside("-v \$HOME/.gradle:/home/jenkins/.gradle --ip=\"10.0.0.4\" --net=$n") {
                                                                 dir("wrappers/android") {
                                                                     sh "sleep 10 && adb connect emulator:5555"
                                                                     sh "adb forward tcp:9701 tcp:9701"
