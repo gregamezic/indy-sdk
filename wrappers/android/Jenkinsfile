@@ -97,13 +97,13 @@ pipeline {
                     steps {
                         sh "echo \"Node: ${NODE_NAME}\""
                         script {
-                            docker.build('pool-image', "-f ci/indy-pool.dockerfile ./ci")
+                            docker.build('pool-image', "--build-arg pool_ip=android_pool -f ci/indy-pool.dockerfile ./ci")
                                     .withRun { poolImage ->
 
                                         sh "sleep 10"
 
                                         docker.image("us-docker.pkg.dev/android-emulator-268719/images/${params.emulatorVersion}:30.1.2")
-                                                .withRun("--device /dev/kvm --link ${poolImage.id}:pool") { emulatorImage ->
+                                                .withRun("--device /dev/kvm --link ${poolImage.id}:android_pool") { emulatorImage ->
 
                                                     docker.build('platform-image', "--build-arg hostUid=\$(id -u) --build-arg hostGid=\$(id -g) wrappers/android/config/docker/platform")
                                                             .inside("-v \$HOME/.gradle:/home/jenkins/.gradle --link ${emulatorImage.id}:emulator") {
