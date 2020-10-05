@@ -49,8 +49,8 @@ static def getLintTask(def debugBuild, def branch) {
 }
 
 def withDockerNetwork(Closure inner) {
+    def n = UUID.randomUUID().toString()
     try {
-        def n = UUID.randomUUID().toString()
         sh "docker network create --subnet 10.0.0.0/8 $n"
         inner.call(n)
     } finally {
