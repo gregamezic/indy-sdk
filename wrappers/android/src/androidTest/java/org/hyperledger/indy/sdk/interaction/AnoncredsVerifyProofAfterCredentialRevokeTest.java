@@ -13,6 +13,7 @@ import org.hyperledger.indy.sdk.ledger.Ledger;
 import org.hyperledger.indy.sdk.ledger.LedgerResults;
 import org.hyperledger.indy.sdk.ledger.LedgerResults.ParseResponseResult;
 import org.hyperledger.indy.sdk.utils.PoolUtils;
+import org.hyperledger.indy.sdk.wallet.Wallet;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
