@@ -30,7 +30,9 @@ public class IndyIntegrationTestWithPoolAndSingleWallet extends IndyIntegrationT
 
 	@After
 	public void deletePoolAndWallet() throws Exception {
-		pool.closePoolLedger().get();
+		if (pool != null) {
+			pool.closePoolLedger().get();
+		}
 		wallet.closeWallet().get();
 		Wallet.deleteWallet(WALLET_CONFIG, WALLET_CREDENTIALS).get();
 	}
