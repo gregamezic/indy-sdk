@@ -112,9 +112,9 @@ public class IndyIntegrationTest {
 
 	@Before
 	public void setUp() throws Exception {
-		StorageUtils.cleanupStorage();
-
 		AndroidInitHelper.init();
+
+		StorageUtils.cleanupStorage();
 		Pool.setProtocolVersion(PROTOCOL_VERSION).get();
 	}
 

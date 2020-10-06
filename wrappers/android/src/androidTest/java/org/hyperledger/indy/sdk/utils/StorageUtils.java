@@ -19,8 +19,8 @@ public class StorageUtils {
 		File tmpDir = new File(EnvironmentUtils.getTmpPath());
 		File homeDir = new File(EnvironmentUtils.getIndyHomePath());
 
-		StorageUtils.cleanDirectory(tmpDir);
-		StorageUtils.cleanDirectory(homeDir);
+//		StorageUtils.cleanDirectory(tmpDir);
+//		StorageUtils.cleanDirectory(homeDir);
 	}
 
 }
