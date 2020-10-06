@@ -65,7 +65,7 @@ pipeline {
                                                                     // connected check cannot run in parallel.
                                                                     sh "./gradlew connectedAndroidTest --console=verbose --no-daemon -Pandroid.builder.sdkDownload=false"
 
-                                                                    sh "adb logcat"
+                                                                    sh "adb logcat -d"
                                                                 }
                                                             }
 
