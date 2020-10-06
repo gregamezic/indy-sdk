@@ -13,12 +13,15 @@ public class AndroidInitHelper {
         File cache = new File(EnvironmentUtils.getIndyHomePath());
         File tmp = new File(EnvironmentUtils.getTmpPath());
 
+        cache.delete();
+        tmp.delete();
+
         if (!cache.exists()) {
             if (!cache.mkdirs()) {
                 throw new IllegalArgumentException("Cache dir fail.");
             }
         } else if (!cache.isDirectory()) {
-            throw new IllegalArgumentException("Cache not a dirr.");
+            throw new IllegalArgumentException("Cache not a dir.");
         }
 
         if (!tmp.exists()) {
