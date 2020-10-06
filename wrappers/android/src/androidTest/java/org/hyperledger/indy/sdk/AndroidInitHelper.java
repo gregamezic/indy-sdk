@@ -4,12 +4,22 @@ import android.system.ErrnoException;
 import android.system.Os;
 
 import org.hyperledger.indy.sdk.utils.EnvironmentUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+
+import pl.brightinventions.slf4android.LogLevel;
+import pl.brightinventions.slf4android.LoggerConfiguration;
 
 public class AndroidInitHelper {
 
     public static void init() throws ErrnoException {
+        Logger logger = LoggerFactory.getLogger("org.hyperledger.indy.sdk.LibIndy.native");
+
+        LoggerConfiguration.configuration()
+                .setLogLevel("org.hyperledger.indy.sdk.LibIndy.native", LogLevel.TRACE);
+
         File cache = new File(EnvironmentUtils.getIndyHomePath());
         File tmp = new File(EnvironmentUtils.getTmpPath());
 
