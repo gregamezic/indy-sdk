@@ -1,45 +1,3 @@
-static def getTestParameters(def parallelTests, def buildCacheTests, def gradleScan) {
-    def testParams = ["--console=verbose", "--no-daemon"]
-    if (parallelTests) {
-        testParams.add("--parallel")
-    }
-
-    if (buildCacheTests) {
-        testParams.add("--build-cache")
-    }
-
-    if (gradleScan) {
-        testParams.add("--scan")
-    }
-
-    // So CI dosn't do additional work. If it fails CI image should be updated.
-    testParams.add("-Pandroid.builder.sdkDownload=false")
-
-    return testParams.join(" ")
-}
-
-static def getTestPreTasks(def cleanTests) {
-
-    def extraTasks = []
-    if (cleanTests) {
-        extraTasks.add("clean")
-    }
-    return extraTasks.join(" ")
-}
-
-static def getCheckTasks(def branch) {
-    if (branch.startsWith("PR-")) {
-        return "vitalJvmTest"
-    } else {
-        return "vitalTest"
-    }
-}
-
-static def getConnectedCheckTasks(def branch) {
-    return "connectedAndroidTest"
-}
-
-
 static def getLintTask(def debugBuild, def branch) {
     if (debugBuild && branch.startsWith("PR-")) {
         return ":target:mobile:app:lintCurrentStageDebug"
@@ -64,13 +22,6 @@ pipeline {
 
     parameters {
         choice(name: 'emulatorVersion', choices: ['30-google-x64', '29-google-x64', '28-playstore-x64'], description: 'Emulator version')
-        booleanParam(defaultValue: true, description: "If `--parallel` flag should be used for tests.", name: 'parallelTests')
-        booleanParam(defaultValue: false, description: "If build cache should be used for tests.", name: 'buildCacheTests')
-        booleanParam(defaultValue: false, description: "If build scan should be created for test steps.", name: 'gradleScan')
-        booleanParam(defaultValue: false, description: 'Indicates if clean command should be executed before tests.', name: 'cleanTests')
-        booleanParam(defaultValue: true, description: 'Only perform checks on debug', name: 'debugBuild')
-        booleanParam(defaultValue: false, description: 'Only perform checks on debug', name: 'lintTask')
-        booleanParam(defaultValue: false, description: 'Notify build failure on slack', name: 'notifyFailure')
     }
 
     triggers {
@@ -113,18 +64,8 @@ pipeline {
                                                                     sh "sleep 10 && adb connect 10.0.0.3:5555"
                                                                     // Wait 10 seconds before connecting to device so we make sure docker image & emulator is spun up
                                                                     sh "wait-for-emulator"
-                                                                    sh "adb forward tcp:9701 tcp:9701"
-                                                                    sh "adb forward tcp:9702 tcp:9702"
-                                                                    sh "adb forward tcp:9703 tcp:9703"
-                                                                    sh "adb forward tcp:9704 tcp:9704"
-                                                                    sh "adb forward tcp:9705 tcp:9705"
-                                                                    sh "adb forward tcp:9706 tcp:9706"
-                                                                    sh "adb forward tcp:9707 tcp:9707"
-                                                                    sh "adb forward tcp:9708 tcp:9708"
                                                                     // connected check cannot run in parallel.
-                                                                    sh "./gradlew ${getTestPreTasks(params.cleanTests)} ${getConnectedCheckTasks(env.BRANCH_NAME)} ${getTestParameters(params.parallelTests, params.buildCacheTests, params.gradleScan)}"
-
-                                                                    sh "docker logs ${emulatorImage.id}"
+                                                                    sh "./gradlew connectedAndroidTest --console=verbose --no-daemon -Pandroid.builder.sdkDownload=false"
                                                                 }
                                                             }
 
