@@ -33,8 +33,11 @@ public class IndyIntegrationTestWithPoolAndSingleWallet extends IndyIntegrationT
 		if (pool != null) {
 			pool.closePoolLedger().get();
 		}
-		wallet.closeWallet().get();
-		Wallet.deleteWallet(WALLET_CONFIG, WALLET_CREDENTIALS).get();
+
+		if (wallet != null) {
+			wallet.closeWallet().get();
+			Wallet.deleteWallet(WALLET_CONFIG, WALLET_CREDENTIALS).get();
+		}
 	}
 
 	protected void checkResponseType(String response, String expectedType) throws JSONException {
