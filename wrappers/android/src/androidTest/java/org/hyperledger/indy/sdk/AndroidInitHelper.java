@@ -15,6 +15,10 @@ import pl.brightinventions.slf4android.LoggerConfiguration;
 public class AndroidInitHelper {
 
     public static void init() throws ErrnoException {
+//        StrictMode.ThreadPolicy policy = new
+//                StrictMode.ThreadPolicy.Builder().permitAll().build();
+//        StrictMode.setThreadPolicy(policy);
+
         Logger logger = LoggerFactory.getLogger("org.hyperledger.indy.sdk.LibIndy.native");
 
         LoggerConfiguration.configuration()
