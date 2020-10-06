@@ -1,6 +1,5 @@
 package org.hyperledger.indy.sdk.demo;
 
-import org.hyperledger.indy.sdk.AndroidInitHelper;
 import org.hyperledger.indy.sdk.IndyIntegrationTest;
 import org.hyperledger.indy.sdk.InvalidStructureException;
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds;
@@ -57,9 +56,7 @@ public class AnoncredsDemoTest extends IndyIntegrationTest {
 	}
 
 	@Before
-	public void createWallet() throws Exception {
-		AndroidInitHelper.init();
-
+	public void createWallet() throws Exception {	
 		// Set protocol version
 		Pool.setProtocolVersion(PROTOCOL_VERSION).get();
 

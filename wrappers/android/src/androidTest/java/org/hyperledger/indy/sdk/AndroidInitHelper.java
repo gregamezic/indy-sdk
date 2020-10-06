@@ -3,17 +3,15 @@ package org.hyperledger.indy.sdk;
 import android.system.ErrnoException;
 import android.system.Os;
 
-import java.io.File;
+import org.hyperledger.indy.sdk.utils.EnvironmentUtils;
 
-import androidx.test.platform.app.InstrumentationRegistry;
+import java.io.File;
 
 public class AndroidInitHelper {
 
     public static void init() throws ErrnoException {
-        File cacheDir = InstrumentationRegistry.getInstrumentation().getContext().getCacheDir();
-
-        File cache = new File(cacheDir, "cache");
-        File tmp = new File(cacheDir, "tmp");
+        File cache = new File(EnvironmentUtils.getIndyHomePath());
+        File tmp = new File(EnvironmentUtils.getTmpPath());
 
         if (!cache.exists()) {
             if (!cache.mkdirs()) {
@@ -31,16 +29,16 @@ public class AndroidInitHelper {
             throw new IllegalArgumentException("Tmp not a dir.");
         }
 
-        if (!cacheDir.equals("")) {
+//        if (!cacheDir.equals("")) {
             Os.setenv("EXTERNAL_STORAGE", cache.getAbsolutePath(), true);
             Os.setenv("TMPDIR", tmp.getAbsolutePath(), true);
 
             if (!LibIndy.isInitialized()) {
                 LibIndy.init();
             }
-        } else {
-            throw new IllegalArgumentException("External storage path must be provided.");
-        }
+//        } else {
+//            throw new IllegalArgumentException("External storage path must be provided.");
+//        }
     }
 
 }
