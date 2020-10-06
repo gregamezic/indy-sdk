@@ -53,8 +53,6 @@ pipeline {
                                 docker.build('pool-image', "--build-arg pool_ip=10.0.0.2 -f ci/indy-pool.dockerfile ./ci")
                                     .withRun("--ip=\"10.0.0.2\" --net=$n") { poolImage ->
 
-                                        sh "sleep 10"
-
                                         docker.image("us-docker.pkg.dev/android-emulator-268719/images/${params.emulatorVersion}:30.1.2")
                                                 .withRun("--device /dev/kvm --ip=\"10.0.0.3\" --net=$n") { emulatorImage ->
 
