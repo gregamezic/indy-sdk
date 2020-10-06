@@ -99,6 +99,8 @@ public class AnoncredsIntegrationTest {
 
 	@Before
 	public void setUp() throws Exception {
+		StorageUtils.cleanupStorage();
+
 		AndroidInitHelper.init();
 
 		initCommonWallet();
@@ -109,8 +111,6 @@ public class AnoncredsIntegrationTest {
 		if (walletOpened) {
 			return;
 		}
-
-		StorageUtils.cleanupStorage();
 
 		String walletConfig =
 				new JSONObject()

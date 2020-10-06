@@ -7,9 +7,6 @@ import org.hyperledger.indy.sdk.utils.EnvironmentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-
-import androidx.test.platform.app.InstrumentationRegistry;
 import pl.brightinventions.slf4android.LogLevel;
 import pl.brightinventions.slf4android.LoggerConfiguration;
 
@@ -21,8 +18,8 @@ public class AndroidInitHelper {
         LoggerConfiguration.configuration()
                 .setLogLevel("org.hyperledger.indy.sdk.LibIndy.native", LogLevel.TRACE);
 
-        File walletDir = new File(InstrumentationRegistry.getInstrumentation().getContext().getCacheDir().getAbsolutePath() + "/wallet/");
-        File tmp = new File(EnvironmentUtils.getTmpPath());
+//        File walletDir = new File(InstrumentationRegistry.getInstrumentation().getContext().getCacheDir().getAbsolutePath() + "/wallet/");
+//        File tmp = new File(EnvironmentUtils.getTmpPath());
 //
 //        cache.delete();
 //        tmp.delete();
@@ -44,8 +41,8 @@ public class AndroidInitHelper {
 //        }
 
 //        if (!cacheDir.equals("")) {
-            Os.setenv("EXTERNAL_STORAGE", walletDir.getAbsolutePath(), true);
-            Os.setenv("TMPDIR", tmp.getAbsolutePath(), true);
+            Os.setenv("EXTERNAL_STORAGE", EnvironmentUtils.getIndyHomePath(), true);
+            Os.setenv("TMPDIR", EnvironmentUtils.getTmpPath(), true);
 
             if (!LibIndy.isInitialized()) {
                 LibIndy.init();
