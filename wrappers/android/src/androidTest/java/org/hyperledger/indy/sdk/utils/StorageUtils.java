@@ -1,9 +1,13 @@
 package org.hyperledger.indy.sdk.utils;
 
+import android.content.Context;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+
+import androidx.test.platform.app.InstrumentationRegistry;
 
 
 public class StorageUtils {
@@ -16,14 +20,14 @@ public class StorageUtils {
 
 	public static void cleanupStorage() throws IOException {
 
-//		File tmpDir = new File(EnvironmentUtils.getTmpPath());
-//		File homeDir = new File(EnvironmentUtils.getIndyHomePath());
-//
-//		StorageUtils.cleanDirectory(tmpDir);
-//		StorageUtils.cleanDirectory(homeDir);
-//
-//		Context instrumentationContext = InstrumentationRegistry.getInstrumentation().getContext();
-//		StorageUtils.cleanDirectory(instrumentationContext.getCacheDir().getAbsoluteFile());
+		File tmpDir = new File(EnvironmentUtils.getTmpPath());
+		File homeDir = new File(EnvironmentUtils.getIndyHomePath());
+
+		StorageUtils.cleanDirectory(tmpDir);
+		StorageUtils.cleanDirectory(homeDir);
+
+		Context instrumentationContext = InstrumentationRegistry.getInstrumentation().getContext();
+		StorageUtils.cleanDirectory(instrumentationContext.getCacheDir().getAbsoluteFile());
 	}
 
 }

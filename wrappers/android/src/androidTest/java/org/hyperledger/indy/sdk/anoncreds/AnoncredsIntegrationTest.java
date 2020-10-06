@@ -3,7 +3,6 @@ package org.hyperledger.indy.sdk.anoncreds;
 import org.hyperledger.indy.sdk.AndroidInitHelper;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateAndStoreCredentialDefResult;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.ProverCreateCredentialRequestResult;
-import org.hyperledger.indy.sdk.utils.StorageUtils;
 import org.hyperledger.indy.sdk.wallet.Wallet;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -110,7 +109,7 @@ public class AnoncredsIntegrationTest {
 			return;
 		}
 
-		StorageUtils.cleanupStorage();
+//		StorageUtils.cleanupStorage();
 
 		String walletConfig =
 				new JSONObject()
