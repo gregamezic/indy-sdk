@@ -26,7 +26,7 @@ public class CryptoDemoTest extends IndyIntegrationTest {
 	@Test
 	public void testCryptoDemo() throws Exception {
 		//0. Delete pool if exists from before
-		PoolUtils.deletePoolLedgerConfig();
+//		PoolUtils.deletePoolLedgerConfig(); // it never exits
 
 		//1. Create and Open Pool
 		String poolName = PoolUtils.createPoolLedgerConfig();

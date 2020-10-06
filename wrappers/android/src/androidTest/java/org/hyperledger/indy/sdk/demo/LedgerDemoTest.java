@@ -27,7 +27,7 @@ public class LedgerDemoTest extends IndyIntegrationTest {
 	@Test
 	public void testLedgerDemo() throws Exception {
 		//0. Delete pool if exists from before
-		PoolUtils.deletePoolLedgerConfig();
+//		PoolUtils.deletePoolLedgerConfig(); // it never exits
 
 		// 1. Create ledger config from genesis txn file
 		String poolName = PoolUtils.createPoolLedgerConfig();
