@@ -4,7 +4,7 @@
 
 # Base image
 # ---------------------------------------------------------------------- #
-FROM kaminomobile/android-platform-29:31
+FROM kaminomobile/android-platform-30:1
 
 # Author
 # ---------------------------------------------------------------------- #
