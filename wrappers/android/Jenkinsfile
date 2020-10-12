@@ -64,6 +64,7 @@ pipeline {
                                                                     sh "wait-for-emulator"
                                                                     // connected check cannot run in parallel.
                                                                     sh "./gradlew  connectedAndroidTest --console=verbose --no-daemon -Pandroid.builder.sdkDownload=false -Pandroid.testInstrumentationRunnerArguments.class=org.hyperledger.indy.sdk.interaction.AnoncredsVerifyProofAfterCredentialRevokeTest#testAnoncredsVerifyProofAfterCredentialRevoke || (echo Logcat!! && adb logcat -d)"
+                                                                    sh "adb logcat -d"
                                                                 }
                                                             }
 

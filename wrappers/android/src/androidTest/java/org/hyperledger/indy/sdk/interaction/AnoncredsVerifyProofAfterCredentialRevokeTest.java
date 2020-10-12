@@ -35,7 +35,7 @@ import static org.junit.Assert.assertFalse;
 public class AnoncredsVerifyProofAfterCredentialRevokeTest extends IndyIntegrationTestWithPoolAndSingleWallet {
 	// This test is a copy of a project attached to IS-1368. We omitted pool and wallet preparation.
 
-	private static String indyClientPath = EnvironmentUtils.getIndyHomePath();
+	private static String indyClientPath = EnvironmentUtils.getTmpPath();
 
 	@Test
 	public void testAnoncredsVerifyProofAfterCredentialRevoke() throws Exception {
