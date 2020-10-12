@@ -70,7 +70,7 @@ public class AndroidInitHelper {
             };
 
             LibIndy.api.indy_set_logger(null, null, call, null);
-            LibIndy.api.indy_set_log_max_lvl(5);
+//            LibIndy.api.indy_set_log_max_lvl(5);
 //        } else {
 //            throw new IllegalArgumentException("External storage path must be provided.");
 //        }
