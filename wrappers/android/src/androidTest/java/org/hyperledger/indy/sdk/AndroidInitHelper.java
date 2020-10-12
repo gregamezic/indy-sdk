@@ -61,19 +61,20 @@ public class AndroidInitHelper {
                 LibIndy.init();
             }
 
-
-            Callback call = new Callback() {
-
-                public void callback(Pointer context, int level, String target, String message, String module_path, String file, int line) {
-                    Log.v("Indy log",message);
-                }
-            };
-
-            LibIndy.api.indy_set_logger(null, null, call, null);
+            LibIndy.api.indy_set_logger(null, null, Test.call, null);
 //            LibIndy.api.indy_set_log_max_lvl(5);
 //        } else {
 //            throw new IllegalArgumentException("External storage path must be provided.");
 //        }
+    }
+
+    static class Test {
+        private static Callback call = new Callback() {
+
+            public void callback(Pointer context, int level, String target, String message, String module_path, String file, int line) {
+                Log.v("Indy log", message);
+            }
+        };
     }
 
 }
