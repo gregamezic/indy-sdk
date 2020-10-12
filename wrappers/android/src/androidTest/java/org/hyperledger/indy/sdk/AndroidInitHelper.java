@@ -2,6 +2,10 @@ package org.hyperledger.indy.sdk;
 
 import android.system.ErrnoException;
 import android.system.Os;
+import android.util.Log;
+
+import com.sun.jna.Callback;
+import com.sun.jna.Pointer;
 
 import org.apache.commons.io.FileUtils;
 import org.hyperledger.indy.sdk.utils.EnvironmentUtils;
@@ -56,6 +60,17 @@ public class AndroidInitHelper {
             if (!LibIndy.isInitialized()) {
                 LibIndy.init();
             }
+
+
+            Callback call = new Callback() {
+
+                public void callback(Pointer context, int level, String target, String message, String module_path, String file, int line) {
+                    Log.v("Indy log",message);
+                }
+            };
+
+            LibIndy.api.indy_set_logger(null, null, call, null);
+            LibIndy.api.indy_set_log_max_lvl(5);
 //        } else {
 //            throw new IllegalArgumentException("External storage path must be provided.");
 //        }
