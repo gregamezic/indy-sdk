@@ -140,7 +140,7 @@ public class AnoncredsVerifyProofAfterCredentialRevokeTest extends IndyIntegrati
 		response = PoolUtils.ensurePreviousRequestApplied(pool, request, innerResponse -> {
 			JSONObject innerResponseObject = new JSONObject(innerResponse);
 			Log.d("Indy Test Log", innerResponse);
-			return !innerResponseObject.getJSONObject("result").isNull("seqNo");
+			return !innerResponseObject.getJSONObject("result").isNull("reqId");
 		});
 		LedgerResults.ParseRegistryResponseResult resultAfterCreatingRevDef = Ledger.parseGetRevocRegResponse(response).get();
 		System.out.println("Accum Value at (after creating rev def): " + timestampAfterCreatingRevDef + "\n" +  resultAfterCreatingRevDef.getObjectJson() + "\n");
