@@ -1,5 +1,7 @@
 package org.hyperledger.indy.sdk.interaction;
 
+import android.system.Os;
+
 import org.apache.commons.io.FileUtils;
 import org.hyperledger.indy.sdk.IndyIntegrationTestWithPoolAndSingleWallet;
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds;
@@ -12,6 +14,7 @@ import org.hyperledger.indy.sdk.did.DidResults;
 import org.hyperledger.indy.sdk.ledger.Ledger;
 import org.hyperledger.indy.sdk.ledger.LedgerResults;
 import org.hyperledger.indy.sdk.ledger.LedgerResults.ParseResponseResult;
+import org.hyperledger.indy.sdk.utils.EnvironmentUtils;
 import org.hyperledger.indy.sdk.utils.PoolUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +40,11 @@ public class AnoncredsVerifyProofAfterCredentialRevokeTest extends IndyIntegrati
 	@Test
 	public void testAnoncredsVerifyProofAfterCredentialRevoke() throws Exception {
 
+		// CHeck this
+		Os.setenv("EXTERNAL_STORAGE", EnvironmentUtils.getIndyHomePath(), true);
+		Os.setenv("TMPDIR", EnvironmentUtils.getTmpPath(), true);
+
+
 		// create steward did from seed
 		String seed = "000000000000000000000000Steward1";
 		DidJSONParameters.CreateAndStoreMyDidJSONParameter stewardDIDParameter = new DidJSONParameters.CreateAndStoreMyDidJSONParameter(null, seed, null,
@@ -51,7 +59,6 @@ public class AnoncredsVerifyProofAfterCredentialRevokeTest extends IndyIntegrati
 		String keyTrustAnchor = createDidResult.getVerkey();
 		String request = Ledger.buildNymRequest(didSteward, didTrustAnchor, keyTrustAnchor, null, "TRUST_ANCHOR").get();
 		String response = Ledger.signAndSubmitRequest(pool, wallet, didSteward, request).get();
-
 
 		// trust anchor creates schema and credential definition and writes them to the
 		// ledger
