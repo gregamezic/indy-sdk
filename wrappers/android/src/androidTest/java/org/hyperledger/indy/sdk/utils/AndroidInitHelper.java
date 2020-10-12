@@ -1,4 +1,4 @@
-package org.hyperledger.indy.sdk;
+package org.hyperledger.indy.sdk.utils;
 
 import android.system.ErrnoException;
 import android.system.Os;
@@ -7,7 +7,7 @@ import android.util.Log;
 import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
 
-import org.hyperledger.indy.sdk.utils.EnvironmentUtils;
+import org.hyperledger.indy.sdk.LibIndy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

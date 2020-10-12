@@ -1,6 +1,6 @@
 package org.hyperledger.indy.sdk.anoncreds;
 
-import org.hyperledger.indy.sdk.AndroidInitHelper;
+import org.hyperledger.indy.sdk.utils.AndroidInitHelper;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateAndStoreCredentialDefResult;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.ProverCreateCredentialRequestResult;
 import org.hyperledger.indy.sdk.utils.StorageUtils;

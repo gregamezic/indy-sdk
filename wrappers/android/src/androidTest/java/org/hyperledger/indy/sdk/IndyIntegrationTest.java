@@ -3,6 +3,7 @@ package org.hyperledger.indy.sdk;
 import org.hyperledger.indy.sdk.crypto.CryptoJSONParameters;
 import org.hyperledger.indy.sdk.did.DidJSONParameters;
 import org.hyperledger.indy.sdk.pool.Pool;
+import org.hyperledger.indy.sdk.utils.AndroidInitHelper;
 import org.hyperledger.indy.sdk.utils.StorageUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
