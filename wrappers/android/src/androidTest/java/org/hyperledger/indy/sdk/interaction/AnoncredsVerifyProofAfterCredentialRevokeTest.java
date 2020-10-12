@@ -97,7 +97,7 @@ public class AnoncredsVerifyProofAfterCredentialRevokeTest extends IndyIntegrati
 
 
 		// now the trust anchor creates a revReg and writes the definition to the ledger
-		String revocDir = indyClientPath + "/" + "revoc_dir";
+		String revocDir = indyClientPath + "revoc_dir";
 		File revocDirPath = new File(revocDir);
 		if (!revocDirPath.exists()) {
 			revocDirPath.mkdir();
