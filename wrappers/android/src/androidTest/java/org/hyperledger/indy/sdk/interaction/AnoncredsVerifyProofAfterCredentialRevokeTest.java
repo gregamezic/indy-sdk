@@ -29,6 +29,7 @@ import java.util.Iterator;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import static org.hyperledger.indy.sdk.utils.EnvironmentUtils.getIndyHomePath;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(AndroidJUnit4.class)
@@ -36,6 +37,13 @@ public class AnoncredsVerifyProofAfterCredentialRevokeTest extends IndyIntegrati
 	// This test is a copy of a project attached to IS-1368. We omitted pool and wallet preparation.
 
 	private static String indyClientPath;
+	{
+		try {
+			indyClientPath = new JSONObject(String.format("{\"base_dir\":\"%s\", \"uri_pattern\":\"\"}", getIndyHomePath("tails")).replace('\\', '/')).toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Test
 	public void testAnoncredsVerifyProofAfterCredentialRevoke() throws Exception {
