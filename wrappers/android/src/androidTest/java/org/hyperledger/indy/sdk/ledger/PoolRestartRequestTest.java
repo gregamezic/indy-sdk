@@ -35,7 +35,7 @@ public class PoolRestartRequestTest extends IndyIntegrationTestWithPoolAndSingle
 
     @Test
     public void testPoolRestartRequestWorks() throws Exception {
-        int nextYear = Calendar.getInstance().get(Calendar.YEAR) + 1;
+        int nextYear = Calendar.getInstance().get(Calendar.YEAR) + 10;
 
         DidResults.CreateAndStoreMyDidResult didResult = Did.createAndStoreMyDid(wallet, TRUSTEE_IDENTITY_JSON).get();
         String did = didResult.getDid();
