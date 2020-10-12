@@ -1,5 +1,7 @@
 package org.hyperledger.indy.sdk.interaction;
 
+import android.util.Log;
+
 import org.apache.commons.io.FileUtils;
 import org.hyperledger.indy.sdk.IndyIntegrationTestWithPoolAndSingleWallet;
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds;
@@ -137,6 +139,7 @@ public class AnoncredsVerifyProofAfterCredentialRevokeTest extends IndyIntegrati
 		request = Ledger.buildGetRevocRegRequest(didTrustAnchor, revRegDefId, timestampAfterCreatingRevDef).get();
 		response = PoolUtils.ensurePreviousRequestApplied(pool, request, innerResponse -> {
 			JSONObject innerResponseObject = new JSONObject(innerResponse);
+			Log.d("Indy Test Log", innerResponse);
 			return !innerResponseObject.getJSONObject("result").isNull("seqNo");
 		});
 		LedgerResults.ParseRegistryResponseResult resultAfterCreatingRevDef = Ledger.parseGetRevocRegResponse(response).get();
