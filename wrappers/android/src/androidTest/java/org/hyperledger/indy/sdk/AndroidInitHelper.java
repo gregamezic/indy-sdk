@@ -18,6 +18,8 @@ import java.io.IOException;
 import pl.brightinventions.slf4android.LogLevel;
 import pl.brightinventions.slf4android.LoggerConfiguration;
 
+import static com.sun.jna.Native.detach;
+
 public class AndroidInitHelper {
 
     public static void init() throws ErrnoException {
@@ -72,6 +74,8 @@ public class AndroidInitHelper {
         private static Callback call = new Callback() {
 
             public void callback(Pointer context, int level, String target, String message, String module_path, String file, int line) {
+                detach(false);
+
                 Log.v("Indy log", message);
             }
         };
