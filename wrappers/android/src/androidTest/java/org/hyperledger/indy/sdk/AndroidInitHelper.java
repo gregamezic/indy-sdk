@@ -58,6 +58,7 @@ public class AndroidInitHelper {
 //        if (!cacheDir.equals("")) {
             Os.setenv("EXTERNAL_STORAGE", EnvironmentUtils.getIndyHomePath(), true);
             Os.setenv("TMPDIR", EnvironmentUtils.getTmpPath(), true);
+            Os.setenv("TMP", EnvironmentUtils.getTmpPath(), true);
 
             if (!LibIndy.isInitialized()) {
                 LibIndy.init();
