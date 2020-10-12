@@ -15,7 +15,6 @@ public class StorageUtils {
 	}
 
 	public static void cleanupStorage() throws IOException {
-
 		File tmpDir = new File(EnvironmentUtils.getTmpPath());
 		File homeDir = new File(EnvironmentUtils.getIndyHomePath());
 

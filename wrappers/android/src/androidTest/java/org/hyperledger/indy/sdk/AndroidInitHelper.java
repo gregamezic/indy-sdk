@@ -3,9 +3,13 @@ package org.hyperledger.indy.sdk;
 import android.system.ErrnoException;
 import android.system.Os;
 
+import org.apache.commons.io.FileUtils;
 import org.hyperledger.indy.sdk.utils.EnvironmentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
 
 import pl.brightinventions.slf4android.LogLevel;
 import pl.brightinventions.slf4android.LoggerConfiguration;
@@ -19,11 +23,16 @@ public class AndroidInitHelper {
                 .setLogLevel("org.hyperledger.indy.sdk.LibIndy.native", LogLevel.TRACE);
 
 //        File walletDir = new File(InstrumentationRegistry.getInstrumentation().getContext().getCacheDir().getAbsolutePath() + "/wallet/");
-//        File tmp = new File(EnvironmentUtils.getTmpPath());
+        File tmp = new File(EnvironmentUtils.getTmpPath());
 //
 //        cache.delete();
-//        tmp.delete();
-//
+        tmp.delete();
+        try {
+            FileUtils.forceMkdirParent(tmp);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Tmp dir fail.");
+        }
+
 //        if (!cache.exists()) {
 //            if (!cache.mkdirs()) {
 //                throw new IllegalArgumentException("Cache dir fail.");
