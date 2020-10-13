@@ -63,7 +63,9 @@ pipeline {
                                                                     // Wait 10 seconds before connecting to device so we make sure docker image & emulator is spun up
                                                                     sh "wait-for-emulator"
                                                                     // connected check cannot run in parallel.
-                                                                    sh "./gradlew  connectedAndroidTest --console=verbose --no-daemon -Pandroid.builder.sdkDownload=false || (echo Logcat!! && adb logcat -d)"
+                                                                    timeout(time: 20, unit: 'MINUTES') {
+                                                                        sh "./gradlew  connectedAndroidTest --console=verbose --no-daemon -Pandroid.builder.sdkDownload=false || (echo Logcat!! && adb logcat -d)"
+                                                                    }
                                                                     sh "adb logcat -d"
                                                                 }
                                                             }
