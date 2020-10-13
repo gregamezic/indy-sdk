@@ -1,7 +1,5 @@
 package org.hyperledger.indy.sdk.ledger;
 
-import android.util.Log;
-
 import org.hyperledger.indy.sdk.IndyIntegrationTestWithPoolAndSingleWallet;
 import org.hyperledger.indy.sdk.did.Did;
 import org.hyperledger.indy.sdk.did.DidResults;
@@ -36,6 +34,7 @@ public class PoolRestartRequestTest extends IndyIntegrationTestWithPoolAndSingle
     }
 
     @Test
+    @Ignore
     public void testPoolRestartRequestWorks() throws Exception {
         int nextYear = Calendar.getInstance().get(Calendar.YEAR) + 1;
 
@@ -45,12 +44,10 @@ public class PoolRestartRequestTest extends IndyIntegrationTestWithPoolAndSingle
         //start
         String datetime = String.format("\"%s-01-25T12:49:05.258870+00:00\"", nextYear);
         String request = Ledger.buildPoolRestartRequest(did, "start", datetime).get();
-        Log.d("Indy Test Log", request);
         Ledger.signAndSubmitRequest(pool, wallet, did, request).get();
 
         //cancel
         request = Ledger.buildPoolRestartRequest(did, "cancel", null).get();
-        Log.d("Indy Test Log", request);
         Ledger.signAndSubmitRequest(pool, wallet, did, request).get();
     }
 }
