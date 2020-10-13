@@ -33,6 +33,17 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig false
+        aidl false
+        renderScript false
+        resValues false
+        shaders false
+        // The rest are off by defaults
+    }
+
+    // TODO R8 obfuscation configuration
+
 }
 
 afterEvaluate {
