@@ -12,8 +12,7 @@ import static org.junit.Assert.assertTrue;
 
 public class CreatePoolTest extends IndyIntegrationTest {
 
-	// TODO this will always fail as Android does not allow to write in root directory.
-	@Test @Ignore
+	@Test @Ignore("Null config writes vault file to root of filesystem, which is not possible on Android.")
 	public void testCreatePoolWorksForNullConfig() throws Exception {
 		File file = new File("testCreatePoolWorks.txn");
 		file.deleteOnExit();
