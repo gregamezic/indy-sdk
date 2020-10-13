@@ -40,12 +40,13 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'id.global.sdk.android'
+                groupId = 'org.hyperledger.android'
                 artifactId = 'indy'
-                version = '0.2.0'
+                version = '1.0.0'
             }
         }
 
+        // TODO update for hyperledger deploy
         repositories {
             maven {
                 name = "GitHubPackages"
@@ -68,9 +69,6 @@ repositories {
 }
 
 dependencies {
-    implementation('com.github.bright:slf4android:0.1.6') {
-        transitive = true
-    }
     api("org.slf4j:slf4j-api:1.7.30")
     api("net.java.dev.jna:jna:5.6.0@aar")
     api("org.apache.commons:commons-lang3:3.11")
@@ -78,6 +76,9 @@ dependencies {
         because("We want to support api level 21.")
     }
 
+    androidTestImplementation('com.github.bright:slf4android:0.1.6') {
+        transitive = true
+    }
     androidTestImplementation("junit:junit:4.13.1")
     androidTestImplementation("androidx.test:runner:1.3.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.2")

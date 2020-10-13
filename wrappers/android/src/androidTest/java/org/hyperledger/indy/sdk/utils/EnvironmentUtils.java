@@ -4,9 +4,10 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 public class EnvironmentUtils {
     static String getTestPoolIP() {
+        // TODO this is not as usefull on android. Could be configured through buildConfigField
+        //  on test apk. DSL does not allow that at the moment.
         String testPoolIp = System.getenv("TEST_POOL_IP");
         return testPoolIp != null ? testPoolIp : "10.0.0.2";
-//        return "10.100.0.27";
     }
 
     public static String getIndyHomePath() {
