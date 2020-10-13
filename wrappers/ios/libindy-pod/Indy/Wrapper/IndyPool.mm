@@ -2,8 +2,7 @@
 #import "IndyCallbacks.h"
 #import "IndyPool.h"
 #import "indy_core.h"
-#import "NSError+IndyError.h"
-#import "indy_mod.h"
+#import "NSError+IndyError.h"#import "indy_mod.h"
 
 @implementation IndyPool
 
