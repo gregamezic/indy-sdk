@@ -40,7 +40,7 @@ public class AndroidInitHelper {
 
     // TODO remove
     static class Test {
-        private static Callback call = new Callback() {
+        private static final Callback call = new Callback() {
 
             public void callback(Pointer context, int level, String target, String message,
                     String module_path, String file, int line) {
