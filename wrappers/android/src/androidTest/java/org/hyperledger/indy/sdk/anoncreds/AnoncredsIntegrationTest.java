@@ -1,8 +1,8 @@
 package org.hyperledger.indy.sdk.anoncreds;
 
-import org.hyperledger.indy.sdk.utils.AndroidInitHelper;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.IssuerCreateAndStoreCredentialDefResult;
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults.ProverCreateCredentialRequestResult;
+import org.hyperledger.indy.sdk.utils.AndroidInitHelper;
 import org.hyperledger.indy.sdk.utils.StorageUtils;
 import org.hyperledger.indy.sdk.wallet.Wallet;
 import org.json.JSONException;
@@ -11,13 +11,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.Timeout;
-import org.junit.runner.RunWith;
 
 import java.util.concurrent.TimeUnit;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
-@RunWith(AndroidJUnit4.class)
 public class AnoncredsIntegrationTest {
 
 	@Rule

@@ -13,19 +13,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.Timeout;
-import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import static org.hyperledger.indy.sdk.utils.EnvironmentUtils.getIndyHomePath;
 import static org.hyperledger.indy.sdk.utils.EnvironmentUtils.getTmpPath;
 
-@RunWith(AndroidJUnit4.class)
 public class IndyIntegrationTest {
 
 	protected static final String TRUSTEE_SEED = "000000000000000000000000Trustee1";

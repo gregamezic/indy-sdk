@@ -20,18 +20,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.Iterator;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import static org.junit.Assert.assertFalse;
 
-@RunWith(AndroidJUnit4.class)
 public class AnoncredsVerifyProofAfterCredentialRevokeTest extends IndyIntegrationTestWithPoolAndSingleWallet {
 	// This test is a copy of a project attached to IS-1368. We omitted pool and wallet preparation.
 
