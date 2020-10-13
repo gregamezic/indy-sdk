@@ -127,9 +127,9 @@ public class AuthRuleRequestsTest extends IndyIntegrationTest {
 
 		String request = Ledger.buildAuthRulesRequest(DID, data.toString()).get();
 
-		Log.d("Indy-Test-Logs", "test_debug_separator");
-		Log.d("Indy Test Logs", request);
-		Log.d("Indy Test Logs", expectedResult.toString());
+		Log.v("Indy-Test-Logs", "test_debug_separator");
+		Log.v("Indy Test Logs", request);
+		Log.v("Indy Test Logs", expectedResult.toString());
 
 		assert (JsonTestUtils.toJsonMap(request).entrySet()
 				.containsAll(
