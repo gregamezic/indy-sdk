@@ -19,11 +19,11 @@ import static com.sun.jna.Native.detach;
 public class AndroidInitHelper {
 
     public static void init() throws ErrnoException {
-        Logger logger = LoggerFactory.getLogger("org.hyperledger.indy.sdk.LibIndy.native");
-
         LoggerConfiguration.configuration()
+                .setRootLogLevel(LogLevel.TRACE)
                 .setLogLevel("org.hyperledger.indy.sdk.LibIndy.native", LogLevel.TRACE);
 
+        Logger logger = LoggerFactory.getLogger("org.hyperledger.indy.sdk.LibIndy.native");
         logger.debug("Test log implementation");
 
         // TODO should this be set as part of init?
