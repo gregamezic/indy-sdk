@@ -1,5 +1,7 @@
 package org.hyperledger.indy.sdk.ledger;
 
+import android.util.Log;
+
 import org.hyperledger.indy.sdk.IndyIntegrationTest;
 import org.hyperledger.indy.sdk.JsonTestUtils;
 import org.json.JSONException;
@@ -124,6 +126,9 @@ public class AuthRuleRequestsTest extends IndyIntegrationTest {
 				);
 
 		String request = Ledger.buildAuthRulesRequest(DID, data.toString()).get();
+
+		Log.d("Indy Test Logs", request);
+		Log.d("Indy Test Logs", expectedResult.toString());
 
 		assert (JsonTestUtils.toJsonMap(request).entrySet()
 				.containsAll(
