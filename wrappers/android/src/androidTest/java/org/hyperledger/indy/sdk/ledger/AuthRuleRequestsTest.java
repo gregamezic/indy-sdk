@@ -133,7 +133,7 @@ public class AuthRuleRequestsTest extends IndyIntegrationTestWithPoolAndSingleWa
 				.put("reqId", "id")
 				.put("protocolVersion", 2);
 
-		PoolUtils.createAndOpenPoolLedger();
+		PoolUtils.deletePoolLedgerConfig();
 		String request = Ledger.buildAuthRulesRequest(DID, data.toString()).get();
 
 		Log.v("Indy-Test-Logs", "test_debug_separator");
