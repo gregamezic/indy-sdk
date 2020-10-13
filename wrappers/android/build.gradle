@@ -18,7 +18,6 @@ android {
         }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
     compileOptions {
@@ -32,10 +31,6 @@ android {
         cmake {
             path "CMakeLists.txt"
         }
-    }
-
-    testOptions {
-        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
 }
@@ -92,6 +87,4 @@ dependencies {
     androidTestImplementation("org.bouncycastle:bcprov-jdk15to18:1.66") {
         because("Old version include QTeslaKeyEncodingTests that is picked up by android test runner and executed.")
     }
-
-    androidTestUtil 'androidx.test:orchestrator:1.3.0'
 }
