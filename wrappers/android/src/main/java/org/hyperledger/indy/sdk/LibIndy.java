@@ -1,11 +1,17 @@
 package org.hyperledger.indy.sdk;
 
+import com.sun.jna.Callback;
+import com.sun.jna.DefaultTypeMapper;
+import com.sun.jna.Library;
+import com.sun.jna.Native;
+import com.sun.jna.NativeLibrary;
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.PointerByReference;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.jna.*;
-import com.sun.jna.ptr.PointerByReference;
 import static com.sun.jna.Native.detach;
 
 public abstract class LibIndy {
@@ -332,7 +338,8 @@ public abstract class LibIndy {
 		} else { // Off
 			logLevel = 0;
 		}
-		api.indy_set_logger_with_max_lvl(null, Logger.enabled, Logger.log, Logger.flush, logLevel);
+		api.indy_set_logger(null, Logger.enabled, Logger.log, Logger.flush);
+		api.indy_set_log_max_lvl(logLevel); // TODO this does not appear to be working
 	}
 
 	/**
