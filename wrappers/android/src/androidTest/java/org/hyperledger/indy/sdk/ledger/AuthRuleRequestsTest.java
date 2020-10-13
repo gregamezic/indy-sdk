@@ -4,12 +4,17 @@ import android.util.Log;
 
 import org.hyperledger.indy.sdk.IndyIntegrationTest;
 import org.hyperledger.indy.sdk.JsonTestUtils;
+import org.hyperledger.indy.sdk.utils.PoolUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+@RunWith(AndroidJUnit4.class)
 public class AuthRuleRequestsTest extends IndyIntegrationTest {
 
 	private String txnType = "NYM";
@@ -123,8 +128,12 @@ public class AuthRuleRequestsTest extends IndyIntegrationTest {
 						new JSONObject()
 								.put("type", "122")
 								.put("rules", data)
-				);
+				)
+				// TODO are bottom 2 fields expected?
+				.put("reqId", "id")
+				.put("protocolVersion", 2);
 
+		PoolUtils.createAndOpenPoolLedger();
 		String request = Ledger.buildAuthRulesRequest(DID, data.toString()).get();
 
 		Log.v("Indy-Test-Logs", "test_debug_separator");
