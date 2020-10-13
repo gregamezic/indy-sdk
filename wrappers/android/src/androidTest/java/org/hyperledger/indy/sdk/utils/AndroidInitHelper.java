@@ -24,6 +24,8 @@ public class AndroidInitHelper {
         LoggerConfiguration.configuration()
                 .setLogLevel("org.hyperledger.indy.sdk.LibIndy.native", LogLevel.TRACE);
 
+        logger.debug("Test log implementation");
+
         // TODO should this be set as part of init?
         Os.setenv("EXTERNAL_STORAGE", EnvironmentUtils.getIndyHomePath(), true);
         Os.setenv("TMPDIR", EnvironmentUtils.getTmpPath(), true);
