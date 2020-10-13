@@ -3,6 +3,7 @@ package org.hyperledger.indy.sdk.ledger;
 import org.hyperledger.indy.sdk.IndyIntegrationTestWithPoolAndSingleWallet;
 import org.hyperledger.indy.sdk.did.Did;
 import org.hyperledger.indy.sdk.did.DidResults;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Calendar;
