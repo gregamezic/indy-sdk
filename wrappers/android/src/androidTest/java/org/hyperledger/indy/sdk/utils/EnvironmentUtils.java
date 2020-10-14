@@ -11,7 +11,7 @@ public class EnvironmentUtils {
     }
 
     public static String getIndyHomePath() {
-        return InstrumentationRegistry.getInstrumentation().getContext().getCacheDir().getAbsolutePath() + "/indy_client/";
+        return InstrumentationRegistry.getInstrumentation().getContext().getFilesDir().getAbsolutePath() + "/indy_client/";
     }
 
     public static String getIndyHomePath(String filename) {

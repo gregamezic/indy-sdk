@@ -64,7 +64,7 @@ pipeline {
                                                                     sh "wait-for-emulator"
                                                                     // connected check cannot run in parallel.
                                                                     try {
-                                                                        sh "./gradlew  connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=org.hyperledger.indy.sdk.ledger.AuthRuleRequestsTest#testBuildAuthRulesRequestWorks --console=verbose --no-daemon -Pandroid.builder.sdkDownload=false"
+                                                                        sh "./gradlew  connectedAndroidTest --console=verbose --no-daemon -Pandroid.builder.sdkDownload=false"
                                                                     } finally {
                                                                         sh "adb logcat -d"
                                                                     }
