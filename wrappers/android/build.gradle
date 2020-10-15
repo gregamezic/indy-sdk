@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("maven-publish")
+    id("de.undercouch.download")
 }
 
 android {
@@ -26,12 +27,6 @@ android {
     }
 
     ndkVersion = "21.3.6528147"
-
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
-        }
-    }
 
     buildFeatures {
         buildConfig false
@@ -98,5 +93,61 @@ dependencies {
     androidTestImplementation("com.google.code.gson:gson:2.8.6")
     androidTestImplementation("org.bouncycastle:bcprov-jdk15to18:1.66") {
         because("Old versions include QTeslaKeyEncodingTests that is picked up by android test runner and executed.")
+    }
+}
+
+// TODO: move to buildSrc
+project.afterEvaluate {
+    def indyVersion = project.getProperty("indy.version")
+    def archs = [
+            [arch: "x86", urlArch: "x86"],
+            [arch: "x86_64", urlArch: "x86_64"],
+            [arch: "armeabi-v7a", urlArch: "armv7"],
+            [arch: "arm64-v8a", urlArch: "arm64"]]
+    def rootDownloadPath = project.hasProperty("externalDepsDownloadPath")
+            ? new File(project.getProperty("externalDepsDownloadPath"))
+            : new File(buildDir, "externalDeps")
+    def cacheEtagFile = new File(rootDownloadPath, "etag.json")
+
+    android.libraryVariants.forEach { variant ->
+
+        archs.forEach { a ->
+            def downloadTask = tasks.register("downloadNativeDeps${variant.name.capitalize()}-${a.arch}", Download) {
+                src "https://repo.sovrin.org/android/libindy/stable/${indyVersion}/libindy_android_${a.urlArch}_${indyVersion}.zip"
+                dest new File(rootDownloadPath, "/archive/${variant.name}/${a.arch}/indy${indyVersion}.zip")
+                onlyIfModified true
+                useETag true
+                cachedETagsFile cacheEtagFile
+            }
+
+            def extractDir = new File(rootDownloadPath, "/extracted/")
+            // TODO use configuration avoidance!
+            def extractTask = tasks.register("extractNativeDeps${variant.name.capitalize()}-${a.arch}", Copy) {
+                from zipTree(downloadTask.get().dest)
+                into extractDir
+                dependsOn downloadTask
+            }
+
+            // TODO: Migrate to JNI so we don't have to include libc++_shared.so in the library as it may cause issue for consumers.
+            //  https://android.googlesource.com/platform/ndk/+/refs/heads/master/docs/user/middleware_vendors.md#for-java-middleware-with-jni-libraries
+            def copyStdTask = tasks.register("copyStdLib${variant.name.capitalize()}-${a.arch}", Copy) {
+                from new File("${android.ndkDirectory}/sources/cxx-stl/llvm-libc++/libs/${a.arch}/libc++_shared.so")
+                into new File(rootDir, "/src/main/jniLibs/${a.arch}")
+                dependsOn extractTask
+            }
+
+            // TODO use configuration avoidance!
+            def copyTask = tasks.register("copyNativeDeps${variant.name.capitalize()}-${a.arch}", Copy) {
+                from new File(extractDir, "libindy_${a.urlArch}/lib/libindy.so")
+                into new File(rootDir, "/src/main/jniLibs/${a.arch}")
+//                rename { "libindy.so" }
+                dependsOn extractTask
+                dependsOn copyStdTask
+            }
+
+            variant.getPreBuildProvider().configure {
+                dependsOn(copyTask)
+            }
+        }
     }
 }
