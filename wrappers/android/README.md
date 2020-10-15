@@ -7,7 +7,7 @@ Pull requests welcome!
 ### How to install
 1. Add maven repository
     maven {
-        url = "https://repo.sovrin.org/repository/maven-public"
+        url "https://repo.sovrin.org/repository/maven-public"
     }
 
 2. Add dependency
@@ -18,15 +18,12 @@ Note that before you can use java wrapper you must install  c-callable SDK.
 See the section "Installing the SDK" in the [Indy SDK documentation](../../README.md#installing-the-sdk)
 ### How to build
 
-First, build the native "indy" library at https://github.com/hyperledger/indy-sdk:
-
-	cargo build
-
-Then copy the resulting `libindy.so` to `./lib/`.
-
-Then run
+Then run:
 
     ./gradlew assambleDebug
+
+_Note that this will download libindy from https://repo.sovrin.org/android/libindy/stable_
+_Version of libindy is defined in `indy.version` in `gradle.properties` file_
 
 ### Example use
 For the main workflow examples check test folder: https://github.com/hyperledger/indy-sdk/tree/master/wrappers/android/src/androidTest/java/org/hyperledger/indy/sdk
