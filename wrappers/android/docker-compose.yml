@@ -1,0 +1,45 @@
+version: '3'
+services:
+  pool:
+    container_name: pool
+    build:
+      context: ../../ci/
+      dockerfile: indy-pool.dockerfile
+      args: 
+        pool_ip: 10.0.0.2
+    ports:
+      - "8554:8554"
+      - "5555:5555"
+    networks:
+      pool_network:
+        ipv4_address: 10.0.0.2
+  emulator:
+    container_name: emulator
+    image: "us-docker.pkg.dev/android-emulator-268719/images/30-google-x64:30.1.2"
+    environment:
+      - EMULATOR_PARAMS="-no-accel"
+    networks:
+      pool_network:
+        ipv4_address: 10.0.0.3
+#    logging:
+#      driver: none
+  sdk:
+    container_name: sdk
+    image: "kaminomobile/android-platform-30:1"
+    user: jenkins
+    working_dir: /home/jenkins/worspace
+    volumes: 
+      - ./:/home/jenkins/worspace
+    environment:
+      - EMULATOR_PARAMS="-no-accel"
+    networks:
+      pool_network:
+        ipv4_address: 10.0.0.4
+    command: ./ci_build.sh
+
+networks:
+    pool_network:
+        ipam:
+            driver: default
+            config:
+                - subnet: 10.0.0.0/8

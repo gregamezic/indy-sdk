@@ -1,0 +1,15 @@
+name: android-integration
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkou
+        uses: actions/checkout@master
+      - name: Test
+        run: docker-compose up --exit-code-from sdk
+
+defaults:
+  run:
+    working-directory: wrappers/android

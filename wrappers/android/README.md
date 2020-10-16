@@ -22,8 +22,8 @@ Then run:
 
     ./gradlew assambleDebug
 
-_Note that this will download libindy from https://repo.sovrin.org/android/libindy/stable_
-_Version of libindy is defined in `indy.version` in `gradle.properties` file_
+_Note that this will download libindy from https://repo.sovrin.org/android/libindy/stable._
+_Version of libindy is defined in `indy.version` in `gradle.properties` file._
 
 ### Example use
 For the main workflow examples check test folder: https://github.com/hyperledger/indy-sdk/tree/master/wrappers/android/src/androidTest/java/org/hyperledger/indy/sdk
