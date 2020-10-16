@@ -10,7 +10,7 @@ echo "Wait for boot"
 while [ "`adb shell getprop sys.boot_completed | tr -d '\r' `" != "1" ] ;
 do
   adb devices
-  echo "Still waiting for boot.."
+  echo "Wait for boot..."
   sleep 1;
 done
 

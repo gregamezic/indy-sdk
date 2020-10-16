@@ -21,8 +21,12 @@ services:
     networks:
       pool_network:
         ipv4_address: 10.0.0.3
-#    logging:
-#      driver: none
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+        reservations:
+          memory: 3G
   sdk:
     container_name: sdk
     image: "kaminomobile/android-platform-30:1"
