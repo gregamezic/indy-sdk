@@ -1,5 +1,5 @@
 #!/bin/bash
-# sleep 10 && adb connect 10.0.0.3:5555
+sleep 10 && adb connect 10.0.0.3:5555
 
 #!/bin/bash
 echo "Wait for emulator"
