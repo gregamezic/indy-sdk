@@ -1,5 +1,7 @@
 package org.hyperledger.indy.sdk.demos;
 
+import android.content.Context;
+
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults;
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq;
 import org.hyperledger.indy.sdk.pool.Pool;
@@ -14,7 +16,7 @@ import static org.junit.Assert.*;
 
 public class Anoncreds {
 
-    public static void demo() throws Exception {
+    public static void demo(Context context) throws Exception {
         System.out.println("Anoncreds sample -> started");
 
         String issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
@@ -24,7 +26,7 @@ public class Anoncreds {
         Pool.setProtocolVersion(PROTOCOL_VERSION).get();
 
         //1. Create and Open Pool
-        String poolName = PoolUtils.createPoolLedgerConfig();
+        String poolName = PoolUtils.createPoolLedgerConfig(context);
         Pool pool = Pool.openPoolLedger(poolName, "{}").get();
 
         //2. Issuer Create and Open Wallet

@@ -1,5 +1,8 @@
 package org.hyperledger.indy.sdk.utils;
 
+import android.content.Context;
+import android.util.Log;
+
 import org.apache.commons.io.FileUtils;
 import org.hyperledger.indy.sdk.IndyException;
 import org.hyperledger.indy.sdk.pool.Pool;
@@ -13,10 +16,11 @@ public class PoolUtils {
 
 	private static final String DEFAULT_POOL_NAME = "default_pool";
 	public static final int PROTOCOL_VERSION = 2;
+	private static final String TAG = PoolUtils.class.getName();
 
 
-	private static File createGenesisTxnFile(String filename) throws IOException {
-		String path = EnvironmentUtils.getTmpPath(filename);
+	private static File createGenesisTxnFile(String filename, Context context) throws IOException {
+		String path = EnvironmentUtils.getTmpPath(filename, context);
 		//String testPoolIp = EnvironmentUtils.getTestPoolIP();
 
 		/*String[] defaultTxns = new String[] {
@@ -46,8 +50,11 @@ public class PoolUtils {
 		return file;
 	}
 
-	public static String createPoolLedgerConfig() throws IOException, InterruptedException, java.util.concurrent.ExecutionException, IndyException {
-		File genesisTxnFile = createGenesisTxnFile("temp.txn");
+	public static String createPoolLedgerConfig(Context context) throws IOException, InterruptedException, java.util.concurrent.ExecutionException, IndyException {
+		File genesisTxnFile = createGenesisTxnFile("temp.txn", context);
+
+		Log.d(TAG, "createPoolLedgerConfig: " + genesisTxnFile.getAbsolutePath());
+
 		PoolJSONParameters.CreatePoolLedgerConfigJSONParameter createPoolLedgerConfigJSONParameter
 				= new PoolJSONParameters.CreatePoolLedgerConfigJSONParameter(genesisTxnFile.getAbsolutePath());
 		Pool.createPoolLedgerConfig(DEFAULT_POOL_NAME, createPoolLedgerConfigJSONParameter.toJson()).get();

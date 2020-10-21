@@ -25,9 +25,10 @@ class App : Application() {
         LoggerConfiguration.configuration()
             .setRootLogLevel(LogLevel.TRACE)
 
+
         // TODO should this be set as part of init?
-        Os.setenv("EXTERNAL_STORAGE", EnvironmentUtils.getIndyHomePath(), true)
-        Os.setenv("TMPDIR", EnvironmentUtils.getTmpPath(), true)
+        Os.setenv("EXTERNAL_STORAGE", EnvironmentUtils.getIndyHomePath(baseContext), true)
+        Os.setenv("TMPDIR", EnvironmentUtils.getTmpPath(baseContext), true)
         if (!LibIndy.isInitialized()) {
             LibIndy.init()
         }

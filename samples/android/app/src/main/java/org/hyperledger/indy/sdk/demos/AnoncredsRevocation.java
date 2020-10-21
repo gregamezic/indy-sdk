@@ -1,5 +1,7 @@
 package org.hyperledger.indy.sdk.demos;
 
+import android.content.Context;
+
 import org.hyperledger.indy.sdk.anoncreds.*;
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds;
 import org.hyperledger.indy.sdk.blob_storage.BlobStorageReader;
@@ -16,7 +18,7 @@ import static org.junit.Assert.*;
 
 public class AnoncredsRevocation {
 
-    public static void demo() throws Exception {
+    public static void demo(Context context) throws Exception {
         System.out.println("Anoncreds Revocation sample -> started");
 
         String issuerDid = "NcYxiDXkpYi6ov5FcYDi1e";
@@ -26,7 +28,7 @@ public class AnoncredsRevocation {
         Pool.setProtocolVersion(PROTOCOL_VERSION).get();
 
         //1. Create and Open Pool
-        String poolName = PoolUtils.createPoolLedgerConfig();
+        String poolName = PoolUtils.createPoolLedgerConfig(context);
         Pool pool = Pool.openPoolLedger(poolName, "{}").get();
 
         //2. Issuer Create and Open Wallet
@@ -64,7 +66,7 @@ public class AnoncredsRevocation {
                 .put("max_cred_num", 5)
                 .toString();
         String tailsWriterConfig = new JSONObject()
-                .put("base_dir", getIndyHomePath("tails").replace('\\', '/'))
+                .put("base_dir", getIndyHomePath("tails", context).replace('\\', '/'))
                 .put("uri_pattern", "")
                 .toString();
         BlobStorageWriter tailsWriter = BlobStorageWriter.openWriter("default", tailsWriterConfig).get();

@@ -46,6 +46,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation files('libs/libindy-android-debug.aar')
     implementation "androidx.constraintlayout:constraintlayout:2.0.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9"
 
 
     // java

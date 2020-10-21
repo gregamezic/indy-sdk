@@ -1,5 +1,7 @@
 package org.hyperledger.indy.sdk.demos;
 
+import android.content.Context;
+
 import org.hyperledger.indy.sdk.pool.Pool;
 import org.hyperledger.indy.sdk.did.Did;
 import org.hyperledger.indy.sdk.did.DidJSONParameters;
@@ -15,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 public class Ledger {
 
-    public static void demo() throws Exception {
+    public static void demo(Context context) throws Exception {
         System.out.println("Ledger sample -> started");
 
         String trusteeSeed = "000000000000000000000000Trustee1";
@@ -24,7 +26,7 @@ public class Ledger {
         Pool.setProtocolVersion(PROTOCOL_VERSION).get();
 
         // 1. Create ledger config from genesis txn file
-        String poolName = PoolUtils.createPoolLedgerConfig();
+        String poolName = PoolUtils.createPoolLedgerConfig(context);
         Pool pool = Pool.openPoolLedger(poolName, "{}").get();
 
         // 2. Create and Open My Wallet

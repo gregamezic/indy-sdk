@@ -1,5 +1,7 @@
 package org.hyperledger.indy.sdk.demos;
 
+import android.content.Context;
+
 import org.hyperledger.indy.sdk.anoncreds.AnoncredsResults;
 import org.hyperledger.indy.sdk.pool.Pool;
 import org.hyperledger.indy.sdk.utils.PoolUtils;
@@ -19,7 +21,7 @@ import static org.hyperledger.indy.sdk.anoncreds.Anoncreds.issuerCreateSchema;
 import static org.junit.Assert.assertEquals;
 
 public class Endorser {
-    public static void demo() throws Exception {
+    public static void demo(Context context) throws Exception {
 
         System.out.println("Endorser sample -> started");
         String trusteeSeed = "000000000000000000000000Trustee1";
@@ -28,7 +30,7 @@ public class Endorser {
         Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get();
 
         // 1. Create and Open Pool
-        String poolName = PoolUtils.createPoolLedgerConfig();
+        String poolName = PoolUtils.createPoolLedgerConfig(context);
         Pool pool = Pool.openPoolLedger(poolName, "{}").get();
 
         // 2. Create and Open Author Wallet

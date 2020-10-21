@@ -1,5 +1,7 @@
 package org.hyperledger.indy.sdk.demos;
 
+import android.content.Context;
+
 import org.hyperledger.indy.sdk.pool.Pool;
 import org.hyperledger.indy.sdk.did.DidResults.CreateAndStoreMyDidResult;
 import org.hyperledger.indy.sdk.crypto.CryptoResults.AuthDecryptResult;
@@ -15,14 +17,14 @@ import static org.hyperledger.indy.sdk.utils.PoolUtils.PROTOCOL_VERSION;
 
 public class Crypto {
 
-    public static void demo() throws Exception {
+    public static void demo(Context context) throws Exception {
         System.out.println("Crypto sample -> started");
 
         // Set protocol version 2 to work with Indy Node 1.4
         Pool.setProtocolVersion(PROTOCOL_VERSION).get();
 
         // 1. Create and Open Pool
-        String poolName = PoolUtils.createPoolLedgerConfig();
+        String poolName = PoolUtils.createPoolLedgerConfig(context);
         Pool pool = Pool.openPoolLedger(poolName, "{}").get();
 
         // 2. Create and Open My Wallet
