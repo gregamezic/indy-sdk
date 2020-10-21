@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="16dp"
+    tools:context=".ui.MainActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/indy_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+
+    <Button
+        android:id="@+id/btnAnoncreds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivLogo"
+        android:background="@drawable/button_click_selector"
+        app:backgroundTint="@null"
+        android:layout_marginTop="16dp"
+        android:text="@string/anoncreds"/>
+
+
+
+    <Button
+        android:id="@+id/btnAnoncredsRevocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAnoncreds"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_click_selector"
+        app:backgroundTint="@null"
+        android:text="@string/anoncreds_revocation"/>
+
+    <Button
+        android:id="@+id/btnCrypto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAnoncredsRevocation"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_click_selector"
+        app:backgroundTint="@null"
+        android:text="@string/crypto"/>
+
+    <Button
+        android:id="@+id/btnEndorser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCrypto"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_click_selector"
+        app:backgroundTint="@null"
+        android:text="@string/endorser"/>
+
+    <Button
+        android:id="@+id/btnLedger"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnEndorser"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_click_selector"
+        app:backgroundTint="@null"
+        android:text="@string/ledger"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

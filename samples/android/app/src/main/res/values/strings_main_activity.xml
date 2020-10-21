@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="anoncreds">Anoncreds</string>
+    <string name="anoncreds_revocation">Anoncreds Revocation</string>
+    <string name="crypto">Crypto</string>
+    <string name="endorser">Endorser</string>
+    <string name="ledger">Ledger</string>
+</resources>
