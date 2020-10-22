@@ -3,6 +3,7 @@ package org.hyperledger.indy.sdk.ui.crypto
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.crypto.Crypto
 import org.hyperledger.indy.sdk.did.Did
@@ -17,6 +18,23 @@ class CryptoActivity : AppCompatActivity() {
 
     private val TAG = CryptoActivity::class.java.name
 
+
+
+    // my vars
+    private lateinit var myWallet: Wallet
+    private lateinit var theirWallet: Wallet
+    private lateinit var myVerkey: String
+    private lateinit var theirVerkey: String
+    private lateinit var  encryptedMessage: ByteArray
+    private lateinit var  msg: String
+    private lateinit var  myWalletConfig: String
+    private lateinit var  myWalletCredentials: String
+    private lateinit var  theirWalletConfig: String
+    private lateinit var  theirWalletCredentials: String
+    private lateinit var  poolName: String
+    private lateinit var  pool: Pool
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crypto)
@@ -24,84 +42,143 @@ class CryptoActivity : AppCompatActivity() {
         startDemo()
     }
 
+
+    /**
+     * startDemo function start all functions for Crypto Revocation demo chronological in coroutine default thread
+     */
     private fun startDemo() {
+        MainScope().launch {
+            Log.d(TAG, "startDemo: Crypto sample -> STARTED!")
 
-        Log.d(TAG, "startDemo: Crypto sample -> STARTED!")
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                createOpenPool()
+            }
 
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                createOpenMyWallet()
+            }
 
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                createOpenTheirWallet()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                createMyDID()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                createTheirDID()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                theirAuthEncryptMessage()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                iDecryptMessage()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                closeDeleteMyWallet()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                closeDeleteTheirWallet()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                closePool()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                deletePoolLedgerConfig()
+            }
+
+            Log.d(TAG, "startDemo: Crypto sample -> COMPLETED!")
+        }
+    }
+
+    private suspend fun createOpenPool() {
         // Set protocol version 2 to work with Indy Node 1.4
         Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get()
 
 
         // 1. Create and Open Pool
-        val poolName = PoolUtils.createPoolLedgerConfig(baseContext)
-        val pool = Pool.openPoolLedger(poolName, "{}").get()
+        poolName = PoolUtils.createPoolLedgerConfig(baseContext)
+        pool = Pool.openPoolLedger(poolName, "{}").get()
+    }
 
-
+    private suspend fun createOpenMyWallet() {
         // 2. Create and Open My Wallet
-        val myWalletConfig = JSONObject().put("id", "myWallet").toString()
-        val myWalletCredentials = JSONObject().put("key", "my_wallet_key").toString()
+        myWalletConfig = JSONObject().put("id", "myWallet").toString()
+        myWalletCredentials = JSONObject().put("key", "my_wallet_key").toString()
         Wallet.createWallet(myWalletConfig, myWalletCredentials).get()
-        val myWallet = Wallet.openWallet(myWalletConfig, myWalletCredentials).get()
+        myWallet = Wallet.openWallet(myWalletConfig, myWalletCredentials).get()
+    }
 
-
+    private suspend fun createOpenTheirWallet() {
         // 3. Create and Open Their Wallet
-        val theirWalletConfig = JSONObject().put("id", "theirWallet").toString()
-        val theirWalletCredentials = JSONObject().put("key", "their_wallet_key").toString()
+        theirWalletConfig = JSONObject().put("id", "theirWallet").toString()
+        theirWalletCredentials = JSONObject().put("key", "their_wallet_key").toString()
         Wallet.createWallet(theirWalletConfig, theirWalletCredentials).get()
-        val theirWallet = Wallet.openWallet(theirWalletConfig, theirWalletCredentials).get()
+        theirWallet = Wallet.openWallet(theirWalletConfig, theirWalletCredentials).get()
+    }
 
-
+    private suspend fun createMyDID() {
         // 4. Create My Did
         val myDid = Did.createAndStoreMyDid(myWallet, "{}").get()
-        val myVerkey = myDid.verkey
+        myVerkey = myDid.verkey
+    }
 
-
+    private suspend fun createTheirDID() {
         // 5. Create Their Did
         val createTheirDidResult = Did.createAndStoreMyDid(theirWallet, "{}").get()
-        val theirVerkey = createTheirDidResult.verkey
+        theirVerkey = createTheirDidResult.verkey
+    }
 
-
+    private suspend fun theirAuthEncryptMessage() {
         // 6. Their auth encrypt message
-        val msg = JSONObject()
-            .put("reqId", "1495034346617224651")
-            .put("identifier", "GJ1SzoWzavQYfNL9XkaJdrQejfztN4XqdsiV4ct3LXKL")
-            .put(
-                "operation", JSONObject()
-                    .put("type", "1")
-                    .put("dest", "4efZu2SXufS556yss7W5k6Po37jt4371RM4whbPKBKdB")
-            )
-            .toString()
+        msg = JSONObject()
+                .put("reqId", "1495034346617224651")
+                .put("identifier", "GJ1SzoWzavQYfNL9XkaJdrQejfztN4XqdsiV4ct3LXKL")
+                .put(
+                        "operation", JSONObject()
+                        .put("type", "1")
+                        .put("dest", "4efZu2SXufS556yss7W5k6Po37jt4371RM4whbPKBKdB")
+                )
+                .toString()
 
-        val encryptedMessage =
-            Crypto.authCrypt(theirWallet, theirVerkey, myVerkey, msg.toByteArray()).get()
+        encryptedMessage =
+                Crypto.authCrypt(theirWallet, theirVerkey, myVerkey, msg.toByteArray()).get()
+    }
 
-
+    private suspend fun iDecryptMessage() {
         // 7. I decrypt message
         val authDecryptResult = Crypto.authDecrypt(myWallet, myVerkey, encryptedMessage).get()
 
         Assert.assertTrue(Arrays.equals(msg.toByteArray(), authDecryptResult.decryptedMessage))
         Assert.assertEquals(theirVerkey, authDecryptResult.verkey)
+    }
 
-        // 8. Close and delete My Wallet
-
+    private suspend fun closeDeleteMyWallet() {
         // 8. Close and delete My Wallet
         myWallet.closeWallet().get()
         Wallet.deleteWallet(myWalletConfig, myWalletCredentials).get()
+    }
 
-
+    private suspend fun closeDeleteTheirWallet() {
         // 9. Close and delete Their Wallet
         theirWallet.closeWallet().get()
         Wallet.deleteWallet(theirWalletConfig, theirWalletCredentials).get()
+    }
 
-
+    private suspend fun closePool() {
         // 10. Close Pool
         pool.closePoolLedger().get()
+    }
 
-
+    private suspend fun deletePoolLedgerConfig() {
         // 11. Delete Pool ledger config
         Pool.deletePoolLedgerConfig(poolName).get()
-
-        Log.d(TAG, "startDemo: Crypto sample -> COMPLETED!")
     }
 }

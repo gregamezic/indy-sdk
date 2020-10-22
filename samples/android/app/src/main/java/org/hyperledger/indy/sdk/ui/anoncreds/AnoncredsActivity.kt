@@ -1,11 +1,11 @@
 package org.hyperledger.indy.sdk.ui.anoncreds
 
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.android.synthetic.main.activity_anoncreds.*
+import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq
 import org.hyperledger.indy.sdk.pool.Pool
@@ -19,45 +19,245 @@ class AnoncredsActivity : AppCompatActivity() {
 
     private val TAG = AnoncredsActivity::class.java.name
 
+    private val issuerDid = "NcYxiDXkpYi6ov5FcYDi1e"
+    private val proverDid = "VsKV7grR1BUE29mG2Fm2kX"
+    private lateinit var issuerWallet : Wallet
+    private lateinit var schemaJson : String
+    private lateinit var proverWallet : Wallet
+    private lateinit var credDefId : String
+    private lateinit var credOffer : String
+    private lateinit var credDefJson : String
+    private lateinit var masterSecretId : String
+    private lateinit var credReqJson : String
+    private lateinit var credReqMetadataJson : String
+    private lateinit var credential : String
+    private lateinit var credentialIdForAttribute1 : String
+    private lateinit var credentialIdForAttribute2 : String
+    private lateinit var credentialIdForPredicate : String
+    private lateinit var schemaId : String
+    private lateinit var proofRequestJson : String
+    private lateinit var proof : JSONObject
+    private lateinit var selfAttestedValue : String
+    private lateinit var proofJson : String
+    private lateinit var schemas : String
+    private lateinit var credentialDefs : String
+    private lateinit var issuerWalletConfig : String
+    private lateinit var issuerWalletCredentials : String
+    private lateinit var proverWalletConfig : String
+    private lateinit var proverWalletCredentials : String
+    private lateinit var pool : Pool
+    private lateinit var poolName : String
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_anoncreds)
 
-        GlobalScope.async {
-            startDemo()
+
+        startDemo()
+    }
+
+
+    private fun updateUI(text: String) {
+        tvAnoncredsLogs.text = "${tvAnoncredsLogs.text}$text"
+    }
+
+    private fun updateHeader(text: String) {
+        progressbar.visibility = View.VISIBLE
+        tvAnoncredsStart.text = text
+    }
+
+
+    private fun updateFooter(text: String) {
+        progressbar.visibility = View.GONE
+        tvAnoncredsEnd.text = text
+    }
+
+
+    /**
+     * startDemo function start all functions for Anoncreds demo chronological in coroutine default thread
+     */
+    private fun startDemo() {
+
+        // Start
+        MainScope().launch {
+            Log.d(TAG, "startDemo: Anoncreds sample -> START!")
+            updateHeader(getString(R.string.anoncreds_sample_start))
+
+
+            updateUI(getString(R.string.anoncreds_create_pool))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                createPool()
+            }
+            updateUI(getString(R.string.anoncreds_create_pool_end))
+
+
+            updateUI(getString(R.string.anoncreds_create_open_wallet))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                issuerCreate()
+            }
+            updateUI(getString(R.string.anoncreds_create_open_wallet_end))
+
+
+            updateUI(getString(R.string.anoncreds_prover_create_open_wallet))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                proverCreate()
+            }
+            updateUI(getString(R.string.anoncreds_prover_create_open_wallet_end))
+
+
+            updateUI(getString(R.string.anoncreds_issuer_create_credential_schema))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                issuerCreateCredentialSchema()
+            }
+            updateUI(getString(R.string.anoncreds_issuer_create_credential_schema_end))
+
+
+            updateUI(getString(R.string.anoncreds_issuer_create_credential_definition))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                issuerCreateCredentialDefinition()
+            }
+            updateUI(getString(R.string.anoncreds_issuer_create_credential_definition_end))
+
+
+            updateUI(getString(R.string.anoncreds_prover_master_secret))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                proverCreateMasterSecret()
+            }
+            updateUI(getString(R.string.anoncreds_prover_master_secret_end))
+
+
+            updateUI(getString(R.string.anoncreds_issuer_create_credential_offer))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                issuerCreateCredentialOffer()
+            }
+            updateUI(getString(R.string.anoncreds_issuer_create_credential_offer_end))
+
+
+            updateUI(getString(R.string.anoncreds_prover_create_credential_request))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                proverCreateCredentialRequest()
+            }
+            updateUI(getString(R.string.anoncreds_prover_create_credential_request_end))
+
+
+            updateUI(getString(R.string.anoncreds_issuer_create_credential))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                issuerCreateCredential()
+            }
+            updateUI(getString(R.string.anoncreds_issuer_create_credential_end))
+
+
+            updateUI(getString(R.string.anoncreds_prover_stores_credential))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                proverStoresCredential()
+            }
+            updateUI(getString(R.string.anoncreds_prover_stores_credential_end))
+
+
+            updateUI(getString(R.string.anoncreds_prover_get_credential_proof_request))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                proverCredentialsForProofRequest()
+            }
+            updateUI(getString(R.string.anoncreds_prover_get_credential_proof_request_end))
+
+
+            updateUI(getString(R.string.anoncreds_prover_creates_proof))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                proverCreateProof()
+            }
+            updateUI(getString(R.string.anoncreds_prover_creates_proof_end))
+
+
+            updateUI(getString(R.string.anoncreds_verifier_verify_proof))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                verifierVerifyProof()
+            }
+            updateUI(getString(R.string.anoncreds_verifier_verify_proof_end))
+
+
+            updateUI(getString(R.string.anoncreds_close_delete_issuer_wallet))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                closeDeleteIssuerWallet()
+            }
+            updateUI(getString(R.string.anoncreds_close_delete_issuer_wallet_end))
+
+
+            updateUI(getString(R.string.anoncreds_close_delete_prover_wallet))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                closeDeleteProverWallet()
+            }
+            updateUI(getString(R.string.anoncreds_close_delete_prover_wallet_end))
+
+
+            updateUI(getString(R.string.anoncreds_close_pool))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                closePool()
+            }
+            updateUI(getString(R.string.anoncreds_close_pool_end))
+
+            updateUI(getString(R.string.anoncreds_delete_pool_ledger_config))
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                deletePoolLedgerConfig()
+            }
+            updateUI(getString(R.string.anoncreds_delete_pool_ledger_config_end))
+
+
+
+            updateFooter(getString(R.string.anoncreds_sample_completed))
+            Log.d(TAG, "startDemo: Anoncreds sample -> COMPLETED!")
         }
     }
 
-    private suspend fun startDemo() {
 
-        Log.d(TAG, "startDemo: Anoncreds sample -> START!")
 
-        val issuerDid = "NcYxiDXkpYi6ov5FcYDi1e"
-        val proverDid = "VsKV7grR1BUE29mG2Fm2kX"
+    private suspend fun createPool() {
 
         // Set protocol version 2 to work with Indy Node 1.4
         Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get()
 
-
         //1. Create and Open Pool
-        val poolName = PoolUtils.createPoolLedgerConfig(baseContext)
-        val pool = Pool.openPoolLedger(poolName, "{}").get()
+        poolName = PoolUtils.createPoolLedgerConfig(baseContext)
+        pool = Pool.openPoolLedger(poolName, "{}").get()
+    }
 
+    private suspend fun issuerCreate() {
 
         //2. Issuer Create and Open Wallet
-        val issuerWalletConfig = JSONObject().put("id", "issuerWallet").toString()
-        val issuerWalletCredentials = JSONObject().put("key", "issuer_wallet_key").toString()
+        issuerWalletConfig = JSONObject().put("id", "issuerWallet").toString()
+        issuerWalletCredentials = JSONObject().put("key", "issuer_wallet_key").toString()
         Wallet.createWallet(issuerWalletConfig, issuerWalletCredentials).get()
-        val issuerWallet = Wallet.openWallet(issuerWalletConfig, issuerWalletCredentials).get()
+        issuerWallet = Wallet.openWallet(issuerWalletConfig, issuerWalletCredentials).get()
+    }
 
-
+    private suspend fun proverCreate() {
 
         //3. Prover Create and Open Wallet
-        val proverWalletConfig = JSONObject().put("id", "trusteeWallet").toString()
-        val proverWalletCredentials = JSONObject().put("key", "prover_wallet_key").toString()
+        proverWalletConfig = JSONObject().put("id", "trusteeWallet").toString()
+        proverWalletCredentials = JSONObject().put("key", "prover_wallet_key").toString()
         Wallet.createWallet(proverWalletConfig, proverWalletCredentials).get()
-        val proverWallet = Wallet.openWallet(proverWalletConfig, proverWalletCredentials).get()
+        proverWallet = Wallet.openWallet(proverWalletConfig, proverWalletCredentials).get()
+    }
 
+    private suspend fun issuerCreateCredentialSchema() {
 
         //4. Issuer Creates Credential Schema
         val schemaName = "gvt"
@@ -70,9 +270,11 @@ class AnoncredsActivity : AppCompatActivity() {
             schemaVersion,
             schemaAttributes
         ).get()
-        val schemaId = createSchemaResult.schemaId
-        val schemaJson = createSchemaResult.schemaJson
+        schemaId = createSchemaResult.schemaId
+        schemaJson = createSchemaResult.schemaJson
+    }
 
+    private suspend fun issuerCreateCredentialDefinition() {
 
         //5. Issuer create Credential Definition
         val credDefTag = "Tag1"
@@ -86,23 +288,29 @@ class AnoncredsActivity : AppCompatActivity() {
                 null,
                 credDefConfigJson
             ).get()
-        val credDefId = createCredDefResult.credDefId
-        val credDefJson = createCredDefResult.credDefJson
+        credDefId = createCredDefResult.credDefId
+        credDefJson = createCredDefResult.credDefJson
+    }
 
+    private suspend fun proverCreateMasterSecret() {
 
         //6. Prover create Master Secret
-        val masterSecretId = org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateMasterSecret(
+        masterSecretId = org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateMasterSecret(
             proverWallet,
             null
         ).get()
+    }
 
+    private suspend fun issuerCreateCredentialOffer() {
 
         //7. Issuer Creates Credential Offer
-        val credOffer = org.hyperledger.indy.sdk.anoncreds.Anoncreds.issuerCreateCredentialOffer(
+        credOffer = org.hyperledger.indy.sdk.anoncreds.Anoncreds.issuerCreateCredentialOffer(
             issuerWallet,
             credDefId
         ).get()
+    }
 
+    private suspend fun proverCreateCredentialRequest() {
 
         //8. Prover Creates Credential Request
         val createCredReqResult =
@@ -113,9 +321,11 @@ class AnoncredsActivity : AppCompatActivity() {
                 credDefJson,
                 masterSecretId
             ).get()
-        val credReqJson = createCredReqResult.credentialRequestJson
-        val credReqMetadataJson = createCredReqResult.credentialRequestMetadataJson
+        credReqJson = createCredReqResult.credentialRequestJson
+        credReqMetadataJson = createCredReqResult.credentialRequestMetadataJson
+    }
 
+    private suspend fun issuerCreateCredential() {
 
         //9. Issuer create Credential
         //   note that encoding is not standardized by Indy except that 32-bit integers are encoded as themselves. IS-786
@@ -145,8 +355,10 @@ class AnoncredsActivity : AppCompatActivity() {
                 null,
                 -1
             ).get()
-        val credential = createCredentialResult.credentialJson
+        credential = createCredentialResult.credentialJson
+    }
 
+    private suspend fun proverStoresCredential() {
 
         //10. Prover Stores Credential
         org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverStoreCredential(
@@ -157,11 +369,13 @@ class AnoncredsActivity : AppCompatActivity() {
             credDefJson,
             null
         ).get()
+    }
 
+    private suspend fun proverCredentialsForProofRequest() {
 
         //11. Prover Gets Credentials for Proof Request
         val nonce = org.hyperledger.indy.sdk.anoncreds.Anoncreds.generateNonce().get()
-        val proofRequestJson = JSONObject()
+        proofRequestJson = JSONObject()
             .put("nonce", nonce)
             .put("name", "proof_req_1")
             .put("version", "0.1")
@@ -187,13 +401,13 @@ class AnoncredsActivity : AppCompatActivity() {
 
         val credentialsForAttribute1 =
             JSONArray(credentialsSearch.fetchNextCredentials("attr1_referent", 100).get())
-        val credentialIdForAttribute1 =
+        credentialIdForAttribute1 =
             credentialsForAttribute1.getJSONObject(0).getJSONObject("cred_info")
                 .getString("referent")
 
         val credentialsForAttribute2 =
             JSONArray(credentialsSearch.fetchNextCredentials("attr2_referent", 100).get())
-        val credentialIdForAttribute2 =
+        credentialIdForAttribute2 =
             credentialsForAttribute2.getJSONObject(0).getJSONObject("cred_info")
                 .getString("referent")
 
@@ -203,14 +417,16 @@ class AnoncredsActivity : AppCompatActivity() {
 
         val credentialsForPredicate =
             JSONArray(credentialsSearch.fetchNextCredentials("predicate1_referent", 100).get())
-        val credentialIdForPredicate =
+        credentialIdForPredicate =
             credentialsForPredicate.getJSONObject(0).getJSONObject("cred_info")
                 .getString("referent")
         credentialsSearch.close()
+    }
 
+    private suspend fun proverCreateProof() {
 
         //12. Prover Creates Proof
-        val selfAttestedValue = "8-800-300"
+        selfAttestedValue = "8-800-300"
         val requestedCredentialsJson = JSONObject()
             .put("self_attested_attributes", JSONObject().put("attr3_referent", selfAttestedValue))
             .put(
@@ -235,11 +451,11 @@ class AnoncredsActivity : AppCompatActivity() {
             )
             .toString()
 
-        val schemas = JSONObject().put(schemaId, JSONObject(schemaJson)).toString()
-        val credentialDefs = JSONObject().put(credDefId, JSONObject(credDefJson)).toString()
+        schemas = JSONObject().put(schemaId, JSONObject(schemaJson)).toString()
+        credentialDefs = JSONObject().put(credDefId, JSONObject(credDefJson)).toString()
         val revocStates = JSONObject().toString()
 
-        var proofJson: String? = ""
+        proofJson = ""
         try {
             proofJson = org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateProof(
                 proverWallet, proofRequestJson, requestedCredentialsJson,
@@ -248,8 +464,10 @@ class AnoncredsActivity : AppCompatActivity() {
         } catch (e: Exception) {
             println("")
         }
-        val proof = JSONObject(proofJson)
+        proof = JSONObject(proofJson)
+    }
 
+    private suspend fun verifierVerifyProof() {
 
         //13. Verifier verify Proof
         val revealedAttr1 = proof.getJSONObject("requested_proof").getJSONObject("revealed_attrs")
@@ -279,25 +497,31 @@ class AnoncredsActivity : AppCompatActivity() {
             revocRegs
         ).get()
         Assert.assertTrue(valid)
+    }
 
+    private suspend fun closeDeleteIssuerWallet() {
 
         //14. Close and Delete issuer wallet
         issuerWallet.closeWallet().get()
         Wallet.deleteWallet(issuerWalletConfig, issuerWalletCredentials).get()
+    }
 
+    private suspend fun closeDeleteProverWallet() {
 
         //15. Close and Delete prover wallet
         proverWallet.closeWallet().get()
         Wallet.deleteWallet(proverWalletConfig, proverWalletCredentials).get()
+    }
 
+    private suspend fun closePool() {
 
         //16. Close pool
         pool.closePoolLedger().get()
+    }
 
+    private suspend fun deletePoolLedgerConfig() {
 
         //17. Delete Pool ledger config
         Pool.deletePoolLedgerConfig(poolName).get()
-
-        Log.d(TAG, "startDemo: Anoncreds sample -> COMPLETED!")
     }
 }

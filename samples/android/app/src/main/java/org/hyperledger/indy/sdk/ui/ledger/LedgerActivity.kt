@@ -3,6 +3,7 @@ package org.hyperledger.indy.sdk.ui.ledger
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.did.Did
 import org.hyperledger.indy.sdk.did.DidJSONParameters
@@ -17,6 +18,24 @@ class LedgerActivity : AppCompatActivity() {
 
     private val TAG = LedgerActivity::class.java.name
 
+
+    // my vars
+    private val trusteeSeed = "000000000000000000000000Trustee1"
+    private lateinit var myWallet: Wallet
+    private lateinit var trusteeWallet: Wallet
+    private lateinit var trusteeDid: String
+    private lateinit var myDid: String
+    private lateinit var myVerkey: String
+    private lateinit var pool: Pool
+    private lateinit var nymRequest: String
+    private lateinit var myWalletConfig: String
+    private lateinit var myWalletCredentials: String
+    private lateinit var trusteeWalletConfig: String
+    private lateinit var trusteeWalletCredentials: String
+    private lateinit var poolName: String
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ledger)
@@ -24,91 +43,148 @@ class LedgerActivity : AppCompatActivity() {
         startDemo()
     }
 
+    /**
+     * startDemo function start all functions for Ledger demo chronological in coroutine default thread
+     */
     private fun startDemo() {
+        MainScope().launch {
+            Log.d(TAG, "startDemo: Ledger sample -> STARTED!")
 
-        Log.d(TAG, "startDemo: Ledger sample -> STARTED!")
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                createLedger()
+            }
 
-        val trusteeSeed = "000000000000000000000000Trustee1"
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                createOpenMyWallet()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                createOpenTrusteeWallet()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                createMyDID()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                createDIDFromTrustee1Seed()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                buildNymRequest()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                trusteeSignNymRequest()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                closeDeleteMyWallet()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                closePool()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                closeDeleteTheirWallet()
+            }
+
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                deletePoolLedgerConfig()
+            }
+
+            Log.d(TAG, "startDemo: Ledger sample -> COMPLETED!")
+        }
+    }
 
 
+    private suspend fun createLedger() {
         // Set protocol version 2 to work with Indy Node 1.4
         Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get()
 
 
         // 1. Create ledger config from genesis txn file
-        val poolName = PoolUtils.createPoolLedgerConfig(baseContext)
-        val pool = Pool.openPoolLedger(poolName, "{}").get()
+        poolName = PoolUtils.createPoolLedgerConfig(baseContext)
+        pool = Pool.openPoolLedger(poolName, "{}").get()
+    }
 
-
+    private suspend fun createOpenMyWallet() {
         // 2. Create and Open My Wallet
-        val myWalletConfig = JSONObject().put("id", "myWallet").toString()
-        val myWalletCredentials = JSONObject().put("key", "my_wallet_key").toString()
+        myWalletConfig = JSONObject().put("id", "myWallet").toString()
+        myWalletCredentials = JSONObject().put("key", "my_wallet_key").toString()
         Wallet.createWallet(myWalletConfig, myWalletCredentials).get()
-        val myWallet = Wallet.openWallet(myWalletConfig, myWalletCredentials).get()
+        myWallet = Wallet.openWallet(myWalletConfig, myWalletCredentials).get()
+    }
 
-
+    private suspend fun createOpenTrusteeWallet() {
         // 3. Create and Open Trustee Wallet
-        val trusteeWalletConfig = JSONObject().put("id", "theirWallet").toString()
-        val trusteeWalletCredentials = JSONObject().put("key", "trustee_wallet_key").toString()
+        trusteeWalletConfig = JSONObject().put("id", "theirWallet").toString()
+        trusteeWalletCredentials = JSONObject().put("key", "trustee_wallet_key").toString()
         Wallet.createWallet(trusteeWalletConfig, trusteeWalletCredentials).get()
-        val trusteeWallet = Wallet.openWallet(trusteeWalletConfig, trusteeWalletCredentials).get()
+        trusteeWallet = Wallet.openWallet(trusteeWalletConfig, trusteeWalletCredentials).get()
+    }
 
-
+    private suspend fun createMyDID() {
         // 4. Create My Did
         val createMyDidResult = Did.createAndStoreMyDid(myWallet, "{}").get()
-        val myDid = createMyDidResult.did
-        val myVerkey = createMyDidResult.verkey
+        myDid = createMyDidResult.did
+        myVerkey = createMyDidResult.verkey
+    }
 
-
+    private suspend fun createDIDFromTrustee1Seed() {
         // 5. Create Did from Trustee1 seed
         val theirDidJson =
-            DidJSONParameters.CreateAndStoreMyDidJSONParameter(null, trusteeSeed, null, null)
+                DidJSONParameters.CreateAndStoreMyDidJSONParameter(null, trusteeSeed, null, null)
 
         val createTheirDidResult =
-            Did.createAndStoreMyDid(trusteeWallet, theirDidJson.toJson()).get()
-        val trusteeDid = createTheirDidResult.did
+                Did.createAndStoreMyDid(trusteeWallet, theirDidJson.toJson()).get()
+        trusteeDid = createTheirDidResult.did
+    }
 
-
+    private suspend fun buildNymRequest() {
         // 6. Build Nym Request
-        val nymRequest = Ledger.buildNymRequest(trusteeDid, myDid, myVerkey, null, null).get()
+        nymRequest = Ledger.buildNymRequest(trusteeDid, myDid, myVerkey, null, null).get()
+    }
 
-
+    private suspend fun trusteeSignNymRequest() {
         // 7. Trustee Sign Nym Request
         val nymResponseJson =
-            Ledger.signAndSubmitRequest(pool, trusteeWallet, trusteeDid, nymRequest).get()
+                Ledger.signAndSubmitRequest(pool, trusteeWallet, trusteeDid, nymRequest).get()
 
         val nymResponse = JSONObject(nymResponseJson)
 
         Assert.assertEquals(
-            myDid,
-            nymResponse.getJSONObject("result").getJSONObject("txn").getJSONObject("data")
-                .getString("dest")
+                myDid,
+                nymResponse.getJSONObject("result").getJSONObject("txn").getJSONObject("data")
+                        .getString("dest")
         )
         Assert.assertEquals(
-            myVerkey,
-            nymResponse.getJSONObject("result").getJSONObject("txn").getJSONObject("data")
-                .getString("verkey")
+                myVerkey,
+                nymResponse.getJSONObject("result").getJSONObject("txn").getJSONObject("data")
+                        .getString("verkey")
         )
+    }
 
-
+    private suspend fun closeDeleteMyWallet() {
         // 8. Close and delete My Wallet
         myWallet.closeWallet().get()
         Wallet.deleteWallet(myWalletConfig, myWalletCredentials).get()
+    }
 
-
+    private suspend fun closeDeleteTheirWallet() {
         // 9. Close and delete Their Wallet
         trusteeWallet.closeWallet().get()
         Wallet.deleteWallet(trusteeWalletConfig, trusteeWalletCredentials).get()
+    }
 
-
+    private suspend fun closePool() {
         // 10. Close Pool
         pool.closePoolLedger().get()
+    }
 
-
+    private suspend fun deletePoolLedgerConfig() {
         // 11. Delete Pool ledger config
         Pool.deletePoolLedgerConfig(poolName).get()
-
-        Log.d(TAG, "startDemo: Ledger sample -> COMPLETED!")
-
     }
 }
