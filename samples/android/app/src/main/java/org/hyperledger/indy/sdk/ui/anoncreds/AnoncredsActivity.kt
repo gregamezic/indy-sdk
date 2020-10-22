@@ -64,13 +64,13 @@ class AnoncredsActivity : AppCompatActivity() {
     }
 
     private fun updateHeader(text: String) {
-        progressbar.visibility = View.VISIBLE
+        pbAnoncreds.visibility = View.VISIBLE
         tvAnoncredsStart.text = text
     }
 
 
     private fun updateFooter(text: String) {
-        progressbar.visibility = View.GONE
+        pbAnoncreds.visibility = View.GONE
         tvAnoncredsEnd.text = text
     }
 

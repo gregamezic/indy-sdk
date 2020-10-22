@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="anoncreds_revocation_sample_start"><![CDATA[Anoncreds revocation sample -> START!]]></string>
+    <string name="anoncreds_revocation_create_pool">\n\nSTART creating pool</string>
+    <string name="anoncreds_revocation_create_pool_end">\nEND creating pool</string>
+    <string name="anoncreds_revocation_create_open_wallet">\n\n\nSTART issuer create and open wallet</string>
+    <string name="anoncreds_revocation_create_open_wallet_end">\nEND issuer create and open wallet</string>
+    <string name="anoncreds_revocation_prover_create_open_wallet">\n\n\nSTART prover create and open wallet</string>
+    <string name="anoncreds_revocation_prover_create_open_wallet_end">\nEND prover create and open wallet</string>
+    <string name="anoncreds_revocation_issuer_create_credential_schema">\n\n\nSTART issuer create credential schema</string>
+    <string name="anoncreds_revocation_issuer_create_credential_schema_end">\nEND issuer create credential schema</string>
+    <string name="anoncreds_revocation_issuer_create_credential_definition">\n\n\nSTART issuer create credential definition</string>
+    <string name="anoncreds_revocation_issuer_create_credential_definition_end">\nEND issuer create credential definition</string>
+    <string name="anoncreds_revocation_issuer_create_revocation_registry">\n\n\nSTART issuer create revocation registry</string>
+    <string name="anoncreds_revocation_issuer_create_revocation_registry_end">\nEND issuer create revocation registry</string>
+    <string name="anoncreds_revocation_prover_create_master_secret">\n\n\nSTART prover create master secret</string>
+    <string name="anoncreds_revocation_prover_create_master_secret_end">\nEND prover create master secret</string>
+    <string name="anoncreds_revocation_issuer_create_credential_offer">\n\n\nSTART issuer create credential offer</string>
+    <string name="anoncreds_revocation_issuer_create_credential_offer_end">\nEND issuer create credential offer</string>
+    <string name="anoncreds_revocation_prover_create_credential_request">\n\n\nSTART prover create credential request</string>
+    <string name="anoncreds_revocation_prover_create_credential_request_end">\nEND prover create credential request</string>
+    <string name="anoncreds_revocation_issuer_open_tails_reader">\n\n\nSTART issuer open tails reader</string>
+    <string name="anoncreds_revocation_issuer_open_tails_reader_end">\nEND issuer open tails reader</string>
+    <string name="anoncreds_revocation_issuer_create_credential">\n\n\nSTART issuer create credential</string>
+    <string name="anoncreds_revocation_issuer_create_credential_end">\nEND issuer create credential</string>
+    <string name="anoncreds_revocation_prover_stores_credential">\n\n\nSTART prover stores credential</string>
+    <string name="anoncreds_revocation_prover_stores_credential_end">\nEND prover stores credential</string>
+    <string name="anoncreds_revocation_prover_get_credential_proof_request">\n\n\nSTART prover gets credential for proof request</string>
+    <string name="anoncreds_revocation_prover_get_credential_proof_request_end">\nEND prover gets credential for proof request</string>
+    <string name="anoncreds_revocation_prover_create_revocation_state">\n\n\nSTART prover creates revocation state</string>
+    <string name="anoncreds_revocation_prover_create_revocation_state_end">\nEND prover creates revocation state</string>
+    <string name="anoncreds_revocation_prover_creates_proof">\n\n\nSTART prover creates proof</string>
+    <string name="anoncreds_revocation_prover_creates_proof_end">\nEND prover creates proof</string>
+    <string name="anoncreds_revocation_verifier_verify_proof">\n\n\nSTART verifier verify proof</string>
+    <string name="anoncreds_revocation_verifier_verify_proof_end">\nEND verifier verify proof</string>
+    <string name="anoncreds_revocation_close_delete_issuer_wallet">\n\n\nSTART close and delete issuer wallet</string>
+    <string name="anoncreds_revocation_close_delete_issuer_wallet_end">\nEND close and delete issuer wallet</string>
+    <string name="anoncreds_revocation_close_delete_prover_wallet">\n\n\nSTART close and delete prover wallet</string>
+    <string name="anoncreds_revocation_close_delete_prover_wallet_end">\nEND close and delete prover wallet</string>
+    <string name="anoncreds_revocation_close_pool">\n\n\nSTART close pool</string>
+    <string name="anoncreds_revocation_close_pool_end">\nEND close pool</string>
+    <string name="anoncreds_revocation_delete_pool_ledger_config">\n\n\nSTART delete pool ledger config</string>
+    <string name="anoncreds_revocation_delete_pool_ledger_config_end">\nEND delete pool ledger config</string>
+    <string name="anoncreds_revocation_sample_completed"><![CDATA[\n\n\nAnoncreds revocation sample -> COMPLETED!]]></string>
+
+</resources>

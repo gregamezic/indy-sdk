@@ -2,7 +2,10 @@ package org.hyperledger.indy.sdk.ui.anoncreds_revocation
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_anoncreds.*
+import kotlinx.android.synthetic.main.activity_anoncreds_revocation.*
 import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds
@@ -69,102 +72,180 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         startDemo()
     }
 
+    private fun updateUI(text: String) {
+        tvAnoncredsRevocationLogs.text = "${tvAnoncredsRevocationLogs.text}$text"
+    }
+
+    private fun updateHeader(text: String) {
+        pbAnoncredsRevocation.visibility = View.VISIBLE
+        tvAnoncredsRevocationStart.text = text
+    }
+
+    private fun updateFooter(text: String) {
+        pbAnoncredsRevocation.visibility = View.GONE
+        tvAnoncredsRevocationEnd.text = text
+    }
+
     /**
      * startDemo function start all functions for Anoncreds Revocation demo chronological in coroutine default thread
      */
     private fun startDemo() {
 
         MainScope().launch {
+
             Log.d(TAG, "startDemo: Anoncreds Revocation sample -> STARTED!")
 
+            updateHeader(getString(R.string.anoncreds_revocation_sample_start))
+
+
+            updateUI(getString(R.string.anoncreds_revocation_create_pool))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createOpenPool()
             }
+            updateUI(getString(R.string.anoncreds_revocation_create_pool_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_create_open_wallet))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 issuerCreateOpenWallet()
             }
+            updateUI(getString(R.string.anoncreds_revocation_create_open_wallet_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_prover_create_open_wallet))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 proverCreateOpenWallet()
             }
+            updateUI(getString(R.string.anoncreds_revocation_prover_create_open_wallet_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_schema))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 issuerCreateCredentialSchema()
             }
+            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_schema_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_definition))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 issuerCreateCredentialDefinition()
             }
+            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_definition_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_issuer_create_revocation_registry))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 issuerCreateRevocationRegistry()
             }
+            updateUI(getString(R.string.anoncreds_revocation_issuer_create_revocation_registry_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_prover_create_master_secret))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 proverCreateMasterSecret()
             }
+            updateUI(getString(R.string.anoncreds_revocation_prover_create_master_secret_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_offer))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 issuerCreateCredentialOffer()
             }
+            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_offer_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_prover_create_credential_request))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 proverCreateCredentialRequest()
             }
+            updateUI(getString(R.string.anoncreds_revocation_prover_create_credential_request_end))
 
 
+            updateUI(getString(R.string.anoncreds_revocation_issuer_open_tails_reader))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 issuerOpenTailsReader()
             }
+            updateUI(getString(R.string.anoncreds_revocation_issuer_open_tails_reader_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 issuerCreateCredential()
             }
+            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_prover_stores_credential))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 proverStoresCredential()
             }
+            updateUI(getString(R.string.anoncreds_revocation_prover_stores_credential_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_prover_get_credential_proof_request))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 proverGetCredentialsForProofRequest()
             }
+            updateUI(getString(R.string.anoncreds_revocation_prover_get_credential_proof_request_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_prover_create_revocation_state))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 proverCreateRevocationState()
             }
+            updateUI(getString(R.string.anoncreds_revocation_prover_create_revocation_state_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_prover_creates_proof))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 proverCreateProof()
             }
+            updateUI(getString(R.string.anoncreds_revocation_prover_creates_proof_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_verifier_verify_proof))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 verifierVerifyProof()
             }
+            updateUI(getString(R.string.anoncreds_revocation_verifier_verify_proof_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_close_delete_issuer_wallet))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 closeDeleteIssuerWallet()
             }
+            updateUI(getString(R.string.anoncreds_revocation_close_delete_issuer_wallet_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_close_delete_prover_wallet))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 closeDeleteProverWallet()
             }
+            updateUI(getString(R.string.anoncreds_revocation_close_delete_prover_wallet_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_close_pool))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 closePool()
             }
+            updateUI(getString(R.string.anoncreds_revocation_close_pool_end))
 
+
+            updateUI(getString(R.string.anoncreds_revocation_delete_pool_ledger_config))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 deletePoolLedgerConfig()
             }
+            updateUI(getString(R.string.anoncreds_revocation_delete_pool_ledger_config_end))
 
 
+            updateFooter(getString(R.string.anoncreds_revocation_sample_completed))
             Log.d(TAG, "startDemo: Anoncreds Revocation sample -> COMPLETED!")
         }
     }
 
 
     private suspend fun createOpenPool() {
+
         // Set protocol version 2 to work with Indy Node 1.4
         Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get()
 
@@ -401,9 +482,9 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
                 .toString()
 
         schemas = JSONObject().put(schemaId, JSONObject(schemaJson)).toString()
-        val credentialDefs = JSONObject().put(credDefId, JSONObject(credDefJson)).toString()
+        credentialDefs = JSONObject().put(credDefId, JSONObject(credDefJson)).toString()
         val revStates =
-                JSONObject().put(revRegId, JSONObject().put("" + timestamp, JSONObject(revStateJson)))
+                JSONObject().put(revRegId, JSONObject().put("" + timestamp, JSONObject(revStateJson))   )
                         .toString()
 
         proofJson = Anoncreds.proverCreateProof(
