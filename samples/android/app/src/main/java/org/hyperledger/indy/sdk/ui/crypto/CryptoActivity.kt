@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_anoncreds.*
+import kotlinx.android.synthetic.main.activity_anoncreds_revocation.*
 import kotlinx.android.synthetic.main.activity_crypto.*
 import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
@@ -16,6 +17,7 @@ import org.hyperledger.indy.sdk.utils.PoolUtils
 import org.hyperledger.indy.sdk.wallet.Wallet
 import org.json.JSONObject
 import org.junit.Assert
+import java.lang.Exception
 import java.util.*
 
 class CryptoActivity : AppCompatActivity() {
@@ -71,77 +73,144 @@ class CryptoActivity : AppCompatActivity() {
             updateHeader(getString(R.string.crypto_sample_start))
 
             updateUI(getString(R.string.crypto_create_pool))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                createOpenPool()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    createOpenPool()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@CryptoActivity, getString(R.string.error))
+                pbCrypto.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.crypto_create_pool_end))
 
 
             updateUI(getString(R.string.crypto_create_open_my_wallet))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                createOpenMyWallet()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    createOpenMyWallet()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@CryptoActivity, getString(R.string.error))
+                pbCrypto.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.crypto_create_open_my_wallet_end))
 
 
             updateUI(getString(R.string.crypto_create_open_their_wallet))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                createOpenTheirWallet()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    createOpenTheirWallet()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@CryptoActivity, getString(R.string.error))
+                pbCrypto.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.crypto_create_open_their_wallet_end))
 
 
             updateUI(getString(R.string.crypto_create_my_did))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                createMyDID()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    createMyDID()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@CryptoActivity, getString(R.string.error))
+                pbCrypto.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.crypto_create_my_did_end))
 
 
             updateUI(getString(R.string.crypto_create_their_did))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                createTheirDID()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    createTheirDID()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@CryptoActivity, getString(R.string.error))
+                pbCrypto.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.crypto_create_their_did_end))
 
 
             updateUI(getString(R.string.crypto_their_auth_encrypt_message))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                theirAuthEncryptMessage()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    theirAuthEncryptMessage()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@CryptoActivity, getString(R.string.error))
+                pbCrypto.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.crypto_their_auth_encrypt_message_end))
 
 
             updateUI(getString(R.string.crypto_i_decrypt_message))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                iDecryptMessage()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    iDecryptMessage()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@CryptoActivity, getString(R.string.error))
+                pbCrypto.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.crypto_i_decrypt_message_end))
 
 
             updateUI(getString(R.string.crypto_close_delete_my_wallet))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                closeDeleteMyWallet()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    closeDeleteMyWallet()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@CryptoActivity, getString(R.string.error))
+                pbCrypto.visibility = View.GONE
+                return@launch
             }
-            updateUI(getString(R.string.crypto_close_delete_my_wallet))
+            updateUI(getString(R.string.crypto_close_delete_my_wallet_end))
+
 
             updateUI(getString(R.string.crypto_close_delete_their_wallet))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                closeDeleteTheirWallet()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    closeDeleteTheirWallet()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@CryptoActivity, getString(R.string.error))
+                pbCrypto.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.crypto_close_delete_their_wallet_end))
 
 
             updateUI(getString(R.string.crypto_close_pool))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                closePool()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    closePool()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@CryptoActivity, getString(R.string.error))
+                pbCrypto.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.crypto_close_pool_end))
 
 
             updateUI(getString(R.string.crypto_delete_pool_ledger_config))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                deletePoolLedgerConfig()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    deletePoolLedgerConfig()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@CryptoActivity, getString(R.string.error))
+                pbCrypto.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.crypto_delete_pool_ledger_config_end))
 

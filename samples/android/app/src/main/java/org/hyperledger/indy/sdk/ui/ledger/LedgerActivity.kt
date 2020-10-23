@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_anoncreds.*
+import kotlinx.android.synthetic.main.activity_endorser.*
 import kotlinx.android.synthetic.main.activity_ledger.*
 import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
@@ -73,77 +74,143 @@ class LedgerActivity : AppCompatActivity() {
 
 
             updateUI(getString(R.string.ledger_create_ledger))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                createLedger()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    createLedger()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@LedgerActivity, getString(R.string.error))
+                pbLedger.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.ledger_create_ledger_end))
 
             updateUI(getString(R.string.ledger_create_open_my_wallet))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                createOpenMyWallet()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    createOpenMyWallet()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@LedgerActivity, getString(R.string.error))
+                pbLedger.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.ledger_create_open_my_wallet_end))
 
 
             updateUI(getString(R.string.ledger_create_open_trustee_wallet))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                createOpenTrusteeWallet()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    createOpenTrusteeWallet()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@LedgerActivity, getString(R.string.error))
+                pbLedger.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.ledger_create_open_trustee_wallet_end))
 
 
             updateUI(getString(R.string.ledger_create_my_did))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                createMyDID()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    createMyDID()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@LedgerActivity, getString(R.string.error))
+                pbLedger.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.ledger_create_my_did_end))
 
 
             updateUI(getString(R.string.ledger_create_did_from_trustee))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                createDIDFromTrustee1Seed()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    createDIDFromTrustee1Seed()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@LedgerActivity, getString(R.string.error))
+                pbLedger.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.ledger_create_did_from_trustee_end))
 
 
             updateUI(getString(R.string.ledger_build_nym_request))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                buildNymRequest()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    buildNymRequest()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@LedgerActivity, getString(R.string.error))
+                pbLedger.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.ledger_build_nym_request_end))
 
 
             updateUI(getString(R.string.ledger_trustee_sign_nym_request))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                trusteeSignNymRequest()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    trusteeSignNymRequest()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@LedgerActivity, getString(R.string.error))
+                pbLedger.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.ledger_trustee_sign_nym_request_end))
 
 
             updateUI(getString(R.string.ledger_close_delete_my_wallet))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                closeDeleteMyWallet()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    closeDeleteMyWallet()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@LedgerActivity, getString(R.string.error))
+                pbLedger.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.ledger_close_delete_my_wallet_end))
 
 
             updateUI(getString(R.string.ledger_close_pool))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                closePool()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    closePool()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@LedgerActivity, getString(R.string.error))
+                pbLedger.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.ledger_close_pool_end))
 
 
             updateUI(getString(R.string.ledger_close_delete_their_wallet))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                closeDeleteTheirWallet()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    closeDeleteTheirWallet()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@LedgerActivity, getString(R.string.error))
+                pbLedger.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.ledger_close_delete_their_wallet_end))
 
 
             updateUI(getString(R.string.ledger_delete_pool_ledger_config))
-            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                deletePoolLedgerConfig()
+            try {
+                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                    deletePoolLedgerConfig()
+                }
+            } catch (e: Exception) {
+                MessageHelper.errorToast(this@LedgerActivity, getString(R.string.error))
+                pbLedger.visibility = View.GONE
+                return@launch
             }
             updateUI(getString(R.string.ledger_delete_pool_ledger_config_end))
 
