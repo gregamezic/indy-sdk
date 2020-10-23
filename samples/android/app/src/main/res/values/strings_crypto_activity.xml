@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="crypto_sample_start"><![CDATA[Crypto sample -> STARTED!]]></string>
+    <string name="crypto_create_pool">\n\nSTART creating pool</string>
+    <string name="crypto_create_pool_end">\nEND creating pool</string>
+    <string name="crypto_create_open_my_wallet">\n\n\nSTART create and open my wallet</string>
+    <string name="crypto_create_open_my_wallet_end">\nEND create and open my wallet</string>
+    <string name="crypto_create_open_their_wallet">\n\n\nSTART create and open their wallet</string>
+    <string name="crypto_create_open_their_wallet_end">\nEND create and open their wallet</string>
+    <string name="crypto_create_my_did">\n\n\nSTART create my DID</string>
+    <string name="crypto_create_my_did_end">\nEND create my DID</string>
+    <string name="crypto_create_their_did">\n\n\nSTART create their DID</string>
+    <string name="crypto_create_their_did_end">\nEND create their DID</string>
+    <string name="crypto_their_auth_encrypt_message">\n\n\nSTART their auth encrypt message</string>
+    <string name="crypto_their_auth_encrypt_message_end">\nEND their auth encrypt message</string>
+    <string name="crypto_i_decrypt_message">\n\n\nSTART I decrypt message</string>
+    <string name="crypto_i_decrypt_message_end">\nEND I decrypt message</string>
+    <string name="crypto_close_delete_my_wallet">\n\n\nSTART close and delete my wallet</string>
+    <string name="crypto_close_delete_my_wallet_end">\nEND close and delete my wallet</string>
+    <string name="crypto_close_delete_their_wallet">\n\n\nSTART close and delete their wallet</string>
+    <string name="crypto_close_delete_their_wallet_end">\nEND close and delete their wallet</string>
+    <string name="crypto_close_pool">\n\n\nSTART close pool</string>
+    <string name="crypto_close_pool_end">\nEND close pool</string>
+    <string name="crypto_delete_pool_ledger_config">\n\n\nSTART delete pool ledger config</string>
+    <string name="crypto_delete_pool_ledger_config_end">\nEND delete pool ledger config</string>
+    <string name="crypto_sample_completed"><![CDATA[\n\n\nCrypto sample -> COMPLETED!]]></string>
+
+</resources>

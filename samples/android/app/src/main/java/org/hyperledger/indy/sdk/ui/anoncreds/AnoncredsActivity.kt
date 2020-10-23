@@ -68,7 +68,6 @@ class AnoncredsActivity : AppCompatActivity() {
         tvAnoncredsStart.text = text
     }
 
-
     private fun updateFooter(text: String) {
         pbAnoncreds.visibility = View.GONE
         tvAnoncredsEnd.text = text

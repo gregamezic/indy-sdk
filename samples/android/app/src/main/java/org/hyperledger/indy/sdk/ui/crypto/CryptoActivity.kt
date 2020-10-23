@@ -2,7 +2,10 @@ package org.hyperledger.indy.sdk.ui.crypto
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_anoncreds.*
+import kotlinx.android.synthetic.main.activity_crypto.*
 import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.crypto.Crypto
@@ -43,60 +46,110 @@ class CryptoActivity : AppCompatActivity() {
     }
 
 
+    private fun updateUI(text: String) {
+        tvCryptoLogs.text = "${tvCryptoLogs.text}$text"
+    }
+
+    private fun updateHeader(text: String) {
+        pbCrypto.visibility = View.VISIBLE
+        tvCryptoStart.text = text
+    }
+
+    private fun updateFooter(text: String) {
+        pbCrypto.visibility = View.GONE
+        tvCryptoEnd.text = text
+    }
+
+
     /**
      * startDemo function start all functions for Crypto Revocation demo chronological in coroutine default thread
      */
     private fun startDemo() {
         MainScope().launch {
             Log.d(TAG, "startDemo: Crypto sample -> STARTED!")
+            updateHeader(getString(R.string.crypto_sample_start))
 
+            updateUI(getString(R.string.crypto_create_pool))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createOpenPool()
             }
+            updateUI(getString(R.string.crypto_create_pool_end))
 
+
+            updateUI(getString(R.string.crypto_create_open_my_wallet))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createOpenMyWallet()
             }
+            updateUI(getString(R.string.crypto_create_open_my_wallet_end))
 
+
+            updateUI(getString(R.string.crypto_create_open_their_wallet))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createOpenTheirWallet()
             }
+            updateUI(getString(R.string.crypto_create_open_their_wallet_end))
 
+
+            updateUI(getString(R.string.crypto_create_my_did))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createMyDID()
             }
+            updateUI(getString(R.string.crypto_create_my_did_end))
 
+
+            updateUI(getString(R.string.crypto_create_their_did))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createTheirDID()
             }
+            updateUI(getString(R.string.crypto_create_their_did_end))
 
+
+            updateUI(getString(R.string.crypto_their_auth_encrypt_message))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 theirAuthEncryptMessage()
             }
+            updateUI(getString(R.string.crypto_their_auth_encrypt_message_end))
 
+
+            updateUI(getString(R.string.crypto_i_decrypt_message))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 iDecryptMessage()
             }
+            updateUI(getString(R.string.crypto_i_decrypt_message_end))
 
+
+            updateUI(getString(R.string.crypto_close_delete_my_wallet))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 closeDeleteMyWallet()
             }
+            updateUI(getString(R.string.crypto_close_delete_my_wallet))
 
+            updateUI(getString(R.string.crypto_close_delete_their_wallet))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 closeDeleteTheirWallet()
             }
+            updateUI(getString(R.string.crypto_close_delete_their_wallet_end))
 
+
+            updateUI(getString(R.string.crypto_close_pool))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 closePool()
             }
+            updateUI(getString(R.string.crypto_close_pool_end))
 
+
+            updateUI(getString(R.string.crypto_delete_pool_ledger_config))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 deletePoolLedgerConfig()
             }
+            updateUI(getString(R.string.crypto_delete_pool_ledger_config_end))
 
+
+            updateFooter(getString(R.string.crypto_sample_completed))
             Log.d(TAG, "startDemo: Crypto sample -> COMPLETED!")
         }
     }
+
 
     private suspend fun createOpenPool() {
         // Set protocol version 2 to work with Indy Node 1.4
