@@ -10,6 +10,7 @@ import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.crypto.Crypto
 import org.hyperledger.indy.sdk.did.Did
+import org.hyperledger.indy.sdk.helpers.MessageHelper
 import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.utils.PoolUtils
 import org.hyperledger.indy.sdk.wallet.Wallet
@@ -145,6 +146,7 @@ class CryptoActivity : AppCompatActivity() {
             updateUI(getString(R.string.crypto_delete_pool_ledger_config_end))
 
 
+            MessageHelper.successToast(this@CryptoActivity, getString(R.string.success))
             updateFooter(getString(R.string.crypto_sample_completed))
             Log.d(TAG, "startDemo: Crypto sample -> COMPLETED!")
         }

@@ -12,6 +12,7 @@ import org.hyperledger.indy.sdk.anoncreds.Anoncreds
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq
 import org.hyperledger.indy.sdk.blob_storage.BlobStorageReader
 import org.hyperledger.indy.sdk.blob_storage.BlobStorageWriter
+import org.hyperledger.indy.sdk.helpers.MessageHelper
 import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.utils.EnvironmentUtils
 import org.hyperledger.indy.sdk.utils.PoolUtils
@@ -238,6 +239,7 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
             updateUI(getString(R.string.anoncreds_revocation_delete_pool_ledger_config_end))
 
 
+            MessageHelper.successToast(this@AnoncredsRevocationActivity, getString(R.string.success))
             updateFooter(getString(R.string.anoncreds_revocation_sample_completed))
             Log.d(TAG, "startDemo: Anoncreds Revocation sample -> COMPLETED!")
         }

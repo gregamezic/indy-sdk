@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="ledger_sample_start"><![CDATA[Ledger sample -> STARTED!]]></string>
+
+    <string name="ledger_create_ledger">\n\nSTART create ledger config from genesis txn file</string>
+    <string name="ledger_create_ledger_end">\nEND create ledger config from genesis txn file</string>
+    <string name="ledger_create_open_my_wallet">\n\n\nSTART create and open my wallet</string>
+    <string name="ledger_create_open_my_wallet_end">\nEND create and open my wallet</string>
+    <string name="ledger_create_open_trustee_wallet">\n\n\nSTART create and open trustee wallet</string>
+    <string name="ledger_create_open_trustee_wallet_end">\nEND create and open trustee wallet</string>
+    <string name="ledger_create_my_did">\n\n\nSTART create my DID</string>
+    <string name="ledger_create_my_did_end">\nEND create my DID</string>
+    <string name="ledger_create_did_from_trustee">\n\n\nSTART create DID from trustee1 seed</string>
+    <string name="ledger_create_did_from_trustee_end">\nEND create DID from trustee1 seed</string>
+    <string name="ledger_build_nym_request">\n\n\nSTART build nym request</string>
+    <string name="ledger_build_nym_request_end">\nEND build nym request</string>
+    <string name="ledger_trustee_sign_nym_request">\n\n\nSTART trustee sign nym request</string>
+    <string name="ledger_trustee_sign_nym_request_end">\nEND trustee sign nym request</string>
+    <string name="ledger_close_delete_my_wallet">\n\n\nSTART close and delete my wallet</string>
+    <string name="ledger_close_delete_my_wallet_end">\nEND close and delete my wallet</string>
+
+    <string name="ledger_close_pool">\n\n\nSTART close pool</string>
+    <string name="ledger_close_pool_end">\nEND close pool</string>
+
+    <string name="ledger_close_delete_their_wallet">\n\n\nSTART close and delete their wallet</string>
+    <string name="ledger_close_delete_their_wallet_end">\nEND close and delete their wallet</string>
+
+    <string name="ledger_delete_pool_ledger_config">\n\n\nSTART delete pool ledger config</string>
+    <string name="ledger_delete_pool_ledger_config_end">\nEND delete pool ledger config</string>
+
+    <string name="ledger_sample_completed"><![CDATA[\n\n\Ledger sample -> COMPLETED!]]></string>
+
+</resources>

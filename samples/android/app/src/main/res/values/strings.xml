@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">INDY-SDK Android Sample</string>
+
+    <string name="success">success!</string>
+    <string name="error">error!</string>
+
 </resources>

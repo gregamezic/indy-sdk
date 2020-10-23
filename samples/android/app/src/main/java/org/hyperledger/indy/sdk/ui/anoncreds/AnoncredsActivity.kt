@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_anoncreds.*
 import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq
+import org.hyperledger.indy.sdk.helpers.MessageHelper
 import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.utils.PoolUtils
 import org.hyperledger.indy.sdk.wallet.Wallet
@@ -222,6 +223,7 @@ class AnoncredsActivity : AppCompatActivity() {
 
 
             updateFooter(getString(R.string.anoncreds_sample_completed))
+            MessageHelper.successToast(this@AnoncredsActivity, getString(R.string.success))
             Log.d(TAG, "startDemo: Anoncreds sample -> COMPLETED!")
         }
     }

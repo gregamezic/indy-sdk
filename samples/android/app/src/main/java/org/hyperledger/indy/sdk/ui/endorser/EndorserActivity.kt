@@ -2,13 +2,16 @@ package org.hyperledger.indy.sdk.ui.endorser
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_endorser.*
 import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds
 import org.hyperledger.indy.sdk.did.Did
 import org.hyperledger.indy.sdk.did.DidJSONParameters
 import org.hyperledger.indy.sdk.did.DidResults
+import org.hyperledger.indy.sdk.helpers.MessageHelper
 import org.hyperledger.indy.sdk.ledger.Ledger
 import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.utils.PoolUtils
@@ -42,6 +45,11 @@ class EndorserActivity : AppCompatActivity() {
     private lateinit var endorserWalletCredentials: String
     private lateinit var authorWalletConfig: String
     private lateinit var authorWalletCredentials: String
+    private lateinit var schemaJson: String
+    private lateinit var schemaRequest: String
+    private lateinit var schemaRequestWithEndorser: String
+    private lateinit var schemaRequestWithEndorserAuthorSigned: String
+    private lateinit var schemaRequestWithEndorserSigned: String
 
 
 
@@ -53,6 +61,21 @@ class EndorserActivity : AppCompatActivity() {
     }
 
 
+    private fun updateUI(text: String) {
+        tvEndorserLogs.text = "${tvEndorserLogs.text}$text"
+    }
+
+    private fun updateHeader(text: String) {
+        pbEndorser.visibility = View.VISIBLE
+        tvEndorserStart.text = text
+    }
+
+    private fun updateFooter(text: String) {
+        pbEndorser.visibility = View.GONE
+        tvEndorserStart.text = text
+    }
+
+
     /**
      * startDemo function start all functions fro Anoncreds chronological in coroutine default thread
      */
@@ -61,57 +84,135 @@ class EndorserActivity : AppCompatActivity() {
         MainScope().launch {
             Log.d(TAG, "startDemo: Endorser sample -> STARTED!")
 
+            updateHeader(getString(R.string.endorser_sample_start))
+
+
+            updateUI(getString(R.string.endorser_create_pool))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createOpenPool()
             }
+            updateUI(getString(R.string.endorser_create_pool_end))
 
+
+            updateUI(getString(R.string.endorser_create_open_author_wallet))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createOpenAuthorWallet()
             }
+            updateUI(getString(R.string.endorser_create_open_author_wallet_end))
 
+
+            updateUI(getString(R.string.endorser_create_open_endorser_wallet))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createOpenEndorserWallet()
             }
+            updateUI(getString(R.string.endorser_create_open_endorser_wallet_end))
 
+
+            updateUI(getString(R.string.endorser_create_open_trustee_wallet))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createOpenTrusteeWallet()
             }
+            updateUI(getString(R.string.endorser_create_open_trustee_wallet_end))
 
+
+            updateUI(getString(R.string.endorser_create_trustee_did))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createTrusteeDID()
             }
+            updateUI(getString(R.string.endorser_create_trustee_did_end))
 
+
+            updateUI(getString(R.string.endorser_create_author_did))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createAuthorDID()
             }
+            updateUI(getString(R.string.endorser_create_author_did_end))
 
+
+            updateUI(getString(R.string.endorser_create_endorser_did))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createEndorserDID()
             }
+            updateUI(getString(R.string.endorser_create_endorser_did_end))
 
+
+            updateUI(getString(R.string.endorser_build_author_nym_request))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 buildAuthorNymRequest()
             }
+            updateUI(getString(R.string.endorser_build_author_nym_request_end))
 
+
+            updateUI(getString(R.string.endorser_trustee_sign_author_nym_request))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 trusteeSignAuthorNymRequest()
             }
+            updateUI(getString(R.string.endorser_trustee_sign_author_nym_request_end))
 
+
+            updateUI(getString(R.string.endorser_build_endorser_nym_request))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 buildEndorserNymRequest()
             }
+            updateUI(getString(R.string.endorser_build_endorser_nym_request_end))
 
+
+            updateUI(getString(R.string.endorser_trustee_sign_endorser_nym))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 trusteeSingEndorserNymRequest()
             }
+            updateUI(getString(R.string.endorser_trustee_sign_endorser_nym_end))
 
+
+            updateUI(getString(R.string.endorser_create_schema_endorser))
             withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
                 createSchemaWithEndorser()
             }
+            updateUI(getString(R.string.endorser_create_schema_endorser_end))
+
+
+            updateUI(getString(R.string.endorser_transaction_author_builds_schema_request))
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                transactionAuthorBuildsSchemaRequest()
+            }
+            updateUI(getString(R.string.endorser_transaction_author_builds_schema_request_end))
+
+
+            updateUI(getString(R.string.endorser_transaction_author_append_DID_request))
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                transactionAuthorSignsRequestDID()
+            }
+            updateUI(getString(R.string.endorser_transaction_author_append_DID_request_end))
+
+
+            updateUI(getString(R.string.endorser_transaction_author_sign_with_endorser))
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                transactionAuthorSignEndorser()
+            }
+            updateUI(getString(R.string.endorser_transaction_author_sign_with_endorser_end))
+
+
+            updateUI(getString(R.string.endorser_transaction_endorser_sign_request))
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                transactionEndorserSignRequest()
+            }
+            updateUI(getString(R.string.endorser_transaction_endorser_sign_request_end))
+
+
+            updateUI(getString(R.string.endorser_transaction_endorser_send_request))
+            withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                transactionEndorserSendRequest()
+            }
+            updateUI(getString(R.string.endorser_transaction_endorser_send_request_end))
+
+
+            MessageHelper.successToast(this@EndorserActivity, getString(R.string.success))
+            updateFooter(getString(R.string.endorser_sample_completed))
 
             Log.d(TAG, "startDemo: Endorser sample -> COMPLETED!")
         }
     }
+
 
     private suspend fun createOpenPool() {
         // Set protocol version 2 to work with Indy Node 1.4
@@ -203,37 +304,37 @@ class EndorserActivity : AppCompatActivity() {
                 Anoncreds.issuerCreateSchema(authorDid, schemaName, schemaVersion, schemaAttributes)
                         .get()
         val schemaId = createSchemaResult.schemaId
-        val schemaJson = createSchemaResult.schemaJson
+        schemaJson = createSchemaResult.schemaJson
+    }
 
-        //  Transaction Author builds Schema Request
+    private suspend fun transactionAuthorBuildsSchemaRequest() {
+        // 13. Transaction Author builds Schema Request
+        schemaRequest = Ledger.buildSchemaRequest(authorDid, schemaJson).get()
+    }
 
-        //  Transaction Author builds Schema Request
-        val schemaRequest = Ledger.buildSchemaRequest(authorDid, schemaJson).get()
-
-        //  Transaction Author appends Endorser's DID into the request
-
-        //  Transaction Author appends Endorser's DID into the request
-        val schemaRequestWithEndorser =
+    private suspend fun transactionAuthorSignsRequestDID() {
+        // 14. Transaction Author appends Endorser's DID into the request
+        schemaRequestWithEndorser =
                 Ledger.appendRequestEndorser(schemaRequest, endorserDid).get()
+    }
 
-        //  Transaction Author signs the request with the added endorser field
-
-        //  Transaction Author signs the request with the added endorser field
-        val schemaRequestWithEndorserAuthorSigned =
+    private suspend fun transactionAuthorSignEndorser() {
+        // 15. Transaction Author signs the request with the added endorser field
+        schemaRequestWithEndorserAuthorSigned =
                 Ledger.multiSignRequest(authorWallet, authorDid, schemaRequestWithEndorser).get()
+    }
 
-        //  Transaction Endorser signs the request
-
-        //  Transaction Endorser signs the request
-        val schemaRequestWithEndorserSigned = Ledger.multiSignRequest(
+    private suspend fun transactionEndorserSignRequest() {
+        // 16. Transaction Endorser signs the request
+        schemaRequestWithEndorserSigned = Ledger.multiSignRequest(
                 endorserWallet,
                 endorserDid,
                 schemaRequestWithEndorserAuthorSigned
         ).get()
+    }
 
-        //  Transaction Endorser sends the request
-
-        //  Transaction Endorser sends the request
+    private suspend fun transactionEndorserSendRequest() {
+        // 17. Transaction Endorser sends the request
         val response = Ledger.submitRequest(pool, schemaRequestWithEndorserSigned).get()
         val responseJson = JSONObject(response)
         Assert.assertEquals("REPLY", responseJson.getString("op"))
