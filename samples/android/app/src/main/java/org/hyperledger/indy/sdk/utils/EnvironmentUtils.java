@@ -15,7 +15,6 @@ public class EnvironmentUtils {
 
 	public static String getIndyHomePath(Context context) {
 		return  context.getFilesDir().getAbsolutePath() + "/indy_client/";
-		//return FileUtils.getUserDirectoryPath() + "/.indy_client/";
 	}
 
 	public static String getIndyHomePath(String filename, Context context) {
@@ -24,7 +23,6 @@ public class EnvironmentUtils {
 
 	public static String getTmpPath(Context context) {
 		return context.getCacheDir().getAbsolutePath() + "/tmp/";
-		//return FileUtils.getTempDirectoryPath() + "/indy/";
 	}
 
 	public static String getTmpPath(String filename, Context context) {

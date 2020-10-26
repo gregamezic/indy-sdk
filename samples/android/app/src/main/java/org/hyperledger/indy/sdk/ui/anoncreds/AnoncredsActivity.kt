@@ -2,13 +2,15 @@ package org.hyperledger.indy.sdk.ui.anoncreds
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_anoncreds.*
 import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq
+import org.hyperledger.indy.sdk.helpers.DemoActionHelper
 import org.hyperledger.indy.sdk.helpers.MessageHelper
+import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateFooter
+import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateHeader
+import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateUI
 import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.utils.PoolUtils
 import org.hyperledger.indy.sdk.wallet.Wallet
@@ -52,25 +54,10 @@ class AnoncredsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_anoncreds)
+        setContentView(R.layout.demos_activity)
 
 
         startDemo()
-    }
-
-
-    private fun updateUI(text: String) {
-        tvAnoncredsLogs.text = "${tvAnoncredsLogs.text}$text"
-    }
-
-    private fun updateHeader(text: String) {
-        pbAnoncreds.visibility = View.VISIBLE
-        tvAnoncredsStart.text = text
-    }
-
-    private fun updateFooter(text: String) {
-        pbAnoncreds.visibility = View.GONE
-        tvAnoncredsEnd.text = text
     }
 
 
@@ -81,239 +68,245 @@ class AnoncredsActivity : AppCompatActivity() {
 
         // Start
         MainScope().launch {
+
+            var result = false
+
             Log.d(TAG, "startDemo: Anoncreds sample -> START!")
-            updateHeader(getString(R.string.anoncreds_sample_start))
+            updateHeader(this@AnoncredsActivity, getString(R.string.anoncreds_sample_start))
 
 
-            updateUI(getString(R.string.anoncreds_create_pool))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    createPool()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_create_pool))
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { createPool() }
             }
-            updateUI(getString(R.string.anoncreds_create_pool_end))
+            updateUI(this@AnoncredsActivity, result, getString(R.string.anoncreds_create_pool_end))
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_create_open_wallet))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    issuerCreate()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_create_open_wallet))
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { issuerCreate() }
             }
-            updateUI(getString(R.string.anoncreds_create_open_wallet_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_create_open_wallet_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_prover_create_open_wallet))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    proverCreate()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(
+                this@AnoncredsActivity,
+                getString(R.string.anoncreds_prover_create_open_wallet)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { proverCreate() }
             }
-            updateUI(getString(R.string.anoncreds_prover_create_open_wallet_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_prover_create_open_wallet_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_issuer_create_credential_schema))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    issuerCreateCredentialSchema()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(
+                this@AnoncredsActivity,
+                getString(R.string.anoncreds_issuer_create_credential_schema)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { issuerCreateCredentialSchema() }
             }
-            updateUI(getString(R.string.anoncreds_issuer_create_credential_schema_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_issuer_create_credential_schema_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_issuer_create_credential_definition))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    issuerCreateCredentialDefinition()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(
+                this@AnoncredsActivity,
+                getString(R.string.anoncreds_issuer_create_credential_definition)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { issuerCreateCredentialDefinition() }
             }
-            updateUI(getString(R.string.anoncreds_issuer_create_credential_definition_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_issuer_create_credential_definition_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_prover_master_secret))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    proverCreateMasterSecret()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_prover_master_secret))
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { proverCreateMasterSecret() }
             }
-            updateUI(getString(R.string.anoncreds_prover_master_secret_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_prover_master_secret_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_issuer_create_credential_offer))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    issuerCreateCredentialOffer()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(
+                this@AnoncredsActivity,
+                getString(R.string.anoncreds_issuer_create_credential_offer)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { issuerCreateCredentialOffer() }
             }
-            updateUI(getString(R.string.anoncreds_issuer_create_credential_offer_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_issuer_create_credential_offer_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_prover_create_credential_request))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    proverCreateCredentialRequest()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(
+                this@AnoncredsActivity,
+                getString(R.string.anoncreds_prover_create_credential_request)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { proverCreateCredentialRequest() }
             }
-            updateUI(getString(R.string.anoncreds_prover_create_credential_request_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_prover_create_credential_request_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_issuer_create_credential))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    issuerCreateCredential()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_issuer_create_credential))
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { issuerCreateCredential() }
             }
-            updateUI(getString(R.string.anoncreds_issuer_create_credential_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_issuer_create_credential_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_prover_stores_credential))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    proverStoresCredential()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_prover_stores_credential))
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { proverStoresCredential() }
             }
-            updateUI(getString(R.string.anoncreds_prover_stores_credential_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_prover_stores_credential_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_prover_get_credential_proof_request))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    proverCredentialsForProofRequest()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(
+                this@AnoncredsActivity,
+                getString(R.string.anoncreds_prover_get_credential_proof_request)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { proverCredentialsForProofRequest() }
             }
-            updateUI(getString(R.string.anoncreds_prover_get_credential_proof_request_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_prover_get_credential_proof_request_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_prover_creates_proof))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    proverCreateProof()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_prover_creates_proof))
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { proverCreateProof() }
             }
-            updateUI(getString(R.string.anoncreds_prover_creates_proof_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_prover_creates_proof_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_verifier_verify_proof))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    verifierVerifyProof()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_verifier_verify_proof))
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { verifierVerifyProof() }
             }
-            updateUI(getString(R.string.anoncreds_verifier_verify_proof_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_verifier_verify_proof_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_close_delete_issuer_wallet))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    closeDeleteIssuerWallet()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(
+                this@AnoncredsActivity,
+                getString(R.string.anoncreds_close_delete_issuer_wallet)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { closeDeleteIssuerWallet() }
             }
-            updateUI(getString(R.string.anoncreds_close_delete_issuer_wallet_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_close_delete_issuer_wallet_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_close_delete_prover_wallet))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    closeDeleteProverWallet()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(
+                this@AnoncredsActivity,
+                getString(R.string.anoncreds_close_delete_prover_wallet)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { closeDeleteProverWallet() }
             }
-            updateUI(getString(R.string.anoncreds_close_delete_prover_wallet_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_close_delete_prover_wallet_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_close_pool))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    closePool()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_close_pool))
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { closePool() }
             }
-            updateUI(getString(R.string.anoncreds_close_pool_end))
+            updateUI(this@AnoncredsActivity, result, getString(R.string.anoncreds_close_pool_end))
+            if (!result) return@launch
 
-            updateUI(getString(R.string.anoncreds_delete_pool_ledger_config))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    deletePoolLedgerConfig()
-                }
-            } catch (e: java.lang.Exception) {
-                MessageHelper.errorToast(this@AnoncredsActivity, getString(R.string.error))
-                pbAnoncreds.visibility = View.GONE
-                return@launch
+
+            updateUI(
+                this@AnoncredsActivity,
+                getString(R.string.anoncreds_delete_pool_ledger_config)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { deletePoolLedgerConfig() }
             }
-            updateUI(getString(R.string.anoncreds_delete_pool_ledger_config_end))
+            updateUI(
+                this@AnoncredsActivity,
+                result,
+                getString(R.string.anoncreds_delete_pool_ledger_config_end)
+            )
+            if (!result) return@launch
 
 
-
-            updateFooter(getString(R.string.anoncreds_sample_completed))
+            // show success logs
+            updateFooter(this@AnoncredsActivity, getString(R.string.anoncreds_sample_completed))
             MessageHelper.successToast(this@AnoncredsActivity, getString(R.string.success))
             Log.d(TAG, "startDemo: Anoncreds sample -> COMPLETED!")
         }
     }
 
 
-    private suspend fun createPool() {
+    private fun createPool() {
 
         // Set protocol version 2 to work with Indy Node 1.4
         Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get()
@@ -323,7 +316,7 @@ class AnoncredsActivity : AppCompatActivity() {
         pool = Pool.openPoolLedger(poolName, "{}").get()
     }
 
-    private suspend fun issuerCreate() {
+    private fun issuerCreate() {
 
         //2. Issuer Create and Open Wallet
         issuerWalletConfig = JSONObject().put("id", "issuerWallet").toString()
@@ -332,7 +325,7 @@ class AnoncredsActivity : AppCompatActivity() {
         issuerWallet = Wallet.openWallet(issuerWalletConfig, issuerWalletCredentials).get()
     }
 
-    private suspend fun proverCreate() {
+    private fun proverCreate() {
 
         //3. Prover Create and Open Wallet
         proverWalletConfig = JSONObject().put("id", "trusteeWallet").toString()
@@ -341,199 +334,199 @@ class AnoncredsActivity : AppCompatActivity() {
         proverWallet = Wallet.openWallet(proverWalletConfig, proverWalletCredentials).get()
     }
 
-    private suspend fun issuerCreateCredentialSchema() {
+    private fun issuerCreateCredentialSchema() {
 
         //4. Issuer Creates Credential Schema
         val schemaName = "gvt"
         val schemaVersion = "1.0"
         val schemaAttributes =
-                JSONArray().put("name").put("age").put("sex").put("height").toString()
+            JSONArray().put("name").put("age").put("sex").put("height").toString()
         val createSchemaResult = org.hyperledger.indy.sdk.anoncreds.Anoncreds.issuerCreateSchema(
-                issuerDid,
-                schemaName,
-                schemaVersion,
-                schemaAttributes
+            issuerDid,
+            schemaName,
+            schemaVersion,
+            schemaAttributes
         ).get()
         schemaId = createSchemaResult.schemaId
         schemaJson = createSchemaResult.schemaJson
     }
 
-    private suspend fun issuerCreateCredentialDefinition() {
+    private fun issuerCreateCredentialDefinition() {
 
         //5. Issuer create Credential Definition
         val credDefTag = "Tag1"
         val credDefConfigJson = JSONObject().put("support_revocation", false).toString()
         val createCredDefResult =
-                org.hyperledger.indy.sdk.anoncreds.Anoncreds.issuerCreateAndStoreCredentialDef(
-                        issuerWallet,
-                        issuerDid,
-                        schemaJson,
-                        credDefTag,
-                        null,
-                        credDefConfigJson
-                ).get()
+            org.hyperledger.indy.sdk.anoncreds.Anoncreds.issuerCreateAndStoreCredentialDef(
+                issuerWallet,
+                issuerDid,
+                schemaJson,
+                credDefTag,
+                null,
+                credDefConfigJson
+            ).get()
         credDefId = createCredDefResult.credDefId
         credDefJson = createCredDefResult.credDefJson
     }
 
-    private suspend fun proverCreateMasterSecret() {
+    private fun proverCreateMasterSecret() {
 
         //6. Prover create Master Secret
         masterSecretId = org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateMasterSecret(
-                proverWallet,
-                null
+            proverWallet,
+            null
         ).get()
     }
 
-    private suspend fun issuerCreateCredentialOffer() {
+    private fun issuerCreateCredentialOffer() {
 
         //7. Issuer Creates Credential Offer
         credOffer = org.hyperledger.indy.sdk.anoncreds.Anoncreds.issuerCreateCredentialOffer(
-                issuerWallet,
-                credDefId
+            issuerWallet,
+            credDefId
         ).get()
     }
 
-    private suspend fun proverCreateCredentialRequest() {
+    private fun proverCreateCredentialRequest() {
 
         //8. Prover Creates Credential Request
         val createCredReqResult =
-                org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateCredentialReq(
-                        proverWallet,
-                        proverDid,
-                        credOffer,
-                        credDefJson,
-                        masterSecretId
-                ).get()
+            org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateCredentialReq(
+                proverWallet,
+                proverDid,
+                credOffer,
+                credDefJson,
+                masterSecretId
+            ).get()
         credReqJson = createCredReqResult.credentialRequestJson
         credReqMetadataJson = createCredReqResult.credentialRequestMetadataJson
     }
 
-    private suspend fun issuerCreateCredential() {
+    private fun issuerCreateCredential() {
 
         //9. Issuer create Credential
         //   note that encoding is not standardized by Indy except that 32-bit integers are encoded as themselves. IS-786
         val credValuesJson = JSONObject()
-                .put(
-                        "sex",
-                        JSONObject().put("raw", "male").put(
-                                "encoded",
-                                "594465709955896723921094925839488742869205008160769251991705001"
-                        )
+            .put(
+                "sex",
+                JSONObject().put("raw", "male").put(
+                    "encoded",
+                    "594465709955896723921094925839488742869205008160769251991705001"
                 )
-                .put(
-                        "name",
-                        JSONObject().put("raw", "Alex")
-                                .put("encoded", "1139481716457488690172217916278103335")
-                )
-                .put("height", JSONObject().put("raw", "175").put("encoded", "175"))
-                .put("age", JSONObject().put("raw", "28").put("encoded", "28"))
-                .toString()
+            )
+            .put(
+                "name",
+                JSONObject().put("raw", "Alex")
+                    .put("encoded", "1139481716457488690172217916278103335")
+            )
+            .put("height", JSONObject().put("raw", "175").put("encoded", "175"))
+            .put("age", JSONObject().put("raw", "28").put("encoded", "28"))
+            .toString()
 
         val createCredentialResult =
-                org.hyperledger.indy.sdk.anoncreds.Anoncreds.issuerCreateCredential(
-                        issuerWallet,
-                        credOffer,
-                        credReqJson,
-                        credValuesJson,
-                        null,
-                        -1
-                ).get()
+            org.hyperledger.indy.sdk.anoncreds.Anoncreds.issuerCreateCredential(
+                issuerWallet,
+                credOffer,
+                credReqJson,
+                credValuesJson,
+                null,
+                -1
+            ).get()
         credential = createCredentialResult.credentialJson
     }
 
-    private suspend fun proverStoresCredential() {
+    private fun proverStoresCredential() {
 
         //10. Prover Stores Credential
         org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverStoreCredential(
-                proverWallet,
-                null,
-                credReqMetadataJson,
-                credential,
-                credDefJson,
-                null
+            proverWallet,
+            null,
+            credReqMetadataJson,
+            credential,
+            credDefJson,
+            null
         ).get()
     }
 
-    private suspend fun proverCredentialsForProofRequest() {
+    private fun proverCredentialsForProofRequest() {
 
         //11. Prover Gets Credentials for Proof Request
         val nonce = org.hyperledger.indy.sdk.anoncreds.Anoncreds.generateNonce().get()
         proofRequestJson = JSONObject()
-                .put("nonce", nonce)
-                .put("name", "proof_req_1")
-                .put("version", "0.1")
-                .put(
-                        "requested_attributes", JSONObject()
-                        .put("attr1_referent", JSONObject().put("name", "name"))
-                        .put("attr2_referent", JSONObject().put("name", "sex"))
-                        .put("attr3_referent", JSONObject().put("name", "phone"))
-                )
-                .put(
-                        "requested_predicates", JSONObject()
-                        .put(
-                                "predicate1_referent", JSONObject()
-                                .put("name", "age")
-                                .put("p_type", ">=")
-                                .put("p_value", 18)
-                        )
-                )
-                .toString()
+            .put("nonce", nonce)
+            .put("name", "proof_req_1")
+            .put("version", "0.1")
+            .put(
+                "requested_attributes", JSONObject()
+                    .put("attr1_referent", JSONObject().put("name", "name"))
+                    .put("attr2_referent", JSONObject().put("name", "sex"))
+                    .put("attr3_referent", JSONObject().put("name", "phone"))
+            )
+            .put(
+                "requested_predicates", JSONObject()
+                    .put(
+                        "predicate1_referent", JSONObject()
+                            .put("name", "age")
+                            .put("p_type", ">=")
+                            .put("p_value", 18)
+                    )
+            )
+            .toString()
 
         val credentialsSearch =
-                CredentialsSearchForProofReq.open(proverWallet, proofRequestJson, null).get()
+            CredentialsSearchForProofReq.open(proverWallet, proofRequestJson, null).get()
 
         val credentialsForAttribute1 =
-                JSONArray(credentialsSearch.fetchNextCredentials("attr1_referent", 100).get())
+            JSONArray(credentialsSearch.fetchNextCredentials("attr1_referent", 100).get())
         credentialIdForAttribute1 =
-                credentialsForAttribute1.getJSONObject(0).getJSONObject("cred_info")
-                        .getString("referent")
+            credentialsForAttribute1.getJSONObject(0).getJSONObject("cred_info")
+                .getString("referent")
 
         val credentialsForAttribute2 =
-                JSONArray(credentialsSearch.fetchNextCredentials("attr2_referent", 100).get())
+            JSONArray(credentialsSearch.fetchNextCredentials("attr2_referent", 100).get())
         credentialIdForAttribute2 =
-                credentialsForAttribute2.getJSONObject(0).getJSONObject("cred_info")
-                        .getString("referent")
+            credentialsForAttribute2.getJSONObject(0).getJSONObject("cred_info")
+                .getString("referent")
 
         val credentialsForAttribute3 =
-                JSONArray(credentialsSearch.fetchNextCredentials("attr3_referent", 100).get())
+            JSONArray(credentialsSearch.fetchNextCredentials("attr3_referent", 100).get())
         Assert.assertEquals(0, credentialsForAttribute3.length().toLong())
 
         val credentialsForPredicate =
-                JSONArray(credentialsSearch.fetchNextCredentials("predicate1_referent", 100).get())
+            JSONArray(credentialsSearch.fetchNextCredentials("predicate1_referent", 100).get())
         credentialIdForPredicate =
-                credentialsForPredicate.getJSONObject(0).getJSONObject("cred_info")
-                        .getString("referent")
+            credentialsForPredicate.getJSONObject(0).getJSONObject("cred_info")
+                .getString("referent")
         credentialsSearch.close()
     }
 
-    private suspend fun proverCreateProof() {
+    private fun proverCreateProof() {
 
         //12. Prover Creates Proof
         selfAttestedValue = "8-800-300"
         val requestedCredentialsJson = JSONObject()
-                .put("self_attested_attributes", JSONObject().put("attr3_referent", selfAttestedValue))
-                .put(
-                        "requested_attributes", JSONObject()
-                        .put(
-                                "attr1_referent", JSONObject()
-                                .put("cred_id", credentialIdForAttribute1)
-                                .put("revealed", true)
-                        )
-                        .put(
-                                "attr2_referent", JSONObject()
-                                .put("cred_id", credentialIdForAttribute2)
-                                .put("revealed", false)
-                        )
-                )
-                .put(
-                        "requested_predicates", JSONObject()
-                        .put(
-                                "predicate1_referent", JSONObject()
-                                .put("cred_id", credentialIdForPredicate)
-                        )
-                )
-                .toString()
+            .put("self_attested_attributes", JSONObject().put("attr3_referent", selfAttestedValue))
+            .put(
+                "requested_attributes", JSONObject()
+                    .put(
+                        "attr1_referent", JSONObject()
+                            .put("cred_id", credentialIdForAttribute1)
+                            .put("revealed", true)
+                    )
+                    .put(
+                        "attr2_referent", JSONObject()
+                            .put("cred_id", credentialIdForAttribute2)
+                            .put("revealed", false)
+                    )
+            )
+            .put(
+                "requested_predicates", JSONObject()
+                    .put(
+                        "predicate1_referent", JSONObject()
+                            .put("cred_id", credentialIdForPredicate)
+                    )
+            )
+            .toString()
 
         schemas = JSONObject().put(schemaId, JSONObject(schemaJson)).toString()
         credentialDefs = JSONObject().put(credDefId, JSONObject(credDefJson)).toString()
@@ -542,8 +535,8 @@ class AnoncredsActivity : AppCompatActivity() {
         proofJson = ""
         try {
             proofJson = org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateProof(
-                    proverWallet, proofRequestJson, requestedCredentialsJson,
-                    masterSecretId, schemas, credentialDefs, revocStates
+                proverWallet, proofRequestJson, requestedCredentialsJson,
+                masterSecretId, schemas, credentialDefs, revocStates
             ).get()
         } catch (e: Exception) {
             println("")
@@ -551,59 +544,59 @@ class AnoncredsActivity : AppCompatActivity() {
         proof = JSONObject(proofJson)
     }
 
-    private suspend fun verifierVerifyProof() {
+    private fun verifierVerifyProof() {
 
         //13. Verifier verify Proof
         val revealedAttr1 = proof.getJSONObject("requested_proof").getJSONObject("revealed_attrs")
-                .getJSONObject("attr1_referent")
+            .getJSONObject("attr1_referent")
         Assert.assertEquals("Alex", revealedAttr1.getString("raw"))
 
         Assert.assertNotNull(
-                proof.getJSONObject("requested_proof").getJSONObject("unrevealed_attrs")
-                        .getJSONObject("attr2_referent").getInt("sub_proof_index")
+            proof.getJSONObject("requested_proof").getJSONObject("unrevealed_attrs")
+                .getJSONObject("attr2_referent").getInt("sub_proof_index")
         )
 
         Assert.assertEquals(
-                selfAttestedValue,
-                proof.getJSONObject("requested_proof").getJSONObject("self_attested_attrs")
-                        .getString("attr3_referent")
+            selfAttestedValue,
+            proof.getJSONObject("requested_proof").getJSONObject("self_attested_attrs")
+                .getString("attr3_referent")
         )
 
         val revocRegDefs = JSONObject().toString()
         val revocRegs = JSONObject().toString()
 
         val valid = org.hyperledger.indy.sdk.anoncreds.Anoncreds.verifierVerifyProof(
-                proofRequestJson,
-                proofJson,
-                schemas,
-                credentialDefs,
-                revocRegDefs,
-                revocRegs
+            proofRequestJson,
+            proofJson,
+            schemas,
+            credentialDefs,
+            revocRegDefs,
+            revocRegs
         ).get()
         Assert.assertTrue(valid)
     }
 
-    private suspend fun closeDeleteIssuerWallet() {
+    private fun closeDeleteIssuerWallet() {
 
         //14. Close and Delete issuer wallet
         issuerWallet.closeWallet().get()
         Wallet.deleteWallet(issuerWalletConfig, issuerWalletCredentials).get()
     }
 
-    private suspend fun closeDeleteProverWallet() {
+    private fun closeDeleteProverWallet() {
 
         //15. Close and Delete prover wallet
         proverWallet.closeWallet().get()
         Wallet.deleteWallet(proverWalletConfig, proverWalletCredentials).get()
     }
 
-    private suspend fun closePool() {
+    private fun closePool() {
 
         //16. Close pool
         pool.closePoolLedger().get()
     }
 
-    private suspend fun deletePoolLedgerConfig() {
+    private fun deletePoolLedgerConfig() {
 
         //17. Delete Pool ledger config
         Pool.deletePoolLedgerConfig(poolName).get()

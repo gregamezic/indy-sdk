@@ -2,17 +2,17 @@ package org.hyperledger.indy.sdk.ui.anoncreds_revocation
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_anoncreds.*
-import kotlinx.android.synthetic.main.activity_anoncreds_revocation.*
 import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq
 import org.hyperledger.indy.sdk.blob_storage.BlobStorageReader
 import org.hyperledger.indy.sdk.blob_storage.BlobStorageWriter
+import org.hyperledger.indy.sdk.helpers.DemoActionHelper
 import org.hyperledger.indy.sdk.helpers.MessageHelper
+import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateFooter
+import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateHeader
 import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.utils.EnvironmentUtils
 import org.hyperledger.indy.sdk.utils.PoolUtils
@@ -20,7 +20,6 @@ import org.hyperledger.indy.sdk.wallet.Wallet
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert
-import java.lang.Exception
 
 class AnoncredsRevocationActivity : AppCompatActivity() {
 
@@ -69,24 +68,12 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_anoncreds_revocation)
+        setContentView(R.layout.demos_activity)
 
         startDemo()
     }
 
-    private fun updateUI(text: String) {
-        tvAnoncredsRevocationLogs.text = "${tvAnoncredsRevocationLogs.text}$text"
-    }
 
-    private fun updateHeader(text: String) {
-        pbAnoncredsRevocation.visibility = View.VISIBLE
-        tvAnoncredsRevocationStart.text = text
-    }
-
-    private fun updateFooter(text: String) {
-        pbAnoncredsRevocation.visibility = View.GONE
-        tvAnoncredsRevocationEnd.text = text
-    }
 
     /**
      * startDemo function start all functions for Anoncreds Revocation demo chronological in coroutine default thread
@@ -95,279 +82,320 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
 
         MainScope().launch {
 
+            var result = false
+
             Log.d(TAG, "startDemo: Anoncreds Revocation sample -> STARTED!")
+            updateHeader(this@AnoncredsRevocationActivity, getString(R.string.anoncreds_revocation_sample_start))
 
-            updateHeader(getString(R.string.anoncreds_revocation_sample_start))
 
-
-            updateUI(getString(R.string.anoncreds_revocation_create_pool))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    createOpenPool()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_create_pool)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { createOpenPool() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_create_pool_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_create_pool_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_create_open_wallet))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    issuerCreateOpenWallet()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_create_open_wallet)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { issuerCreateOpenWallet() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_create_open_wallet_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_create_open_wallet_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_prover_create_open_wallet))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    proverCreateOpenWallet()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_prover_create_open_wallet)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { proverCreateOpenWallet() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_prover_create_open_wallet_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_prover_create_open_wallet_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_schema))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    issuerCreateCredentialSchema()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_issuer_create_credential_schema)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { issuerCreateCredentialSchema() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_schema_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_issuer_create_credential_schema_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_definition))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    issuerCreateCredentialDefinition()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_issuer_create_credential_definition)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { issuerCreateCredentialDefinition() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_definition_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_issuer_create_credential_definition_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_issuer_create_revocation_registry))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    issuerCreateRevocationRegistry()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_issuer_create_revocation_registry)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { issuerCreateRevocationRegistry() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_issuer_create_revocation_registry_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_issuer_create_revocation_registry_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_prover_create_master_secret))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    proverCreateMasterSecret()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_prover_create_master_secret)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { proverCreateMasterSecret() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_prover_create_master_secret_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_prover_create_master_secret_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_offer))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    issuerCreateCredentialOffer()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_issuer_create_credential_offer)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { issuerCreateCredentialOffer() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_offer_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_issuer_create_credential_offer_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_prover_create_credential_request))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    proverCreateCredentialRequest()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_prover_create_credential_request)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { proverCreateCredentialRequest() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_prover_create_credential_request_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_prover_create_credential_request_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_issuer_open_tails_reader))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    issuerOpenTailsReader()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_issuer_open_tails_reader)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { issuerOpenTailsReader() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_issuer_open_tails_reader_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_issuer_open_tails_reader_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    issuerCreateCredential()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_issuer_create_credential)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { issuerCreateCredential() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_issuer_create_credential_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_issuer_create_credential_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_prover_stores_credential))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    proverStoresCredential()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_prover_stores_credential)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { proverStoresCredential() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_prover_stores_credential_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_prover_stores_credential_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_prover_get_credential_proof_request))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    proverGetCredentialsForProofRequest()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_prover_get_credential_proof_request)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { proverGetCredentialsForProofRequest() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_prover_get_credential_proof_request_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_prover_get_credential_proof_request_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_prover_create_revocation_state))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    proverCreateRevocationState()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_prover_create_revocation_state)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { proverCreateRevocationState() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_prover_create_revocation_state_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_prover_create_revocation_state_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_prover_creates_proof))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    proverCreateProof()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_prover_creates_proof)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { proverCreateProof() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_prover_creates_proof_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_prover_creates_proof_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_verifier_verify_proof))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    verifierVerifyProof()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_verifier_verify_proof)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { verifierVerifyProof() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_verifier_verify_proof_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_verifier_verify_proof_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_close_delete_issuer_wallet))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    closeDeleteIssuerWallet()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_close_delete_issuer_wallet)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { closeDeleteIssuerWallet() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_close_delete_issuer_wallet_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_close_delete_issuer_wallet_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_close_delete_prover_wallet))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    closeDeleteProverWallet()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_close_delete_prover_wallet)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { closeDeleteProverWallet() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_close_delete_prover_wallet_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_close_delete_prover_wallet_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_close_pool))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    closePool()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_close_pool)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { closePool() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_close_pool_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_close_pool_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.anoncreds_revocation_delete_pool_ledger_config))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    deletePoolLedgerConfig()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@AnoncredsRevocationActivity, getString(R.string.error))
-                pbAnoncredsRevocation.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                getString(R.string.anoncreds_revocation_delete_pool_ledger_config)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { deletePoolLedgerConfig() }
             }
-            updateUI(getString(R.string.anoncreds_revocation_delete_pool_ledger_config_end))
+            MessageHelper.updateUI(
+                this@AnoncredsRevocationActivity,
+                result,
+                getString(R.string.anoncreds_revocation_delete_pool_ledger_config_end)
+            )
+            if (!result) return@launch
 
 
             MessageHelper.successToast(this@AnoncredsRevocationActivity, getString(R.string.success))
-            updateFooter(getString(R.string.anoncreds_revocation_sample_completed))
+            updateFooter(this@AnoncredsRevocationActivity, getString(R.string.anoncreds_revocation_sample_completed))
             Log.d(TAG, "startDemo: Anoncreds Revocation sample -> COMPLETED!")
         }
     }
 
 
-    private suspend fun createOpenPool() {
+    private fun createOpenPool() {
 
         // Set protocol version 2 to work with Indy Node 1.4
         Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get()
@@ -378,7 +406,7 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         pool = Pool.openPoolLedger(poolName, "{}").get()
     }
 
-    private suspend fun issuerCreateOpenWallet() {
+    private fun issuerCreateOpenWallet() {
         //2. Issuer Create and Open Wallet
         issuerWalletConfig = JSONObject().put("id", "issuerWallet").toString()
         issuerWalletCredentials = JSONObject().put("key", "issuer_wallet_key").toString()
@@ -386,7 +414,7 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         issuerWallet = Wallet.openWallet(issuerWalletConfig, issuerWalletCredentials).get()
     }
 
-    private suspend fun proverCreateOpenWallet() {
+    private fun proverCreateOpenWallet() {
         //3. Prover Create and Open Wallet
         proverWalletConfig = JSONObject().put("id", "trusteeWallet").toString()
         proverWalletCredentials = JSONObject().put("key", "prover_wallet_key").toString()
@@ -394,7 +422,7 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         proverWallet = Wallet.openWallet(proverWalletConfig, proverWalletCredentials).get()
     }
 
-    private suspend fun issuerCreateCredentialSchema() {
+    private fun issuerCreateCredentialSchema() {
         //4. Issuer Creates Credential Schema
         val schemaName = "gvt"
         val schemaVersion = "1.0"
@@ -407,7 +435,7 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         schemaJson = createSchemaResult.schemaJson
     }
 
-    private suspend fun issuerCreateCredentialDefinition() {
+    private fun issuerCreateCredentialDefinition() {
         //5. Issuer create Credential Definition
         val credDefTag = "Tag1"
         val credDefConfigJson = JSONObject().put("support_revocation", true).toString()
@@ -423,7 +451,7 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         credDefJson = createCredDefResult.credDefJson
     }
 
-    private suspend fun issuerCreateRevocationRegistry() {
+    private fun issuerCreateRevocationRegistry() {
         //6. Issuer create Revocation Registry
         val revRegDefConfig = JSONObject()
                 .put("issuance_type", "ISSUANCE_ON_DEMAND")
@@ -454,17 +482,17 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         revRegDefJson = createRevRegResult.revRegDefJson
     }
 
-    private suspend fun proverCreateMasterSecret() {
+    private fun proverCreateMasterSecret() {
         //7. Prover create Master Secret
         masterSecretId = Anoncreds.proverCreateMasterSecret(proverWallet, null).get()
     }
 
-    private suspend fun issuerCreateCredentialOffer() {
+    private fun issuerCreateCredentialOffer() {
         //8. Issuer Creates Credential Offer
         credOffer = Anoncreds.issuerCreateCredentialOffer(issuerWallet, credDefId).get()
     }
 
-    private suspend fun proverCreateCredentialRequest() {
+    private fun proverCreateCredentialRequest() {
         //9. Prover Creates Credential Request
         val createCredReqResult = Anoncreds.proverCreateCredentialReq(
                 proverWallet,
@@ -477,13 +505,13 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         credReqMetadataJson = createCredReqResult.credentialRequestMetadataJson
     }
 
-    private suspend fun issuerOpenTailsReader() {
+    private fun issuerOpenTailsReader() {
         //10. Issuer open Tails Reader
         val blobStorageReaderCfg = BlobStorageReader.openReader("default", tailsWriterConfig).get()
         blobStorageReaderHandle = blobStorageReaderCfg.blobStorageReaderHandle
     }
 
-    private suspend fun issuerCreateCredential() {
+    private fun issuerCreateCredential() {
         //11. Issuer create Credential
         //    note that encoding is not standardized by Indy except that 32-bit integers are encoded as themselves. IS-786
         val credValuesJson = JSONObject()
@@ -516,7 +544,7 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         credRevId = createCredentialResult.revocId
     }
 
-    private suspend fun proverStoresCredential() {
+    private fun proverStoresCredential() {
         //12. Prover Stores Credential
         Anoncreds.proverStoreCredential(
                 proverWallet,
@@ -528,7 +556,7 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         ).get()
     }
 
-    private suspend fun proverGetCredentialsForProofRequest() {
+    private fun proverGetCredentialsForProofRequest() {
         //13. Prover Gets Credentials for Proof Request
         timestamp = System.currentTimeMillis() / 1000
         val nonce = Anoncreds.generateNonce().get()
@@ -570,7 +598,7 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         credentialsSearch.close()
     }
 
-    private suspend fun proverCreateRevocationState() {
+    private fun proverCreateRevocationState() {
         //14. Prover create RevocationState
         revStateJson = Anoncreds.createRevocationState(
                 blobStorageReaderHandle,
@@ -581,7 +609,7 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         ).get()
     }
 
-    private suspend fun proverCreateProof() {
+    private fun proverCreateProof() {
         //15. Prover Creates Proof
         val requestedCredentialsJson = JSONObject()
                 .put("self_attested_attributes", JSONObject())
@@ -617,7 +645,7 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         proof = JSONObject(proofJson)
     }
 
-    private suspend fun verifierVerifyProof() {
+    private fun verifierVerifyProof() {
         //16. Verifier verify Proof
         val revealedAttr1 = proof.getJSONObject("requested_proof").getJSONObject("revealed_attrs")
                 .getJSONObject("attr1_referent")
@@ -640,24 +668,24 @@ class AnoncredsRevocationActivity : AppCompatActivity() {
         Assert.assertTrue(valid)
     }
 
-    private suspend fun closeDeleteIssuerWallet() {
+    private fun closeDeleteIssuerWallet() {
         //17. Close and Delete issuer wallet
         issuerWallet.closeWallet().get()
         Wallet.deleteWallet(issuerWalletConfig, issuerWalletCredentials).get()
     }
 
-    private suspend fun closeDeleteProverWallet() {
+    private fun closeDeleteProverWallet() {
         //18. Close and Delete prover wallet
         proverWallet.closeWallet().get()
         Wallet.deleteWallet(proverWalletConfig, proverWalletCredentials).get()
     }
 
-    private suspend fun closePool() {
+    private fun closePool() {
         //19. Close pool
         pool.closePoolLedger().get()
     }
 
-    private suspend fun deletePoolLedgerConfig() {
+    private fun deletePoolLedgerConfig() {
         //20. Delete Pool ledger config
         Pool.deletePoolLedgerConfig(poolName).get()
     }

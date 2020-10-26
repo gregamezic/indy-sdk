@@ -21,12 +21,13 @@ class App : Application() {
     @Throws(ErrnoException::class)
     fun init() {
 
-        // Trace debugging for testing.
-        LoggerConfiguration.configuration()
-            .setRootLogLevel(LogLevel.TRACE)
+        if (BuildConfig.DEBUG) {
+            // Trace debugging for testing.
+            LoggerConfiguration.configuration()
+                .setRootLogLevel(LogLevel.TRACE)
+        }
 
 
-        // TODO should this be set as part of init?
         Os.setenv("EXTERNAL_STORAGE", EnvironmentUtils.getIndyHomePath(baseContext), true)
         Os.setenv("TMPDIR", EnvironmentUtils.getTmpPath(baseContext), true)
         if (!LibIndy.isInitialized()) {

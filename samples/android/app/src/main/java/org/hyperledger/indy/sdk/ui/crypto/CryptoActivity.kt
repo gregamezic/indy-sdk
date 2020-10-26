@@ -2,22 +2,18 @@ package org.hyperledger.indy.sdk.ui.crypto
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_anoncreds.*
-import kotlinx.android.synthetic.main.activity_anoncreds_revocation.*
-import kotlinx.android.synthetic.main.activity_crypto.*
 import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.crypto.Crypto
 import org.hyperledger.indy.sdk.did.Did
-import org.hyperledger.indy.sdk.helpers.MessageHelper
+import org.hyperledger.indy.sdk.helpers.DemoActionHelper
+import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateHeader
 import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.utils.PoolUtils
 import org.hyperledger.indy.sdk.wallet.Wallet
 import org.json.JSONObject
 import org.junit.Assert
-import java.lang.Exception
 import java.util.*
 
 class CryptoActivity : AppCompatActivity() {
@@ -49,40 +45,38 @@ class CryptoActivity : AppCompatActivity() {
     }
 
 
-    private fun updateUI(text: String) {
-        tvCryptoLogs.text = "${tvCryptoLogs.text}$text"
-    }
-
-    private fun updateHeader(text: String) {
-        pbCrypto.visibility = View.VISIBLE
-        tvCryptoStart.text = text
-    }
-
-    private fun updateFooter(text: String) {
-        pbCrypto.visibility = View.GONE
-        tvCryptoEnd.text = text
-    }
-
 
     /**
      * startDemo function start all functions for Crypto Revocation demo chronological in coroutine default thread
      */
     private fun startDemo() {
+
+        // Start
         MainScope().launch {
             Log.d(TAG, "startDemo: Crypto sample -> STARTED!")
-            updateHeader(getString(R.string.crypto_sample_start))
+            updateHeader(this@CryptoActivity, getString(R.string.crypto_sample_start))
 
-            updateUI(getString(R.string.crypto_create_pool))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    createOpenPool()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@CryptoActivity, getString(R.string.error))
-                pbCrypto.visibility = View.GONE
-                return@launch
-            }
-            updateUI(getString(R.string.crypto_create_pool_end))
+/*
+            // create pool
+            DemoActionHelper.runDemoStep(
+                this@CryptoActivity,
+                getString(R.string.crypto_create_pool),
+                { createOpenPool() },
+                getString(R.string.crypto_create_pool_end)
+            )
+
+            // create pool
+            DemoActionHelper.runDemoStep(
+                this@CryptoActivity,
+                getString(R.string.crypto_create_pool),
+                { createOpenPool() },
+                getString(R.string.crypto_create_pool_end)
+            )*/
+
+
+
+            /*
+
 
 
             updateUI(getString(R.string.crypto_create_open_my_wallet))
@@ -217,12 +211,12 @@ class CryptoActivity : AppCompatActivity() {
 
             MessageHelper.successToast(this@CryptoActivity, getString(R.string.success))
             updateFooter(getString(R.string.crypto_sample_completed))
-            Log.d(TAG, "startDemo: Crypto sample -> COMPLETED!")
+            Log.d(TAG, "startDemo: Crypto sample -> COMPLETED!")*/
         }
     }
 
 
-    private suspend fun createOpenPool() {
+    private fun createOpenPool() {
         // Set protocol version 2 to work with Indy Node 1.4
         Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get()
 
@@ -232,7 +226,7 @@ class CryptoActivity : AppCompatActivity() {
         pool = Pool.openPoolLedger(poolName, "{}").get()
     }
 
-    private suspend fun createOpenMyWallet() {
+    private fun createOpenMyWallet() {
         // 2. Create and Open My Wallet
         myWalletConfig = JSONObject().put("id", "myWallet").toString()
         myWalletCredentials = JSONObject().put("key", "my_wallet_key").toString()
@@ -240,7 +234,7 @@ class CryptoActivity : AppCompatActivity() {
         myWallet = Wallet.openWallet(myWalletConfig, myWalletCredentials).get()
     }
 
-    private suspend fun createOpenTheirWallet() {
+    private fun createOpenTheirWallet() {
         // 3. Create and Open Their Wallet
         theirWalletConfig = JSONObject().put("id", "theirWallet").toString()
         theirWalletCredentials = JSONObject().put("key", "their_wallet_key").toString()
@@ -248,19 +242,19 @@ class CryptoActivity : AppCompatActivity() {
         theirWallet = Wallet.openWallet(theirWalletConfig, theirWalletCredentials).get()
     }
 
-    private suspend fun createMyDID() {
+    private fun createMyDID() {
         // 4. Create My Did
         val myDid = Did.createAndStoreMyDid(myWallet, "{}").get()
         myVerkey = myDid.verkey
     }
 
-    private suspend fun createTheirDID() {
+    private fun createTheirDID() {
         // 5. Create Their Did
         val createTheirDidResult = Did.createAndStoreMyDid(theirWallet, "{}").get()
         theirVerkey = createTheirDidResult.verkey
     }
 
-    private suspend fun theirAuthEncryptMessage() {
+    private fun theirAuthEncryptMessage() {
         // 6. Their auth encrypt message
         msg = JSONObject()
                 .put("reqId", "1495034346617224651")
@@ -276,7 +270,7 @@ class CryptoActivity : AppCompatActivity() {
                 Crypto.authCrypt(theirWallet, theirVerkey, myVerkey, msg.toByteArray()).get()
     }
 
-    private suspend fun iDecryptMessage() {
+    private fun iDecryptMessage() {
         // 7. I decrypt message
         val authDecryptResult = Crypto.authDecrypt(myWallet, myVerkey, encryptedMessage).get()
 
@@ -284,24 +278,24 @@ class CryptoActivity : AppCompatActivity() {
         Assert.assertEquals(theirVerkey, authDecryptResult.verkey)
     }
 
-    private suspend fun closeDeleteMyWallet() {
+    private fun closeDeleteMyWallet() {
         // 8. Close and delete My Wallet
         myWallet.closeWallet().get()
         Wallet.deleteWallet(myWalletConfig, myWalletCredentials).get()
     }
 
-    private suspend fun closeDeleteTheirWallet() {
+    private fun closeDeleteTheirWallet() {
         // 9. Close and delete Their Wallet
         theirWallet.closeWallet().get()
         Wallet.deleteWallet(theirWalletConfig, theirWalletCredentials).get()
     }
 
-    private suspend fun closePool() {
+    private fun closePool() {
         // 10. Close Pool
         pool.closePoolLedger().get()
     }
 
-    private suspend fun deletePoolLedgerConfig() {
+    private fun deletePoolLedgerConfig() {
         // 11. Delete Pool ledger config
         Pool.deletePoolLedgerConfig(poolName).get()
     }
