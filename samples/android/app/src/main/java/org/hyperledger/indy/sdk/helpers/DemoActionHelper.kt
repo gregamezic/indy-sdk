@@ -7,9 +7,9 @@ class DemoActionHelper {
 
 
     companion object {
-
         private val TAG = DemoActionHelper::class.java.name
 
+        // run in
         fun runDemoStep(action: () -> Unit): Boolean {
             return try {
                 action()

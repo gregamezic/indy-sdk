@@ -17,23 +17,21 @@ public class MessageHelper {
 
     companion object {
 
+        // toasts
         fun successToast(context: Context, msg: String) {
             Toasty.success(context, msg, Toast.LENGTH_SHORT).show()
         }
-
         fun errorToast(context: Context, msg: String) {
             Toasty.error(context, msg, Toast.LENGTH_SHORT).show()
         }
 
 
-
+        // update ui
         fun updateUI(context: Context, text: String) {
             val tvText = (context as Activity).findViewById<TextView>(R.id.tvDemoLogs)
             tvText.setTextColor(ContextCompat.getColor(context, R.color.normalColor))
             tvText.text = "${tvText.text}$text"
         }
-
-        // from action result
         fun updateUI(context: Context, success: Boolean, text: String) {
 
             val tvText = (context as Activity).findViewById<TextView>(R.id.tvDemoLogs)
@@ -54,6 +52,7 @@ public class MessageHelper {
         }
 
 
+        // update header/footer
         fun updateHeader(context: Context, text: String) {
             (context as Activity)
             val tvText = context.findViewById<TextView>(R.id.tvDemoStart)
@@ -62,7 +61,6 @@ public class MessageHelper {
             tvText.text = text
             pbDemo.visibility = View.VISIBLE
         }
-
         fun updateFooter(context: Context, text: String) {
             (context as Activity)
             val tvText = context.findViewById<TextView>(R.id.tvDemoEnd)

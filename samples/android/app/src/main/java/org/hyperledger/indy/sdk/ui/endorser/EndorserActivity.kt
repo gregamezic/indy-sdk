@@ -12,7 +12,10 @@ import org.hyperledger.indy.sdk.anoncreds.Anoncreds
 import org.hyperledger.indy.sdk.did.Did
 import org.hyperledger.indy.sdk.did.DidJSONParameters
 import org.hyperledger.indy.sdk.did.DidResults
+import org.hyperledger.indy.sdk.helpers.DemoActionHelper
 import org.hyperledger.indy.sdk.helpers.MessageHelper
+import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateFooter
+import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateHeader
 import org.hyperledger.indy.sdk.ledger.Ledger
 import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.utils.PoolUtils
@@ -57,268 +60,291 @@ class EndorserActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_endorser)
+        setContentView(R.layout.demos_activity)
 
         startDemo()
     }
 
-
-    private fun updateUI(text: String) {
-        tvEndorserLogs.text = "${tvEndorserLogs.text}$text"
-    }
-
-    private fun updateHeader(text: String) {
-        pbEndorser.visibility = View.VISIBLE
-        tvEndorserStart.text = text
-    }
-
-    private fun updateFooter(text: String) {
-        pbEndorser.visibility = View.GONE
-        tvEndorserStart.text = text
-    }
 
 
     /**
      * startDemo function start all functions fro Anoncreds chronological in coroutine default thread
      */
     private fun startDemo() {
+
+        var result = false
+
         // Start
         MainScope().launch {
+
             Log.d(TAG, "startDemo: Endorser sample -> STARTED!")
+            updateHeader(this@EndorserActivity, getString(R.string.endorser_sample_start))
 
-            updateHeader(getString(R.string.endorser_sample_start))
 
-
-            updateUI(getString(R.string.endorser_create_pool))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    createOpenPool()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_create_pool)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { createOpenPool() }
             }
-            updateUI(getString(R.string.endorser_create_pool_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_create_pool_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_create_open_author_wallet))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    createOpenAuthorWallet()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_create_open_author_wallet)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { createOpenAuthorWallet() }
             }
-            updateUI(getString(R.string.endorser_create_open_author_wallet_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_create_open_author_wallet_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_create_open_endorser_wallet))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    createOpenEndorserWallet()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_create_open_endorser_wallet)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { createOpenEndorserWallet() }
             }
-            updateUI(getString(R.string.endorser_create_open_endorser_wallet_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_create_open_endorser_wallet_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_create_open_trustee_wallet))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    createOpenTrusteeWallet()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_create_open_trustee_wallet)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { createOpenTrusteeWallet() }
             }
-            updateUI(getString(R.string.endorser_create_open_trustee_wallet_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_create_open_trustee_wallet_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_create_trustee_did))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    createTrusteeDID()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_create_trustee_did)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { createTrusteeDID() }
             }
-            updateUI(getString(R.string.endorser_create_trustee_did_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_create_trustee_did_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_create_author_did))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    createAuthorDID()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_create_author_did)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { createAuthorDID() }
             }
-            updateUI(getString(R.string.endorser_create_author_did_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_create_author_did_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_create_endorser_did))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    createEndorserDID()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_create_endorser_did)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { createEndorserDID() }
             }
-            updateUI(getString(R.string.endorser_create_endorser_did_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_create_endorser_did_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_build_author_nym_request))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    buildAuthorNymRequest()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_build_author_nym_request)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { buildAuthorNymRequest() }
             }
-            updateUI(getString(R.string.endorser_build_author_nym_request_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_build_author_nym_request_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_trustee_sign_author_nym_request))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    trusteeSignAuthorNymRequest()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_trustee_sign_author_nym_request)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { trusteeSignAuthorNymRequest() }
             }
-            updateUI(getString(R.string.endorser_trustee_sign_author_nym_request_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_trustee_sign_author_nym_request_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_build_endorser_nym_request))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    buildEndorserNymRequest()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_build_endorser_nym_request)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { buildEndorserNymRequest() }
             }
-            updateUI(getString(R.string.endorser_build_endorser_nym_request_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_build_endorser_nym_request_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_trustee_sign_endorser_nym))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    trusteeSingEndorserNymRequest()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_trustee_sign_endorser_nym)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { trusteeSingEndorserNymRequest() }
             }
-            updateUI(getString(R.string.endorser_trustee_sign_endorser_nym_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_trustee_sign_endorser_nym_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_create_schema_endorser))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    createSchemaWithEndorser()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_create_schema_endorser)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { createSchemaWithEndorser() }
             }
-            updateUI(getString(R.string.endorser_create_schema_endorser_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_create_schema_endorser_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_transaction_author_builds_schema_request))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    transactionAuthorBuildsSchemaRequest()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_transaction_author_builds_schema_request)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { transactionAuthorBuildsSchemaRequest() }
             }
-            updateUI(getString(R.string.endorser_transaction_author_builds_schema_request_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_transaction_author_builds_schema_request_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_transaction_author_append_DID_request))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    transactionAuthorSignsRequestDID()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_transaction_author_append_DID_request)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { transactionAuthorSignsRequestDID() }
             }
-            updateUI(getString(R.string.endorser_transaction_author_append_DID_request_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_transaction_author_append_DID_request_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_transaction_author_sign_with_endorser))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    transactionAuthorSignEndorser()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_transaction_author_sign_with_endorser)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { transactionAuthorSignEndorser() }
             }
-            updateUI(getString(R.string.endorser_transaction_author_sign_with_endorser_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_transaction_author_sign_with_endorser_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_transaction_endorser_sign_request))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    transactionEndorserSignRequest()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_transaction_endorser_sign_request)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { transactionEndorserSignRequest() }
             }
-            updateUI(getString(R.string.endorser_transaction_endorser_sign_request_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_transaction_endorser_sign_request_end)
+            )
+            if (!result) return@launch
 
 
-            updateUI(getString(R.string.endorser_transaction_endorser_send_request))
-            try {
-                withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                    transactionEndorserSendRequest()
-                }
-            } catch (e: Exception) {
-                MessageHelper.errorToast(this@EndorserActivity, getString(R.string.error))
-                pbEndorser.visibility = View.GONE
-                return@launch
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                getString(R.string.endorser_transaction_endorser_send_request)
+            )
+            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
+                DemoActionHelper.runDemoStep { transactionEndorserSendRequest() }
             }
-            updateUI(getString(R.string.endorser_transaction_endorser_send_request_end))
+            MessageHelper.updateUI(
+                this@EndorserActivity,
+                result,
+                getString(R.string.endorser_transaction_endorser_send_request_end)
+            )
+            if (!result) return@launch
+
 
 
             MessageHelper.successToast(this@EndorserActivity, getString(R.string.success))
-            updateFooter(getString(R.string.endorser_sample_completed))
-
+            updateFooter(this@EndorserActivity, getString(R.string.endorser_sample_completed))
             Log.d(TAG, "startDemo: Endorser sample -> COMPLETED!")
         }
     }
 
 
-    private suspend fun createOpenPool() {
+    private fun createOpenPool() {
         // Set protocol version 2 to work with Indy Node 1.4
         Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get()
 
@@ -328,7 +354,7 @@ class EndorserActivity : AppCompatActivity() {
         pool = Pool.openPoolLedger(poolName, "{}").get()
     }
 
-    private suspend fun createOpenAuthorWallet() {
+    private fun createOpenAuthorWallet() {
         // 2. Create and Open Author Wallet
         authorWalletConfig = JSONObject().put("id", "authorWallet").toString()
         authorWalletCredentials = JSONObject().put("key", "author_wallet_key").toString()
@@ -336,7 +362,7 @@ class EndorserActivity : AppCompatActivity() {
         authorWallet = Wallet.openWallet(authorWalletConfig, authorWalletCredentials).get()
     }
 
-    private suspend fun createOpenEndorserWallet() {
+    private fun createOpenEndorserWallet() {
         // 3. Create and Open Endorser Wallet
         endorserWalletConfig = JSONObject().put("id", "endorserWallet").toString()
         endorserWalletCredentials = JSONObject().put("key", "endorser_wallet_key").toString()
@@ -345,7 +371,7 @@ class EndorserActivity : AppCompatActivity() {
                 Wallet.openWallet(endorserWalletConfig, endorserWalletCredentials).get()
     }
 
-    private suspend fun createOpenTrusteeWallet() {
+    private fun createOpenTrusteeWallet() {
         // 4. Create and Open Trustee Wallet
         trusteeWalletConfig = JSONObject().put("id", "trusteeWallet").toString()
         trusteeWalletCredentials = JSONObject().put("key", "trustee_wallet_key").toString()
@@ -353,7 +379,7 @@ class EndorserActivity : AppCompatActivity() {
         trusteeWallet = Wallet.openWallet(trusteeWalletConfig, trusteeWalletCredentials).get()
     }
 
-    private suspend fun createTrusteeDID() {
+    private fun createTrusteeDID() {
         // 5. Create Trustee DID
         val theirDidJson =
                 DidJSONParameters.CreateAndStoreMyDidJSONParameter(null, trusteeSeed, null, null)
@@ -362,43 +388,43 @@ class EndorserActivity : AppCompatActivity() {
         trusteeDid = createTheirDidResult.did
     }
 
-    private suspend fun createAuthorDID() {
+    private fun createAuthorDID() {
         // 6. Create Author DID
         createMyDidResult = Did.createAndStoreMyDid(authorWallet, "{}").get()
         authorDid = createMyDidResult.did
         authorVerkey = createMyDidResult.verkey
     }
 
-    private suspend fun createEndorserDID() {
+    private fun createEndorserDID() {
         // 7. Create Endorser DID
         createMyDidResult = Did.createAndStoreMyDid(endorserWallet, "{}").get()
         endorserDid = createMyDidResult.did
         endorserVerkey = createMyDidResult.verkey
     }
 
-    private suspend fun buildAuthorNymRequest() {
+    private fun buildAuthorNymRequest() {
         // 8. Build Author Nym Request
         nymRequest =
                 Ledger.buildNymRequest(trusteeDid, authorDid, authorVerkey, null, null).get()
     }
 
-    private suspend fun trusteeSignAuthorNymRequest() {
+    private fun trusteeSignAuthorNymRequest() {
         // 9. Trustee Sign Author Nym Request
         Ledger.signAndSubmitRequest(pool, trusteeWallet, trusteeDid, nymRequest).get()
     }
 
-    private suspend fun buildEndorserNymRequest() {
+    private fun buildEndorserNymRequest() {
         // 10. Build Endorser Nym Request
         nymRequest =
                 Ledger.buildNymRequest(trusteeDid, endorserDid, endorserVerkey, null, "ENDORSER").get()
     }
 
-    private suspend fun trusteeSingEndorserNymRequest() {
+    private fun trusteeSingEndorserNymRequest() {
         // 11. Trustee Sign Endorser Nym Request
         Ledger.signAndSubmitRequest(pool, trusteeWallet, trusteeDid, nymRequest).get()
     }
 
-    private suspend fun createSchemaWithEndorser() {
+    private fun createSchemaWithEndorser() {
         // 12. Create schema with endorser
         val schemaName = "gvt"
         val schemaVersion = "1.0"
@@ -411,24 +437,24 @@ class EndorserActivity : AppCompatActivity() {
         schemaJson = createSchemaResult.schemaJson
     }
 
-    private suspend fun transactionAuthorBuildsSchemaRequest() {
+    private fun transactionAuthorBuildsSchemaRequest() {
         // 13. Transaction Author builds Schema Request
         schemaRequest = Ledger.buildSchemaRequest(authorDid, schemaJson).get()
     }
 
-    private suspend fun transactionAuthorSignsRequestDID() {
+    private fun transactionAuthorSignsRequestDID() {
         // 14. Transaction Author appends Endorser's DID into the request
         schemaRequestWithEndorser =
                 Ledger.appendRequestEndorser(schemaRequest, endorserDid).get()
     }
 
-    private suspend fun transactionAuthorSignEndorser() {
+    private fun transactionAuthorSignEndorser() {
         // 15. Transaction Author signs the request with the added endorser field
         schemaRequestWithEndorserAuthorSigned =
                 Ledger.multiSignRequest(authorWallet, authorDid, schemaRequestWithEndorser).get()
     }
 
-    private suspend fun transactionEndorserSignRequest() {
+    private fun transactionEndorserSignRequest() {
         // 16. Transaction Endorser signs the request
         schemaRequestWithEndorserSigned = Ledger.multiSignRequest(
                 endorserWallet,
@@ -437,7 +463,7 @@ class EndorserActivity : AppCompatActivity() {
         ).get()
     }
 
-    private suspend fun transactionEndorserSendRequest() {
+    private fun transactionEndorserSendRequest() {
         // 17. Transaction Endorser sends the request
         val response = Ledger.submitRequest(pool, schemaRequestWithEndorserSigned).get()
         val responseJson = JSONObject(response)

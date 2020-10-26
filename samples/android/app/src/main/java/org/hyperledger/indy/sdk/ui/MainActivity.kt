@@ -14,7 +14,6 @@ import org.hyperledger.indy.sdk.ui.ledger.LedgerActivity
 
 class MainActivity : AppCompatActivity() {
 
-    private val TAG = MainActivity::class.java.name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
