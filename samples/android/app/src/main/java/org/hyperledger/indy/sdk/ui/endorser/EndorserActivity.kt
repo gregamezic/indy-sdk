@@ -2,33 +2,24 @@ package org.hyperledger.indy.sdk.ui.endorser
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_crypto.*
-import kotlinx.android.synthetic.main.activity_endorser.*
 import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds
 import org.hyperledger.indy.sdk.did.Did
 import org.hyperledger.indy.sdk.did.DidJSONParameters
 import org.hyperledger.indy.sdk.did.DidResults
-import org.hyperledger.indy.sdk.helpers.DemoActionHelper
-import org.hyperledger.indy.sdk.helpers.MessageHelper
-import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateFooter
-import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateHeader
 import org.hyperledger.indy.sdk.ledger.Ledger
 import org.hyperledger.indy.sdk.pool.Pool
+import org.hyperledger.indy.sdk.ui.BaseActivity
 import org.hyperledger.indy.sdk.utils.PoolUtils
 import org.hyperledger.indy.sdk.wallet.Wallet
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert
-import java.lang.Exception
 
-class EndorserActivity : AppCompatActivity() {
+class EndorserActivity : BaseActivity() {
 
     private val TAG = EndorserActivity::class.java.name
-
 
     // my vars
     private val trusteeSeed = "000000000000000000000000Trustee1"
@@ -57,14 +48,11 @@ class EndorserActivity : AppCompatActivity() {
     private lateinit var schemaRequestWithEndorserSigned: String
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.demos_activity)
 
         startDemo()
     }
-
 
 
     /**
@@ -72,272 +60,166 @@ class EndorserActivity : AppCompatActivity() {
      */
     private fun startDemo() {
 
-        var result = false
+        Log.d(TAG, "startDemo: Endorser sample -> STARTED!")
+        updateHeader(this@EndorserActivity, getString(R.string.endorser_sample_start))
 
         // Start
         MainScope().launch {
 
-            Log.d(TAG, "startDemo: Endorser sample -> STARTED!")
-            updateHeader(this@EndorserActivity, getString(R.string.endorser_sample_start))
-
-
-            MessageHelper.updateUI(
+            var result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_create_pool)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createOpenPool() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_create_pool),
+                { createOpenPool() },
                 getString(R.string.endorser_create_pool_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_create_open_author_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createOpenAuthorWallet() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_create_open_author_wallet),
+                { createOpenAuthorWallet() },
                 getString(R.string.endorser_create_open_author_wallet_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_create_open_endorser_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createOpenEndorserWallet() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_create_open_endorser_wallet),
+                { createOpenEndorserWallet() },
                 getString(R.string.endorser_create_open_endorser_wallet_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_create_open_trustee_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createOpenTrusteeWallet() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_create_open_trustee_wallet),
+                { createOpenTrusteeWallet() },
                 getString(R.string.endorser_create_open_trustee_wallet_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_create_trustee_did)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createTrusteeDID() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_create_trustee_did),
+                { createTrusteeDID() },
                 getString(R.string.endorser_create_trustee_did_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_create_author_did)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createAuthorDID() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_create_author_did),
+                { createAuthorDID() },
                 getString(R.string.endorser_create_author_did_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_create_endorser_did)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createEndorserDID() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_create_endorser_did),
+                { createEndorserDID() },
                 getString(R.string.endorser_create_endorser_did_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_build_author_nym_request)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { buildAuthorNymRequest() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_build_author_nym_request),
+                { buildAuthorNymRequest() },
                 getString(R.string.endorser_build_author_nym_request_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_trustee_sign_author_nym_request)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { trusteeSignAuthorNymRequest() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_trustee_sign_author_nym_request),
+                { trusteeSignAuthorNymRequest() },
                 getString(R.string.endorser_trustee_sign_author_nym_request_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_build_endorser_nym_request)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { buildEndorserNymRequest() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_build_endorser_nym_request),
+                { buildEndorserNymRequest() },
                 getString(R.string.endorser_build_endorser_nym_request_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_trustee_sign_endorser_nym)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { trusteeSingEndorserNymRequest() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_trustee_sign_endorser_nym),
+                { trusteeSingEndorserNymRequest() },
                 getString(R.string.endorser_trustee_sign_endorser_nym_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_create_schema_endorser)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createSchemaWithEndorser() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_create_schema_endorser),
+                { createSchemaWithEndorser() },
                 getString(R.string.endorser_create_schema_endorser_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_transaction_author_builds_schema_request)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { transactionAuthorBuildsSchemaRequest() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_transaction_author_builds_schema_request),
+                { transactionAuthorBuildsSchemaRequest() },
                 getString(R.string.endorser_transaction_author_builds_schema_request_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_transaction_author_append_DID_request)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { transactionAuthorSignsRequestDID() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_transaction_author_append_DID_request),
+                { transactionAuthorSignsRequestDID() },
                 getString(R.string.endorser_transaction_author_append_DID_request_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_transaction_author_sign_with_endorser)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { transactionAuthorSignEndorser() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_transaction_author_sign_with_endorser),
+                { transactionAuthorSignEndorser() },
                 getString(R.string.endorser_transaction_author_sign_with_endorser_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_transaction_endorser_sign_request)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { transactionEndorserSignRequest() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_transaction_endorser_sign_request),
+                { transactionEndorserSignRequest() },
                 getString(R.string.endorser_transaction_endorser_sign_request_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@EndorserActivity,
-                getString(R.string.endorser_transaction_endorser_send_request)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { transactionEndorserSendRequest() }
-            }
-            MessageHelper.updateUI(
-                this@EndorserActivity,
-                result,
+                getString(R.string.endorser_transaction_endorser_send_request),
+                { transactionEndorserSendRequest() },
                 getString(R.string.endorser_transaction_endorser_send_request_end)
             )
             if (!result) return@launch
 
 
-
-            MessageHelper.successToast(this@EndorserActivity, getString(R.string.success))
+            successToast(this@EndorserActivity, getString(R.string.success))
             updateFooter(this@EndorserActivity, getString(R.string.endorser_sample_completed))
             Log.d(TAG, "startDemo: Endorser sample -> COMPLETED!")
         }
@@ -433,7 +315,7 @@ class EndorserActivity : AppCompatActivity() {
         val createSchemaResult =
                 Anoncreds.issuerCreateSchema(authorDid, schemaName, schemaVersion, schemaAttributes)
                         .get()
-        val schemaId = createSchemaResult.schemaId
+        createSchemaResult.schemaId
         schemaJson = createSchemaResult.schemaJson
     }
 

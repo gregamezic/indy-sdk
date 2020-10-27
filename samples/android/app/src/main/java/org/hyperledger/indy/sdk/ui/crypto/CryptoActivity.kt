@@ -2,27 +2,21 @@ package org.hyperledger.indy.sdk.ui.crypto
 
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.crypto.Crypto
 import org.hyperledger.indy.sdk.did.Did
-import org.hyperledger.indy.sdk.helpers.DemoActionHelper
-import org.hyperledger.indy.sdk.helpers.MessageHelper
-import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateFooter
-import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateHeader
 import org.hyperledger.indy.sdk.pool.Pool
+import org.hyperledger.indy.sdk.ui.BaseActivity
 import org.hyperledger.indy.sdk.utils.PoolUtils
 import org.hyperledger.indy.sdk.wallet.Wallet
 import org.json.JSONObject
 import org.junit.Assert
 import java.util.*
 
-class CryptoActivity : AppCompatActivity() {
+class CryptoActivity : BaseActivity() {
 
     private val TAG = CryptoActivity::class.java.name
-
-
 
     // my vars
     private lateinit var myWallet: Wallet
@@ -41,7 +35,6 @@ class CryptoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.demos_activity)
 
         startDemo()
     }
@@ -53,182 +46,114 @@ class CryptoActivity : AppCompatActivity() {
      */
     private fun startDemo() {
 
+        Log.d(TAG, "startDemo: Crypto sample -> STARTED!")
+        updateHeader(this@CryptoActivity, getString(R.string.crypto_create_pool))
+
         // Start
         MainScope().launch {
 
-            var result = false
 
-            Log.d(TAG, "startDemo: Crypto sample -> STARTED!")
-            updateHeader(this@CryptoActivity, getString(R.string.crypto_create_pool))
-
-
-            MessageHelper.updateUI(
+            var result = runAction(
                 this@CryptoActivity,
-                getString(R.string.anoncreds_create_pool)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createOpenPool() }
-            }
-            MessageHelper.updateUI(
-                this@CryptoActivity,
-                result,
+                getString(R.string.anoncreds_create_pool),
+                { createOpenPool() },
                 getString(R.string.crypto_create_pool_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@CryptoActivity,
-                getString(R.string.crypto_create_open_my_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createOpenMyWallet() }
-            }
-            MessageHelper.updateUI(
-                this@CryptoActivity,
-                result,
+                getString(R.string.crypto_create_open_my_wallet),
+                { createOpenMyWallet() },
                 getString(R.string.crypto_create_open_my_wallet_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@CryptoActivity,
-                getString(R.string.crypto_create_open_their_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createOpenTheirWallet() }
-            }
-            MessageHelper.updateUI(
-                this@CryptoActivity,
-                result,
+                getString(R.string.crypto_create_open_their_wallet),
+                { createOpenTheirWallet() },
                 getString(R.string.crypto_create_open_their_wallet_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@CryptoActivity,
-                getString(R.string.crypto_create_my_did)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createMyDID() }
-            }
-            MessageHelper.updateUI(
-                this@CryptoActivity,
-                result,
+                getString(R.string.crypto_create_my_did),
+                { createMyDID() },
                 getString(R.string.crypto_create_my_did_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@CryptoActivity,
-                getString(R.string.crypto_create_their_did)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createTheirDID() }
-            }
-            MessageHelper.updateUI(
-                this@CryptoActivity,
-                result,
+                getString(R.string.crypto_create_their_did),
+                { createTheirDID() },
                 getString(R.string.crypto_create_their_did_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@CryptoActivity,
-                getString(R.string.crypto_their_auth_encrypt_message)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { theirAuthEncryptMessage() }
-            }
-            MessageHelper.updateUI(
-                this@CryptoActivity,
-                result,
+                getString(R.string.crypto_their_auth_encrypt_message),
+                { theirAuthEncryptMessage() },
                 getString(R.string.crypto_their_auth_encrypt_message_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@CryptoActivity,
-                getString(R.string.crypto_i_decrypt_message)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { iDecryptMessage() }
-            }
-            MessageHelper.updateUI(
-                this@CryptoActivity,
-                result,
+                getString(R.string.crypto_i_decrypt_message),
+                { iDecryptMessage() },
                 getString(R.string.crypto_i_decrypt_message_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@CryptoActivity,
-                getString(R.string.crypto_close_delete_my_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { closeDeleteMyWallet() }
-            }
-            MessageHelper.updateUI(
-                this@CryptoActivity,
-                result,
+                getString(R.string.crypto_close_delete_my_wallet),
+                { closeDeleteMyWallet() },
                 getString(R.string.crypto_close_delete_my_wallet_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@CryptoActivity,
-                getString(R.string.crypto_close_delete_their_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { closeDeleteTheirWallet() }
-            }
-            MessageHelper.updateUI(
-                this@CryptoActivity,
-                result,
+                getString(R.string.crypto_close_delete_their_wallet),
+                { closeDeleteTheirWallet() },
                 getString(R.string.crypto_close_delete_their_wallet_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@CryptoActivity,
-                getString(R.string.crypto_close_pool)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { closePool() }
-            }
-            MessageHelper.updateUI(
-                this@CryptoActivity,
-                result,
+                getString(R.string.crypto_close_pool),
+                { closePool() },
                 getString(R.string.crypto_close_pool_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@CryptoActivity,
-                getString(R.string.crypto_delete_pool_ledger_config)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { deletePoolLedgerConfig() }
-            }
-            MessageHelper.updateUI(
-                this@CryptoActivity,
-                result,
+                getString(R.string.crypto_delete_pool_ledger_config),
+                { deletePoolLedgerConfig() },
                 getString(R.string.crypto_delete_pool_ledger_config_end)
             )
             if (!result) return@launch
 
 
 
-            MessageHelper.successToast(this@CryptoActivity, getString(R.string.success))
+            successToast(this@CryptoActivity, getString(R.string.success))
             updateFooter(this@CryptoActivity, getString(R.string.crypto_sample_completed))
             Log.d(TAG, "startDemo: Crypto sample -> COMPLETED!")
         }

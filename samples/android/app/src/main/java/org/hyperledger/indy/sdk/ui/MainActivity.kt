@@ -2,7 +2,10 @@ package org.hyperledger.indy.sdk.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.ui.anoncreds.AnoncredsActivity
@@ -21,6 +24,9 @@ class MainActivity : AppCompatActivity() {
 
 
         initClickListeners()
+
+
+
     }
 
     /**
@@ -30,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         btnAnoncreds.setOnClickListener {
             val intent = Intent(this, AnoncredsActivity::class.java)
             startActivity(intent)
+            //Snackbar.make(it, "Some text", Snackbar.LENGTH_SHORT).show()
         }
 
         btnAnoncredsRevocation.setOnClickListener {

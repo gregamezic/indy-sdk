@@ -2,23 +2,19 @@ package org.hyperledger.indy.sdk.ui.anoncreds
 
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.*
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq
-import org.hyperledger.indy.sdk.helpers.DemoActionHelper
-import org.hyperledger.indy.sdk.helpers.MessageHelper
-import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateFooter
-import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateHeader
-import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateUI
 import org.hyperledger.indy.sdk.pool.Pool
+import org.hyperledger.indy.sdk.ui.BaseActivity
 import org.hyperledger.indy.sdk.utils.PoolUtils
 import org.hyperledger.indy.sdk.wallet.Wallet
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert
 
-class AnoncredsActivity : AppCompatActivity() {
+class AnoncredsActivity : BaseActivity() {
 
     private val TAG = AnoncredsActivity::class.java.name
 
@@ -54,8 +50,6 @@ class AnoncredsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.demos_activity)
-
 
         startDemo()
     }
@@ -64,243 +58,171 @@ class AnoncredsActivity : AppCompatActivity() {
     /**
      * startDemo function start all functions for Anoncreds demo chronological in coroutine default thread
      */
+
     private fun startDemo() {
+        Log.d(TAG, "startDemo: Anoncreds sample -> START!")
+        updateHeader(this@AnoncredsActivity, getString(R.string.anoncreds_sample_start))
 
         // Start
         MainScope().launch {
 
-            var result = false
 
-            Log.d(TAG, "startDemo: Anoncreds sample -> START!")
-            updateHeader(this@AnoncredsActivity, getString(R.string.anoncreds_sample_start))
-
-
-            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_create_pool))
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createPool() }
-            }
-            updateUI(this@AnoncredsActivity, result, getString(R.string.anoncreds_create_pool_end))
-            if (!result) return@launch
-
-
-            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_create_open_wallet))
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { issuerCreate() }
-            }
-            updateUI(
+            var success = runAction(
                 this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_create_pool),
+                { createPool() },
+                getString(R.string.anoncreds_create_pool_end)
+            )
+            if(!success) return@launch
+
+
+
+            runAction(
+                this@AnoncredsActivity,
+                getString(R.string.anoncreds_create_open_wallet),
+                { issuerCreate() },
                 getString(R.string.anoncreds_create_open_wallet_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                getString(R.string.anoncreds_prover_create_open_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { proverCreate() }
-            }
-            updateUI(
-                this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_prover_create_open_wallet),
+                { proverCreate() },
                 getString(R.string.anoncreds_prover_create_open_wallet_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                getString(R.string.anoncreds_issuer_create_credential_schema)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { issuerCreateCredentialSchema() }
-            }
-            updateUI(
-                this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_issuer_create_credential_schema),
+                { issuerCreateCredentialSchema() },
                 getString(R.string.anoncreds_issuer_create_credential_schema_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                getString(R.string.anoncreds_issuer_create_credential_definition)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { issuerCreateCredentialDefinition() }
-            }
-            updateUI(
-                this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_issuer_create_credential_definition),
+                { issuerCreateCredentialDefinition() },
                 getString(R.string.anoncreds_issuer_create_credential_definition_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_prover_master_secret))
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { proverCreateMasterSecret() }
-            }
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_prover_master_secret),
+                { proverCreateMasterSecret() },
                 getString(R.string.anoncreds_prover_master_secret_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                getString(R.string.anoncreds_issuer_create_credential_offer)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { issuerCreateCredentialOffer() }
-            }
-            updateUI(
-                this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_issuer_create_credential_offer),
+                { issuerCreateCredentialOffer() },
                 getString(R.string.anoncreds_issuer_create_credential_offer_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                getString(R.string.anoncreds_prover_create_credential_request)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { proverCreateCredentialRequest() }
-            }
-            updateUI(
-                this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_prover_create_credential_request),
+                { proverCreateCredentialRequest() },
                 getString(R.string.anoncreds_prover_create_credential_request_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_issuer_create_credential))
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { issuerCreateCredential() }
-            }
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_issuer_create_credential),
+                { issuerCreateCredential() },
                 getString(R.string.anoncreds_issuer_create_credential_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_prover_stores_credential))
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { proverStoresCredential() }
-            }
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_prover_stores_credential),
+                { proverStoresCredential() },
                 getString(R.string.anoncreds_prover_stores_credential_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                getString(R.string.anoncreds_prover_get_credential_proof_request)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { proverCredentialsForProofRequest() }
-            }
-            updateUI(
-                this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_prover_get_credential_proof_request),
+                { proverCredentialsForProofRequest() },
                 getString(R.string.anoncreds_prover_get_credential_proof_request_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_prover_creates_proof))
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { proverCreateProof() }
-            }
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_prover_creates_proof),
+                { proverCreateProof() },
                 getString(R.string.anoncreds_prover_creates_proof_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_verifier_verify_proof))
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { verifierVerifyProof() }
-            }
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_verifier_verify_proof),
+                { verifierVerifyProof() },
                 getString(R.string.anoncreds_verifier_verify_proof_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                getString(R.string.anoncreds_close_delete_issuer_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { closeDeleteIssuerWallet() }
-            }
-            updateUI(
-                this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_close_delete_issuer_wallet),
+                { closeDeleteIssuerWallet() },
                 getString(R.string.anoncreds_close_delete_issuer_wallet_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                getString(R.string.anoncreds_close_delete_prover_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { closeDeleteProverWallet() }
-            }
-            updateUI(
-                this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_close_delete_prover_wallet),
+                { closeDeleteProverWallet() },
                 getString(R.string.anoncreds_close_delete_prover_wallet_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
-            updateUI(this@AnoncredsActivity, getString(R.string.anoncreds_close_pool))
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { closePool() }
-            }
-            updateUI(this@AnoncredsActivity, result, getString(R.string.anoncreds_close_pool_end))
-            if (!result) return@launch
-
-
-            updateUI(
+            runAction(
                 this@AnoncredsActivity,
-                getString(R.string.anoncreds_delete_pool_ledger_config)
+                getString(R.string.anoncreds_close_pool),
+                { closePool() },
+                getString(R.string.anoncreds_close_pool_end)
             )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { deletePoolLedgerConfig() }
-            }
-            updateUI(
+
+
+            runAction(
                 this@AnoncredsActivity,
-                result,
+                getString(R.string.anoncreds_delete_pool_ledger_config),
+                { deletePoolLedgerConfig() },
                 getString(R.string.anoncreds_delete_pool_ledger_config_end)
             )
-            if (!result) return@launch
+            if(!success) return@launch
 
 
             // show success logs
             updateFooter(this@AnoncredsActivity, getString(R.string.anoncreds_sample_completed))
-            MessageHelper.successToast(this@AnoncredsActivity, getString(R.string.success))
+            successToast(this@AnoncredsActivity, getString(R.string.success))
             Log.d(TAG, "startDemo: Anoncreds sample -> COMPLETED!")
         }
     }

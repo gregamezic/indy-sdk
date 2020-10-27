@@ -2,28 +2,19 @@ package org.hyperledger.indy.sdk.ui.ledger
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_anoncreds.*
-import kotlinx.android.synthetic.main.activity_endorser.*
-import kotlinx.android.synthetic.main.activity_ledger.*
 import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.did.Did
 import org.hyperledger.indy.sdk.did.DidJSONParameters
-import org.hyperledger.indy.sdk.helpers.DemoActionHelper
-import org.hyperledger.indy.sdk.helpers.MessageHelper
-import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateFooter
-import org.hyperledger.indy.sdk.helpers.MessageHelper.Companion.updateHeader
 import org.hyperledger.indy.sdk.ledger.Ledger
 import org.hyperledger.indy.sdk.pool.Pool
+import org.hyperledger.indy.sdk.ui.BaseActivity
 import org.hyperledger.indy.sdk.utils.PoolUtils
 import org.hyperledger.indy.sdk.wallet.Wallet
 import org.json.JSONObject
 import org.junit.Assert
-import java.lang.Exception
 
-class LedgerActivity : AppCompatActivity() {
+class LedgerActivity : BaseActivity() {
 
     private val TAG = LedgerActivity::class.java.name
 
@@ -46,7 +37,6 @@ class LedgerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.demos_activity)
 
         // start Ledger demo
         startDemo()
@@ -59,184 +49,112 @@ class LedgerActivity : AppCompatActivity() {
      */
     private fun startDemo() {
 
+        Log.d(TAG, "startDemo: Ledger sample -> STARTED!")
+        updateHeader(this@LedgerActivity, getString(R.string.ledger_sample_start))
+
         MainScope().launch {
 
-            var result = false
-
-
-            Log.d(TAG, "startDemo: Ledger sample -> STARTED!")
-            updateHeader(this@LedgerActivity, getString(R.string.ledger_sample_start))
-
-
-            MessageHelper.updateUI(
+            var result = runAction(
                 this@LedgerActivity,
-                getString(R.string.ledger_create_ledger)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createLedger() }
-            }
-            MessageHelper.updateUI(
-                this@LedgerActivity,
-                result,
+                getString(R.string.ledger_create_ledger),
+                { createLedger() },
                 getString(R.string.ledger_create_ledger_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@LedgerActivity,
-                getString(R.string.ledger_create_open_my_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createOpenMyWallet() }
-            }
-            MessageHelper.updateUI(
-                this@LedgerActivity,
-                result,
+                getString(R.string.ledger_create_open_my_wallet),
+                { createOpenMyWallet() },
                 getString(R.string.ledger_create_open_my_wallet_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@LedgerActivity,
-                getString(R.string.ledger_create_open_trustee_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createOpenTrusteeWallet() }
-            }
-            MessageHelper.updateUI(
-                this@LedgerActivity,
-                result,
+                getString(R.string.ledger_create_open_trustee_wallet),
+                { createOpenTrusteeWallet() },
                 getString(R.string.ledger_create_open_trustee_wallet_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@LedgerActivity,
-                getString(R.string.ledger_create_my_did)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createMyDID() }
-            }
-            MessageHelper.updateUI(
-                this@LedgerActivity,
-                result,
+                getString(R.string.ledger_create_my_did),
+                { createMyDID() },
                 getString(R.string.ledger_create_my_did_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@LedgerActivity,
-                getString(R.string.ledger_create_did_from_trustee)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { createDIDFromTrustee1Seed() }
-            }
-            MessageHelper.updateUI(
-                this@LedgerActivity,
-                result,
+                getString(R.string.ledger_create_did_from_trustee),
+                { createDIDFromTrustee1Seed() },
                 getString(R.string.ledger_create_did_from_trustee_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@LedgerActivity,
-                getString(R.string.ledger_build_nym_request)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { buildNymRequest() }
-            }
-            MessageHelper.updateUI(
-                this@LedgerActivity,
-                result,
+                getString(R.string.ledger_build_nym_request),
+                { buildNymRequest() },
                 getString(R.string.ledger_build_nym_request_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@LedgerActivity,
-                getString(R.string.ledger_trustee_sign_nym_request)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { trusteeSignNymRequest() }
-            }
-            MessageHelper.updateUI(
-                this@LedgerActivity,
-                result,
+                getString(R.string.ledger_trustee_sign_nym_request),
+                { trusteeSignNymRequest() },
                 getString(R.string.ledger_trustee_sign_nym_request_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@LedgerActivity,
-                getString(R.string.ledger_close_delete_my_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { closeDeleteMyWallet() }
-            }
-            MessageHelper.updateUI(
-                this@LedgerActivity,
-                result,
+                getString(R.string.ledger_close_delete_my_wallet),
+                { closeDeleteMyWallet() },
                 getString(R.string.ledger_close_delete_my_wallet_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@LedgerActivity,
-                getString(R.string.ledger_close_pool)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { closePool() }
-            }
-            MessageHelper.updateUI(
-                this@LedgerActivity,
-                result,
+                getString(R.string.ledger_close_pool),
+                { closePool() },
                 getString(R.string.ledger_close_pool_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@LedgerActivity,
-                getString(R.string.ledger_close_delete_their_wallet)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { closeDeleteTheirWallet() }
-            }
-            MessageHelper.updateUI(
-                this@LedgerActivity,
-                result,
+                getString(R.string.ledger_close_delete_their_wallet),
+                { closeDeleteTheirWallet() },
                 getString(R.string.ledger_close_delete_their_wallet_end)
             )
             if (!result) return@launch
 
 
-            MessageHelper.updateUI(
+            result = runAction(
                 this@LedgerActivity,
-                getString(R.string.ledger_delete_pool_ledger_config)
-            )
-            result = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
-                DemoActionHelper.runDemoStep { deletePoolLedgerConfig() }
-            }
-            MessageHelper.updateUI(
-                this@LedgerActivity,
-                result,
+                getString(R.string.ledger_delete_pool_ledger_config),
+                { deletePoolLedgerConfig() },
                 getString(R.string.ledger_delete_pool_ledger_config_end)
             )
             if (!result) return@launch
 
 
-
-            MessageHelper.successToast(this@LedgerActivity, getString(R.string.success))
+            successToast(this@LedgerActivity, getString(R.string.success))
             updateFooter(this@LedgerActivity, getString(R.string.ledger_sample_completed))
-
             Log.d(TAG, "startDemo: Ledger sample -> COMPLETED!")
         }
     }
