@@ -2,7 +2,6 @@ package org.hyperledger.indy.sdk.utils
 
 object PoolJson {
 
-    @JvmStatic
     val poolJson: Array<String>
         get() = arrayOf(
             "{" +

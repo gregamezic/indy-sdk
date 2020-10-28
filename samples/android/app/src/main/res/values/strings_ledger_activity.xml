@@ -2,27 +2,26 @@
 <resources>
 
     <string name="ledger_sample_start"><![CDATA[Ledger sample -> STARTED!]]></string>
-
-    <string name="ledger_create_ledger">\n\nSTART create ledger config from genesis txn file</string>
-    <string name="ledger_create_ledger_end">\nEND create ledger config from genesis txn file</string>
-    <string name="ledger_create_open_my_wallet">\n\n\nSTART create and open my wallet</string>
-    <string name="ledger_create_open_my_wallet_end">\nEND create and open my wallet</string>
-    <string name="ledger_create_open_trustee_wallet">\n\n\nSTART create and open trustee wallet</string>
-    <string name="ledger_create_open_trustee_wallet_end">\nEND create and open trustee wallet</string>
-    <string name="ledger_create_my_did">\n\n\nSTART create my DID</string>
-    <string name="ledger_create_my_did_end">\nEND create my DID</string>
-    <string name="ledger_create_did_from_trustee">\n\n\nSTART create DID from trustee1 seed</string>
-    <string name="ledger_create_did_from_trustee_end">\nEND create DID from trustee1 seed</string>
-    <string name="ledger_build_nym_request">\n\n\nSTART build nym request</string>
-    <string name="ledger_build_nym_request_end">\nEND build nym request</string>
-    <string name="ledger_trustee_sign_nym_request">\n\n\nSTART trustee sign nym request</string>
-    <string name="ledger_trustee_sign_nym_request_end">\nEND trustee sign nym request</string>
-    <string name="ledger_close_delete_my_wallet">\n\n\nSTART close and delete my wallet</string>
-    <string name="ledger_close_delete_my_wallet_end">\nEND close and delete my wallet</string>
-    <string name="ledger_close_pool">\n\n\nSTART close pool</string>
-    <string name="ledger_close_pool_end">\nEND close pool</string>
-    <string name="ledger_close_delete_their_wallet">\n\n\nSTART close and delete their wallet</string>
-    <string name="ledger_close_delete_their_wallet_end">\nEND close and delete their wallet</string>
-    <string name="ledger_sample_completed"><![CDATA[\n\n\Ledger sample -> COMPLETED!]]></string>
+    <string name="ledger_create_ledger">START create ledger config from genesis txn file</string>
+    <string name="ledger_create_ledger_end">END create ledger config from genesis txn file</string>
+    <string name="ledger_create_open_my_wallet">START create and open my wallet</string>
+    <string name="ledger_create_open_my_wallet_end">END create and open my wallet</string>
+    <string name="ledger_create_open_trustee_wallet">START create and open trustee wallet</string>
+    <string name="ledger_create_open_trustee_wallet_end">END create and open trustee wallet</string>
+    <string name="ledger_create_my_did">START create my DID</string>
+    <string name="ledger_create_my_did_end">END create my DID</string>
+    <string name="ledger_create_did_from_trustee">START create DID from trustee1 seed</string>
+    <string name="ledger_create_did_from_trustee_end">END create DID from trustee1 seed</string>
+    <string name="ledger_build_nym_request">START build nym request</string>
+    <string name="ledger_build_nym_request_end">END build nym request</string>
+    <string name="ledger_trustee_sign_nym_request">START trustee sign nym request</string>
+    <string name="ledger_trustee_sign_nym_request_end">END trustee sign nym request</string>
+    <string name="ledger_close_delete_my_wallet">START close and delete my wallet</string>
+    <string name="ledger_close_delete_my_wallet_end">END close and delete my wallet</string>
+    <string name="ledger_close_pool">START close pool</string>
+    <string name="ledger_close_pool_end">END close pool</string>
+    <string name="ledger_close_delete_their_wallet">START close and delete their wallet</string>
+    <string name="ledger_close_delete_their_wallet_end">END close and delete their wallet</string>
+    <string name="ledger_sample_completed"><![CDATA[\Ledger sample -> COMPLETED!]]></string>
 
 </resources>

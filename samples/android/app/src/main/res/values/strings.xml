@@ -5,11 +5,11 @@
     <string name="error">error!</string>
 
     <!-- common strings -->
-    <string name="create_pool">\n\nSTART creating pool</string>
-    <string name="create_pool_end">\nEND creating pool</string>
-    <string name="close_pool">\n\n\nSTART close pool</string>
-    <string name="close_pool_end">\nEND close pool</string>
-    <string name="delete_pool_ledger_config">\n\n\nSTART delete pool ledger config</string>
-    <string name="delete_pool_ledger_config_end">\nEND delete pool ledger config</string>
+    <string name="create_pool">START creating pool</string>
+    <string name="create_pool_end">END creating pool</string>
+    <string name="close_pool">START close pool</string>
+    <string name="close_pool_end">END close pool</string>
+    <string name="delete_pool_ledger_config">START delete pool ledger config</string>
+    <string name="delete_pool_ledger_config_end">END delete pool ledger config</string>
 
 </resources>

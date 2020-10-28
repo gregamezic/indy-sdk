@@ -2,12 +2,7 @@ package org.hyperledger.indy.sdk.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
-import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.databinding.ActivityMainBinding
 import org.hyperledger.indy.sdk.ui.anoncreds.AnoncredsActivity
 import org.hyperledger.indy.sdk.ui.anoncreds_revocation.AnoncredsRevocationActivity

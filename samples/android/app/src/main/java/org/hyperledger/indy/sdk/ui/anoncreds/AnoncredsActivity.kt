@@ -1,31 +1,21 @@
 package org.hyperledger.indy.sdk.ui.anoncreds
 
-import android.content.Intent
-import android.os.Bundle
 import android.util.Log
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq
-import org.hyperledger.indy.sdk.listeners.ActionFailListener
-import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.ui.BaseActivity
-import org.hyperledger.indy.sdk.utils.PoolUtils
-import org.hyperledger.indy.sdk.wallet.Wallet
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert
 
-class AnoncredsActivity : BaseActivity(), ActionFailListener {
+class AnoncredsActivity : BaseActivity() {
 
     // my vars
-    private val issuerDid = "NcYxiDXkpYi6ov5FcYDi1e"
-    private val proverDid = "VsKV7grR1BUE29mG2Fm2kX"
-    private lateinit var issuerWallet: Wallet
+    private lateinit var issuerWallet: WalletData
+    private lateinit var proverWallet: WalletData
     private lateinit var schemaJson: String
-    private lateinit var proverWallet: Wallet
     private lateinit var credDefId: String
     private lateinit var credOffer: String
     private lateinit var credDefJson: String
@@ -43,45 +33,27 @@ class AnoncredsActivity : BaseActivity(), ActionFailListener {
     private lateinit var proofJson: String
     private lateinit var schemas: String
     private lateinit var credentialDefs: String
-    private lateinit var issuerWalletConfig: String
-    private lateinit var issuerWalletCredentials: String
-    private lateinit var proverWalletConfig: String
-    private lateinit var proverWalletCredentials: String
-    private lateinit var pool: Pool
-    private lateinit var poolName: String
-
-    private lateinit var job: Job
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // init on fail listener for demo job
-        onFailListener = this
-
-        // start demo
-        startDemo()
-    }
 
 
     /**
      * startDemo function start all functions for Anoncreds demo chronological in coroutine default thread
      */
-    private fun startDemo() {
+    override fun onStartDemo() {
         Log.d(TAG, "startDemo: Anoncreds sample -> START!")
         updateHeader(getString(R.string.anoncreds_sample_start))
 
         // Start
         job = MainScope().launch {
 
-
+            // 1. Create and Open Pool
             if (job.isCancelled) return@launch
             runAction(
                 getString(R.string.create_pool),
-                { createPool() },
+                { createOpenPool() },
                 getString(R.string.create_pool_end)
             )
 
-
+            //2. Issuer Create and Open Wallet
             if (job.isCancelled) return@launch
             runAction(
                 getString(R.string.anoncreds_create_open_wallet),
@@ -220,32 +192,12 @@ class AnoncredsActivity : BaseActivity(), ActionFailListener {
 
 
     // region demo steps functions
-    private fun createPool() {
-
-        // Set protocol version 2 to work with Indy Node 1.4
-        Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get()
-
-        //1. Create and Open Pool
-        poolName = PoolUtils.createPoolLedgerConfig(baseContext)
-        pool = Pool.openPoolLedger(poolName, "{}").get()
-    }
-
     private fun issuerCreate() {
-
-        //2. Issuer Create and Open Wallet
-        issuerWalletConfig = JSONObject().put("id", "issuerWallet").toString()
-        issuerWalletCredentials = JSONObject().put("key", "issuer_wallet_key").toString()
-        Wallet.createWallet(issuerWalletConfig, issuerWalletCredentials).get()
-        issuerWallet = Wallet.openWallet(issuerWalletConfig, issuerWalletCredentials).get()
+        issuerWallet = openWallet(issuerWalletId, issuerWalletKey)
     }
 
     private fun proverCreate() {
-
-        //3. Prover Create and Open Wallet
-        proverWalletConfig = JSONObject().put("id", "trusteeWallet").toString()
-        proverWalletCredentials = JSONObject().put("key", "prover_wallet_key").toString()
-        Wallet.createWallet(proverWalletConfig, proverWalletCredentials).get()
-        proverWallet = Wallet.openWallet(proverWalletConfig, proverWalletCredentials).get()
+        proverWallet = openWallet(proverWalletId, proverWalletKey)
     }
 
     private fun issuerCreateCredentialSchema() {
@@ -272,7 +224,7 @@ class AnoncredsActivity : BaseActivity(), ActionFailListener {
         val credDefConfigJson = JSONObject().put("support_revocation", false).toString()
         val createCredDefResult =
             org.hyperledger.indy.sdk.anoncreds.Anoncreds.issuerCreateAndStoreCredentialDef(
-                issuerWallet,
+                issuerWallet.wallet,
                 issuerDid,
                 schemaJson,
                 credDefTag,
@@ -287,7 +239,7 @@ class AnoncredsActivity : BaseActivity(), ActionFailListener {
 
         //6. Prover create Master Secret
         masterSecretId = org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateMasterSecret(
-            proverWallet,
+            proverWallet.wallet,
             null
         ).get()
     }
@@ -296,7 +248,7 @@ class AnoncredsActivity : BaseActivity(), ActionFailListener {
 
         //7. Issuer Creates Credential Offer
         credOffer = org.hyperledger.indy.sdk.anoncreds.Anoncreds.issuerCreateCredentialOffer(
-            issuerWallet,
+            issuerWallet.wallet,
             credDefId
         ).get()
     }
@@ -306,7 +258,7 @@ class AnoncredsActivity : BaseActivity(), ActionFailListener {
         //8. Prover Creates Credential Request
         val createCredReqResult =
             org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateCredentialReq(
-                proverWallet,
+                proverWallet.wallet,
                 proverDid,
                 credOffer,
                 credDefJson,
@@ -339,7 +291,7 @@ class AnoncredsActivity : BaseActivity(), ActionFailListener {
 
         val createCredentialResult =
             org.hyperledger.indy.sdk.anoncreds.Anoncreds.issuerCreateCredential(
-                issuerWallet,
+                issuerWallet.wallet,
                 credOffer,
                 credReqJson,
                 credValuesJson,
@@ -353,7 +305,7 @@ class AnoncredsActivity : BaseActivity(), ActionFailListener {
 
         //10. Prover Stores Credential
         org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverStoreCredential(
-            proverWallet,
+            proverWallet.wallet,
             null,
             credReqMetadataJson,
             credential,
@@ -388,7 +340,7 @@ class AnoncredsActivity : BaseActivity(), ActionFailListener {
             .toString()
 
         val credentialsSearch =
-            CredentialsSearchForProofReq.open(proverWallet, proofRequestJson, null).get()
+            CredentialsSearchForProofReq.open(proverWallet.wallet, proofRequestJson, null).get()
 
         val credentialsForAttribute1 =
             JSONArray(credentialsSearch.fetchNextCredentials("attr1_referent", 100).get())
@@ -449,7 +401,7 @@ class AnoncredsActivity : BaseActivity(), ActionFailListener {
         proofJson = ""
         try {
             proofJson = org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateProof(
-                proverWallet, proofRequestJson, requestedCredentialsJson,
+                proverWallet.wallet, proofRequestJson, requestedCredentialsJson,
                 masterSecretId, schemas, credentialDefs, revocStates
             ).get()
         } catch (e: Exception) {
@@ -492,37 +444,24 @@ class AnoncredsActivity : BaseActivity(), ActionFailListener {
 
     private fun closeDeleteIssuerWallet() {
 
-        //14. Close and Delete issuer wallet
-        issuerWallet.closeWallet().get()
-        Wallet.deleteWallet(issuerWalletConfig, issuerWalletCredentials).get()
+        closeDeleteWallet(
+            issuerWallet.wallet,
+            issuerWallet.walletConfig,
+            issuerWallet.walletCredentials
+        )
     }
 
     private fun closeDeleteProverWallet() {
-
-        //15. Close and Delete prover wallet
-        proverWallet.closeWallet().get()
-        Wallet.deleteWallet(proverWalletConfig, proverWalletCredentials).get()
-    }
-
-    private fun closePool() {
-
-        //16. Close pool
-        pool.closePoolLedger().get()
-    }
-
-    private fun deletePoolLedgerConfig() {
-
-        //17. Delete Pool ledger config
-        Pool.deletePoolLedgerConfig(poolName).get()
+        closeDeleteWallet(
+            proverWallet.wallet,
+            proverWallet.walletConfig,
+            proverWallet.walletCredentials
+        )
     }
     // endregion  function
 
 
-    override fun onFail() {
-        job.cancel()
-    }
-
-    companion object {
-        private val TAG = AnoncredsActivity::class.java.name
+    private companion object {
+        val TAG: String = AnoncredsActivity::class.java.name
     }
 }
