@@ -8,6 +8,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import org.hyperledger.indy.sdk.R
+import org.hyperledger.indy.sdk.databinding.ActivityMainBinding
 import org.hyperledger.indy.sdk.ui.anoncreds.AnoncredsActivity
 import org.hyperledger.indy.sdk.ui.anoncreds_revocation.AnoncredsRevocationActivity
 import org.hyperledger.indy.sdk.ui.crypto.CryptoActivity
@@ -17,46 +18,41 @@ import org.hyperledger.indy.sdk.ui.ledger.LedgerActivity
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
+        binding = ActivityMainBinding.inflate(layoutInflater)
+
+        setContentView(binding.root)
 
         initClickListeners()
-
-
-
     }
+
 
     /**
      * Click listeners opens separate activity for selected demo
      */
     private fun initClickListeners() {
-        btnAnoncreds.setOnClickListener {
-            val intent = Intent(this, AnoncredsActivity::class.java)
-            startActivity(intent)
-            //Snackbar.make(it, "Some text", Snackbar.LENGTH_SHORT).show()
+        binding.btnAnoncreds.setOnClickListener {
+            startActivity(Intent(this, AnoncredsActivity::class.java))
         }
 
-        btnAnoncredsRevocation.setOnClickListener {
-            val intent = Intent(this, AnoncredsRevocationActivity::class.java)
-            startActivity(intent)
+        binding.btnAnoncredsRevocation.setOnClickListener {
+            startActivity(Intent(this, AnoncredsRevocationActivity::class.java))
         }
 
-        btnCrypto.setOnClickListener {
-            val intent = Intent(this, CryptoActivity::class.java)
-            startActivity(intent)
+        binding.btnCrypto.setOnClickListener {
+            startActivity(Intent(this, CryptoActivity::class.java))
         }
 
-        btnEndorser.setOnClickListener {
-            val intent = Intent(this, EndorserActivity::class.java)
-            startActivity(intent)
+        binding.btnEndorser.setOnClickListener {
+            startActivity(Intent(this, EndorserActivity::class.java))
         }
 
-        btnLedger.setOnClickListener {
-            val intent = Intent(this, LedgerActivity::class.java)
-            startActivity(intent)
+        binding.btnLedger.setOnClickListener {
+            startActivity(Intent(this, LedgerActivity::class.java))
         }
     }
 }

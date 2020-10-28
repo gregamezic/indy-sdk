@@ -1,5 +1,6 @@
 package org.hyperledger.indy.sdk.ui.anoncreds_revocation
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import kotlinx.coroutines.*
@@ -8,6 +9,7 @@ import org.hyperledger.indy.sdk.anoncreds.Anoncreds
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq
 import org.hyperledger.indy.sdk.blob_storage.BlobStorageReader
 import org.hyperledger.indy.sdk.blob_storage.BlobStorageWriter
+import org.hyperledger.indy.sdk.listeners.ActionFailListener
 import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.ui.BaseActivity
 import org.hyperledger.indy.sdk.utils.EnvironmentUtils
@@ -17,15 +19,11 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert
 
-class AnoncredsRevocationActivity : BaseActivity() {
-
-    private val TAG = AnoncredsRevocationActivity::class.java.name
-
+class AnoncredsRevocationActivity : BaseActivity(), ActionFailListener {
 
     // my vars
     private val issuerDid = "NcYxiDXkpYi6ov5FcYDi1e"
     private val proverDid = "VsKV7grR1BUE29mG2Fm2kX"
-
     private lateinit var issuerWallet: Wallet
     private lateinit var proverWallet: Wallet
     private lateinit var schemaJson: String
@@ -59,15 +57,18 @@ class AnoncredsRevocationActivity : BaseActivity() {
     private lateinit var pool: Pool
     private lateinit var poolName: String
 
-
+    private lateinit var job: Job
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // init on fail listener for demo job
+        onFailListener = this
+
+        // start demo
         startDemo()
     }
-
 
 
     /**
@@ -76,198 +77,160 @@ class AnoncredsRevocationActivity : BaseActivity() {
     private fun startDemo() {
 
         Log.d(TAG, "startDemo: Anoncreds Revocation sample -> STARTED!")
-        updateHeader(this@AnoncredsRevocationActivity, getString(R.string.anoncreds_revocation_sample_start))
+        updateHeader(getString(R.string.anoncreds_revocation_sample_start))
 
 
-        MainScope().launch {
+        job = MainScope().launch {
 
-            var result = runAction(
-                this@AnoncredsRevocationActivity,
-                getString(R.string.anoncreds_revocation_create_pool),
+            if (job.isCancelled) return@launch
+            runAction(
+                getString(R.string.create_pool),
                 { createOpenPool() },
-                getString(R.string.anoncreds_revocation_create_pool_end)
+                getString(R.string.create_pool_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_create_open_wallet),
                 { issuerCreateOpenWallet() },
                 getString(R.string.anoncreds_revocation_create_open_wallet_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_prover_create_open_wallet),
                 { proverCreateOpenWallet() },
                 getString(R.string.anoncreds_revocation_prover_create_open_wallet_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_issuer_create_credential_schema),
                 { issuerCreateCredentialSchema() },
                 getString(R.string.anoncreds_revocation_issuer_create_credential_schema_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_issuer_create_credential_definition),
                 { issuerCreateCredentialDefinition() },
                 getString(R.string.anoncreds_revocation_issuer_create_credential_definition_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_issuer_create_revocation_registry),
                 { issuerCreateRevocationRegistry() },
                 getString(R.string.anoncreds_revocation_issuer_create_revocation_registry_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_prover_create_master_secret),
                 { proverCreateMasterSecret() },
                 getString(R.string.anoncreds_revocation_prover_create_master_secret_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_issuer_create_credential_offer),
                 { issuerCreateCredentialOffer() },
                 getString(R.string.anoncreds_revocation_issuer_create_credential_offer_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_prover_create_credential_request),
                 { proverCreateCredentialRequest() },
                 getString(R.string.anoncreds_revocation_prover_create_credential_request_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_issuer_open_tails_reader),
                 { issuerOpenTailsReader() },
                 getString(R.string.anoncreds_revocation_issuer_open_tails_reader_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_issuer_create_credential),
                 { issuerCreateCredential() },
                 getString(R.string.anoncreds_revocation_issuer_create_credential_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_prover_stores_credential),
                 { proverStoresCredential() },
                 getString(R.string.anoncreds_revocation_prover_stores_credential_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_prover_get_credential_proof_request),
                 { proverGetCredentialsForProofRequest() },
                 getString(R.string.anoncreds_revocation_prover_get_credential_proof_request_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_prover_create_revocation_state),
                 { proverCreateRevocationState() },
                 getString(R.string.anoncreds_revocation_prover_create_revocation_state_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_prover_creates_proof),
                 { proverCreateProof() },
                 getString(R.string.anoncreds_revocation_prover_creates_proof_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_verifier_verify_proof),
                 { verifierVerifyProof() },
                 getString(R.string.anoncreds_revocation_verifier_verify_proof_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_close_delete_issuer_wallet),
                 { closeDeleteIssuerWallet() },
                 getString(R.string.anoncreds_revocation_close_delete_issuer_wallet_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.anoncreds_revocation_close_delete_prover_wallet),
                 { closeDeleteProverWallet() },
                 getString(R.string.anoncreds_revocation_close_delete_prover_wallet_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
-                getString(R.string.anoncreds_revocation_close_pool),
+            if (job.isCancelled) return@launch
+            runAction(
+                getString(R.string.close_pool),
                 { closePool() },
-                getString(R.string.anoncreds_revocation_close_pool_end)
+                getString(R.string.close_pool_end)
             )
-            if (!result) return@launch
 
-
-            result = runAction(
-                this@AnoncredsRevocationActivity,
-                getString(R.string.anoncreds_revocation_delete_pool_ledger_config),
+            if (job.isCancelled) return@launch
+            runAction(
+                getString(R.string.delete_pool_ledger_config),
                 { deletePoolLedgerConfig() },
-                getString(R.string.anoncreds_revocation_delete_pool_ledger_config_end)
+                getString(R.string.delete_pool_ledger_config_end)
             )
-            if (!result) return@launch
 
-
-            successToast(this@AnoncredsRevocationActivity, getString(R.string.success))
-            updateFooter(this@AnoncredsRevocationActivity, getString(R.string.anoncreds_revocation_sample_completed))
+            if (job.isCancelled) return@launch
+            successToast(getString(R.string.success))
+            updateFooter(getString(R.string.anoncreds_revocation_sample_completed))
             Log.d(TAG, "startDemo: Anoncreds Revocation sample -> COMPLETED!")
         }
     }
 
 
+    // region demo steps functions
     private fun createOpenPool() {
 
         // Set protocol version 2 to work with Indy Node 1.4
@@ -561,5 +524,16 @@ class AnoncredsRevocationActivity : BaseActivity() {
     private fun deletePoolLedgerConfig() {
         //20. Delete Pool ledger config
         Pool.deletePoolLedgerConfig(poolName).get()
+    }
+    // endregion
+
+
+    override fun onFail() {
+        job.cancel()
+    }
+
+
+    companion object {
+        private val TAG = AnoncredsRevocationActivity::class.java.name
     }
 }

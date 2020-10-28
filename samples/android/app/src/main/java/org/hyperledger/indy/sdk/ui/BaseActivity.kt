@@ -1,7 +1,5 @@
 package org.hyperledger.indy.sdk.ui
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
@@ -9,90 +7,101 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_base.view.*
+import kotlinx.android.synthetic.main.base_main_content.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.hyperledger.indy.sdk.R
+import org.hyperledger.indy.sdk.databinding.ActivityBaseBinding
+import org.hyperledger.indy.sdk.databinding.BaseMainContentBinding
+import org.hyperledger.indy.sdk.listeners.ActionFailListener
 import java.lang.Exception
 
-open class BaseActivity: AppCompatActivity() {
+open class BaseActivity : AppCompatActivity() {
 
-    lateinit var coordinatorView: View
+    // view bindings
+    private lateinit var baseBinding: ActivityBaseBinding
+    private lateinit var mainContentView: View
+
+    // listener
+    lateinit var onFailListener: ActionFailListener
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.demos_activity)
-        coordinatorView = findViewById(R.id.coordinator_main)
 
-    }
+        // init binder
+        baseBinding = ActivityBaseBinding.inflate(layoutInflater)
+        mainContentView = baseBinding.coordinatorMain.main_content
 
-    // toasts
-    fun successToast(activity: Activity, msg: String) {
-        val snackbar = Snackbar.make(coordinatorView, msg, Snackbar.LENGTH_INDEFINITE)
-        snackbar.show()
-    }
-    private fun errorToast(activity: Activity, msg: String) {
-        val snackbar = Snackbar.make(coordinatorView, msg, Snackbar.LENGTH_INDEFINITE)
-
-        // To change background color to red
-        snackbar.view.setBackgroundColor(ContextCompat.getColor(activity, R.color.errorColor))
-        snackbar.show()
+        // set content view
+        setContentView(baseBinding.root)
     }
 
 
-    // update ui
-    private fun updateUI(context: Context, text: String) {
-        val tvText = (context as Activity).findViewById<TextView>(R.id.tvDemoLogs)
-        tvText.text = "${tvText.text}$text"
+    fun successToast(msg: String) {
+        Snackbar.make(baseBinding.coordinatorMain, msg, Snackbar.LENGTH_INDEFINITE).show()
     }
 
-    private fun updateUI(context: Context, success: Boolean, text: String) {
+    private fun errorToast(msg: String) {
 
-        val tvText = (context as Activity).findViewById<TextView>(R.id.tvDemoLogs)
+        Snackbar.make(baseBinding.coordinatorMain, msg, Snackbar.LENGTH_INDEFINITE).apply {
 
-        when {
-            !success -> {
-                tvText.setTextColor(ContextCompat.getColor(context, R.color.errorColor))
-                val pbDemo = context.findViewById<ProgressBar>(R.id.pbDemo)
-                pbDemo.visibility = View.INVISIBLE
-                errorToast(context, context.getString(R.string.error))
-            }
+            // To change background color to red
+            view.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.errorColor))
+            show()
+        }
+    }
+    //endregion
+
+
+    //region update ui
+    private fun updateUI(text: String) {
+        mainContentView.tvDemoLogs.append(text)
+    }
+
+    private fun showError(text: String) {
+
+        // show error text
+        mainContentView.tvDemoLogs.apply {
+            setTextColor(ContextCompat.getColor(baseContext, R.color.errorColor))
+            // TODO: 28/10/2020 should this be here??
+            //append(text)
         }
 
-        tvText.text = "${tvText.text}${text}"
+        // hide progress bar
+        mainContentView.pbDemo.visibility = View.INVISIBLE
+
+        // show error toast
+        errorToast(getString(R.string.error))
     }
 
 
     // update header/footer
-    fun updateHeader(context: Context, text: String) {
-        (context as Activity)
-        val tvText = context.findViewById<TextView>(R.id.tvDemoStart)
-        val pbDemo = context.findViewById<ProgressBar>(R.id.pbDemo)
+    fun updateHeader(text: String) {
 
-        tvText.text = text
-        pbDemo.visibility = View.VISIBLE
+        mainContentView.tvDemoStart.text = text
+        mainContentView.pbDemo.visibility = View.VISIBLE
     }
 
-    fun updateFooter(context: Context, text: String) {
-        (context as Activity)
-        val tvText = context.findViewById<TextView>(R.id.tvDemoEnd)
-        val pbDemo = context.findViewById<ProgressBar>(R.id.pbDemo)
+    fun updateFooter(text: String) {
 
-        tvText.text = text
-        pbDemo.visibility = View.INVISIBLE
+        mainContentView.tvDemoEnd.text = text
+        mainContentView.pbDemo.visibility = View.INVISIBLE
     }
+    // endregion
 
 
-    // run action
+    //region run action
     suspend fun runAction(
-        activity: AppCompatActivity,
         startText: String,
         action: () -> Unit,
         endText: String
     ): Boolean {
 
         // start text
-        updateUI(activity, startText)
+        updateUI(startText)
 
         // do action in coroutine background
         try {
@@ -100,11 +109,14 @@ open class BaseActivity: AppCompatActivity() {
                 action()
             }
         } catch (e: Exception) {
-            updateUI(activity, false, endText)
+            showError(endText)
+            onFailListener.onFail()
             return false
         }
-        updateUI(activity, endText)
-        return true
 
+        // end text
+        updateUI(endText)
+        return true
     }
+    //endregion
 }

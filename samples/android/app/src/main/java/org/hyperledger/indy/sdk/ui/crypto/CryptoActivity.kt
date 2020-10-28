@@ -1,11 +1,13 @@
 package org.hyperledger.indy.sdk.ui.crypto
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import kotlinx.coroutines.*
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.crypto.Crypto
 import org.hyperledger.indy.sdk.did.Did
+import org.hyperledger.indy.sdk.listeners.ActionFailListener
 import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.ui.BaseActivity
 import org.hyperledger.indy.sdk.utils.PoolUtils
@@ -14,9 +16,7 @@ import org.json.JSONObject
 import org.junit.Assert
 import java.util.*
 
-class CryptoActivity : BaseActivity() {
-
-    private val TAG = CryptoActivity::class.java.name
+class CryptoActivity : BaseActivity(), ActionFailListener {
 
     // my vars
     private lateinit var myWallet: Wallet
@@ -32,13 +32,18 @@ class CryptoActivity : BaseActivity() {
     private lateinit var  poolName: String
     private lateinit var  pool: Pool
 
+    private lateinit var job: Job
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // init on fail listener for demo job
+        onFailListener = this
+
+        // start demo
         startDemo()
     }
-
 
 
     /**
@@ -47,119 +52,108 @@ class CryptoActivity : BaseActivity() {
     private fun startDemo() {
 
         Log.d(TAG, "startDemo: Crypto sample -> STARTED!")
-        updateHeader(this@CryptoActivity, getString(R.string.crypto_create_pool))
+        updateHeader(getString(R.string.crypto_sample_start))
 
         // Start
-        MainScope().launch {
+        job = MainScope().launch {
 
-
-            var result = runAction(
-                this@CryptoActivity,
-                getString(R.string.anoncreds_create_pool),
+            if (job.isCancelled) return@launch
+            runAction(
+                getString(R.string.create_pool),
                 { createOpenPool() },
-                getString(R.string.crypto_create_pool_end)
+                getString(R.string.create_pool_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@CryptoActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.crypto_create_open_my_wallet),
                 { createOpenMyWallet() },
                 getString(R.string.crypto_create_open_my_wallet_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@CryptoActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.crypto_create_open_their_wallet),
                 { createOpenTheirWallet() },
                 getString(R.string.crypto_create_open_their_wallet_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@CryptoActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.crypto_create_my_did),
                 { createMyDID() },
                 getString(R.string.crypto_create_my_did_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@CryptoActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.crypto_create_their_did),
                 { createTheirDID() },
                 getString(R.string.crypto_create_their_did_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@CryptoActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.crypto_their_auth_encrypt_message),
                 { theirAuthEncryptMessage() },
                 getString(R.string.crypto_their_auth_encrypt_message_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@CryptoActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.crypto_i_decrypt_message),
                 { iDecryptMessage() },
                 getString(R.string.crypto_i_decrypt_message_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@CryptoActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.crypto_close_delete_my_wallet),
                 { closeDeleteMyWallet() },
                 getString(R.string.crypto_close_delete_my_wallet_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@CryptoActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.crypto_close_delete_their_wallet),
                 { closeDeleteTheirWallet() },
                 getString(R.string.crypto_close_delete_their_wallet_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@CryptoActivity,
-                getString(R.string.crypto_close_pool),
+            if (job.isCancelled) return@launch
+            runAction(
+                getString(R.string.close_pool),
                 { closePool() },
-                getString(R.string.crypto_close_pool_end)
+                getString(R.string.close_pool_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@CryptoActivity,
-                getString(R.string.crypto_delete_pool_ledger_config),
+            if (job.isCancelled) return@launch
+            runAction(
+                getString(R.string.delete_pool_ledger_config),
                 { deletePoolLedgerConfig() },
-                getString(R.string.crypto_delete_pool_ledger_config_end)
+                getString(R.string.delete_pool_ledger_config_end)
             )
-            if (!result) return@launch
 
 
-
-            successToast(this@CryptoActivity, getString(R.string.success))
-            updateFooter(this@CryptoActivity, getString(R.string.crypto_sample_completed))
+            if (job.isCancelled) return@launch
+            successToast(getString(R.string.success))
+            updateFooter(getString(R.string.crypto_sample_completed))
             Log.d(TAG, "startDemo: Crypto sample -> COMPLETED!")
         }
     }
 
 
+    // region demo steps functions
     private fun createOpenPool() {
         // Set protocol version 2 to work with Indy Node 1.4
         Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get()
@@ -242,5 +236,16 @@ class CryptoActivity : BaseActivity() {
     private fun deletePoolLedgerConfig() {
         // 11. Delete Pool ledger config
         Pool.deletePoolLedgerConfig(poolName).get()
+    }
+    // endregion
+
+
+    override fun onFail() {
+        job.cancel()
+    }
+
+
+    companion object {
+        private val TAG = CryptoActivity::class.java.name
     }
 }

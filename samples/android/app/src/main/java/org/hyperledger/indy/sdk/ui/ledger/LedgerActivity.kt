@@ -1,5 +1,6 @@
 package org.hyperledger.indy.sdk.ui.ledger
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import kotlinx.coroutines.*
@@ -7,6 +8,7 @@ import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.did.Did
 import org.hyperledger.indy.sdk.did.DidJSONParameters
 import org.hyperledger.indy.sdk.ledger.Ledger
+import org.hyperledger.indy.sdk.listeners.ActionFailListener
 import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.ui.BaseActivity
 import org.hyperledger.indy.sdk.utils.PoolUtils
@@ -14,10 +16,7 @@ import org.hyperledger.indy.sdk.wallet.Wallet
 import org.json.JSONObject
 import org.junit.Assert
 
-class LedgerActivity : BaseActivity() {
-
-    private val TAG = LedgerActivity::class.java.name
-
+class LedgerActivity : BaseActivity(), ActionFailListener {
 
     // my vars
     private val trusteeSeed = "000000000000000000000000Trustee1"
@@ -34,11 +33,16 @@ class LedgerActivity : BaseActivity() {
     private lateinit var trusteeWalletCredentials: String
     private lateinit var poolName: String
 
+    private lateinit var job: Job
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // start Ledger demo
+        // init on fail listener for demo job
+        onFailListener = this
+
+        // start demo
         startDemo()
     }
 
@@ -50,116 +54,107 @@ class LedgerActivity : BaseActivity() {
     private fun startDemo() {
 
         Log.d(TAG, "startDemo: Ledger sample -> STARTED!")
-        updateHeader(this@LedgerActivity, getString(R.string.ledger_sample_start))
+        updateHeader(getString(R.string.ledger_sample_start))
 
-        MainScope().launch {
+        job = MainScope().launch {
 
-            var result = runAction(
-                this@LedgerActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.ledger_create_ledger),
                 { createLedger() },
                 getString(R.string.ledger_create_ledger_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@LedgerActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.ledger_create_open_my_wallet),
                 { createOpenMyWallet() },
                 getString(R.string.ledger_create_open_my_wallet_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@LedgerActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.ledger_create_open_trustee_wallet),
                 { createOpenTrusteeWallet() },
                 getString(R.string.ledger_create_open_trustee_wallet_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@LedgerActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.ledger_create_my_did),
                 { createMyDID() },
                 getString(R.string.ledger_create_my_did_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@LedgerActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.ledger_create_did_from_trustee),
                 { createDIDFromTrustee1Seed() },
                 getString(R.string.ledger_create_did_from_trustee_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@LedgerActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.ledger_build_nym_request),
                 { buildNymRequest() },
                 getString(R.string.ledger_build_nym_request_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@LedgerActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.ledger_trustee_sign_nym_request),
                 { trusteeSignNymRequest() },
                 getString(R.string.ledger_trustee_sign_nym_request_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@LedgerActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.ledger_close_delete_my_wallet),
                 { closeDeleteMyWallet() },
                 getString(R.string.ledger_close_delete_my_wallet_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@LedgerActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.ledger_close_pool),
                 { closePool() },
                 getString(R.string.ledger_close_pool_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@LedgerActivity,
+            if (job.isCancelled) return@launch
+            runAction(
                 getString(R.string.ledger_close_delete_their_wallet),
                 { closeDeleteTheirWallet() },
                 getString(R.string.ledger_close_delete_their_wallet_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@LedgerActivity,
-                getString(R.string.ledger_delete_pool_ledger_config),
+            if (job.isCancelled) return@launch
+            runAction(
+                getString(R.string.delete_pool_ledger_config),
                 { deletePoolLedgerConfig() },
-                getString(R.string.ledger_delete_pool_ledger_config_end)
+                getString(R.string.delete_pool_ledger_config_end)
             )
-            if (!result) return@launch
 
 
-            successToast(this@LedgerActivity, getString(R.string.success))
-            updateFooter(this@LedgerActivity, getString(R.string.ledger_sample_completed))
+            if (job.isCancelled) return@launch
+            successToast(getString(R.string.success))
+            updateFooter(getString(R.string.ledger_sample_completed))
             Log.d(TAG, "startDemo: Ledger sample -> COMPLETED!")
         }
     }
 
 
+    // region demo steps functions
     private fun createLedger() {
         // Set protocol version 2 to work with Indy Node 1.4
         Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get()
@@ -247,5 +242,16 @@ class LedgerActivity : BaseActivity() {
     private fun deletePoolLedgerConfig() {
         // 11. Delete Pool ledger config
         Pool.deletePoolLedgerConfig(poolName).get()
+    }
+    // endregion
+
+
+    override fun onFail() {
+        job.cancel()
+    }
+
+
+    companion object {
+        private val TAG = LedgerActivity::class.java.name
     }
 }

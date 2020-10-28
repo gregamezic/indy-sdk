@@ -2,8 +2,6 @@
 <resources>
 
     <string name="endorser_sample_start"><![CDATA[Endorser sample -> STARTED!]]></string>
-    <string name="endorser_create_pool">\n\nSTART creating pool</string>
-    <string name="endorser_create_pool_end">\nEND creating pool</string>
     <string name="endorser_create_open_author_wallet">\n\n\nSTART create and open author wallet</string>
     <string name="endorser_create_open_author_wallet_end">\nEND create and open author wallet</string>
     <string name="endorser_create_open_endorser_wallet">\n\n\nSTART create and open endorser wallet</string>
@@ -36,10 +34,6 @@
     <string name="endorser_transaction_endorser_sign_request_end">\nEND transaction endorser signs the request</string>
     <string name="endorser_transaction_endorser_send_request">\n\n\nSTART transaction endorser send the request</string>
     <string name="endorser_transaction_endorser_send_request_end">\nEND transaction endorser send the request</string>
-    <string name="endorser_close_pool">\n\n\nSTART close pool</string>
-    <string name="endorser_close_pool_end">\nEND close pool</string>
-    <string name="endorser_delete_pool_ledger_config">\n\n\nSTART delete pool ledger config</string>
-    <string name="endorser_delete_pool_ledger_config_end">\nEND delete pool ledger config</string>
     <string name="endorser_sample_completed"><![CDATA[\n\n\nCrypto sample -> COMPLETED!]]></string>
 
 </resources>

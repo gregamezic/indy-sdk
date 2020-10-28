@@ -1,5 +1,6 @@
 package org.hyperledger.indy.sdk.ui.endorser
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import kotlinx.coroutines.*
@@ -9,6 +10,7 @@ import org.hyperledger.indy.sdk.did.Did
 import org.hyperledger.indy.sdk.did.DidJSONParameters
 import org.hyperledger.indy.sdk.did.DidResults
 import org.hyperledger.indy.sdk.ledger.Ledger
+import org.hyperledger.indy.sdk.listeners.ActionFailListener
 import org.hyperledger.indy.sdk.pool.Pool
 import org.hyperledger.indy.sdk.ui.BaseActivity
 import org.hyperledger.indy.sdk.utils.PoolUtils
@@ -17,9 +19,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert
 
-class EndorserActivity : BaseActivity() {
-
-    private val TAG = EndorserActivity::class.java.name
+class EndorserActivity : BaseActivity(), ActionFailListener {
 
     // my vars
     private val trusteeSeed = "000000000000000000000000Trustee1"
@@ -47,10 +47,16 @@ class EndorserActivity : BaseActivity() {
     private lateinit var schemaRequestWithEndorserAuthorSigned: String
     private lateinit var schemaRequestWithEndorserSigned: String
 
+    private lateinit var job: Job
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // init on fail listener for demo job
+        onFailListener = this
+
+        // start demo
         startDemo()
     }
 
@@ -61,171 +67,157 @@ class EndorserActivity : BaseActivity() {
     private fun startDemo() {
 
         Log.d(TAG, "startDemo: Endorser sample -> STARTED!")
-        updateHeader(this@EndorserActivity, getString(R.string.endorser_sample_start))
+        updateHeader(getString(R.string.endorser_sample_start))
 
         // Start
-        MainScope().launch {
+        job = MainScope().launch {
 
-            var result = runAction(
-                this@EndorserActivity,
-                getString(R.string.endorser_create_pool),
+
+            if(job.isCancelled) return@launch
+            runAction(
+                getString(R.string.create_pool),
                 { createOpenPool() },
-                getString(R.string.endorser_create_pool_end)
+                getString(R.string.create_pool_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_create_open_author_wallet),
                 { createOpenAuthorWallet() },
                 getString(R.string.endorser_create_open_author_wallet_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_create_open_endorser_wallet),
                 { createOpenEndorserWallet() },
                 getString(R.string.endorser_create_open_endorser_wallet_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_create_open_trustee_wallet),
                 { createOpenTrusteeWallet() },
                 getString(R.string.endorser_create_open_trustee_wallet_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_create_trustee_did),
                 { createTrusteeDID() },
                 getString(R.string.endorser_create_trustee_did_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_create_author_did),
                 { createAuthorDID() },
                 getString(R.string.endorser_create_author_did_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_create_endorser_did),
                 { createEndorserDID() },
                 getString(R.string.endorser_create_endorser_did_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_build_author_nym_request),
                 { buildAuthorNymRequest() },
                 getString(R.string.endorser_build_author_nym_request_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_trustee_sign_author_nym_request),
                 { trusteeSignAuthorNymRequest() },
                 getString(R.string.endorser_trustee_sign_author_nym_request_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_build_endorser_nym_request),
                 { buildEndorserNymRequest() },
                 getString(R.string.endorser_build_endorser_nym_request_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_trustee_sign_endorser_nym),
                 { trusteeSingEndorserNymRequest() },
                 getString(R.string.endorser_trustee_sign_endorser_nym_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_create_schema_endorser),
                 { createSchemaWithEndorser() },
                 getString(R.string.endorser_create_schema_endorser_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_transaction_author_builds_schema_request),
                 { transactionAuthorBuildsSchemaRequest() },
                 getString(R.string.endorser_transaction_author_builds_schema_request_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_transaction_author_append_DID_request),
                 { transactionAuthorSignsRequestDID() },
                 getString(R.string.endorser_transaction_author_append_DID_request_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_transaction_author_sign_with_endorser),
                 { transactionAuthorSignEndorser() },
                 getString(R.string.endorser_transaction_author_sign_with_endorser_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_transaction_endorser_sign_request),
                 { transactionEndorserSignRequest() },
                 getString(R.string.endorser_transaction_endorser_sign_request_end)
             )
-            if (!result) return@launch
 
 
-            result = runAction(
-                this@EndorserActivity,
+            if(job.isCancelled) return@launch
+            runAction(
                 getString(R.string.endorser_transaction_endorser_send_request),
                 { transactionEndorserSendRequest() },
                 getString(R.string.endorser_transaction_endorser_send_request_end)
             )
-            if (!result) return@launch
 
 
-            successToast(this@EndorserActivity, getString(R.string.success))
-            updateFooter(this@EndorserActivity, getString(R.string.endorser_sample_completed))
+            if(job.isCancelled) return@launch
+            successToast(getString(R.string.success))
+            updateFooter(getString(R.string.endorser_sample_completed))
             Log.d(TAG, "startDemo: Endorser sample -> COMPLETED!")
         }
     }
 
 
+    // region demo steps functions
     private fun createOpenPool() {
         // Set protocol version 2 to work with Indy Node 1.4
         Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get()
@@ -362,5 +354,16 @@ class EndorserActivity : BaseActivity() {
 
         endorserWallet.closeWallet().get()
         Wallet.deleteWallet(endorserWalletConfig, endorserWalletCredentials).get()
+    }
+    // endregion
+
+
+    override fun onFail() {
+        job.cancel()
+    }
+
+
+    companion object {
+        private val TAG = EndorserActivity::class.java.name
     }
 }
