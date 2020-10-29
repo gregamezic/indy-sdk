@@ -10,7 +10,6 @@ import org.hyperledger.indy.sdk.ui.crypto.CryptoActivity
 import org.hyperledger.indy.sdk.ui.endorser.EndorserActivity
 import org.hyperledger.indy.sdk.ui.ledger.LedgerActivity
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -19,12 +18,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
-
         initClickListeners()
     }
-
 
     /**
      * Click listeners opens separate activity for selected demo

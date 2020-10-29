@@ -26,17 +26,12 @@ abstract class BaseActivity : AppCompatActivity() {
     private lateinit var mainContentView: View
     lateinit var job: Job
 
-    val issuerDid = "NcYxiDXkpYi6ov5FcYDi1e"
-    val proverDid = "VsKV7grR1BUE29mG2Fm2kX"
-
     // pool
     lateinit var pool: Pool
     private lateinit var poolName: String
 
-
     // on start demo function
     abstract fun onStartDemo()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,17 +46,14 @@ abstract class BaseActivity : AppCompatActivity() {
         onStartDemo()
     }
 
-
     // region show toasts
     fun successToast(msg: String) {
         Snackbar.make(baseBinding.coordinatorMain, msg, Snackbar.LENGTH_INDEFINITE).show()
     }
 
-
     private fun errorToast(msg: String) {
 
         Snackbar.make(baseBinding.coordinatorMain, msg, Snackbar.LENGTH_INDEFINITE).apply {
-
             // To change background color to red
             view.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.errorColor))
             show()
@@ -69,17 +61,14 @@ abstract class BaseActivity : AppCompatActivity() {
     }
     //endregion
 
-
     //region update ui
     private fun appendLogStart(text: String) {
         mainContentView.tvDemoLogs.append("\n\n\n$text")
     }
 
-
     private fun appendLogEnd(text: String) {
         mainContentView.tvDemoLogs.append("\n$text")
     }
-
 
     private fun showError() {
         // show error text
@@ -94,20 +83,17 @@ abstract class BaseActivity : AppCompatActivity() {
         errorToast(getString(R.string.error))
     }
 
-
     // update header/footer
     fun updateHeader(text: String) {
         mainContentView.tvDemoStart.text = text
         mainContentView.pbDemo.visibility = View.VISIBLE
     }
 
-
     fun updateFooter(text: String) {
         mainContentView.tvDemoEnd.text = text
         mainContentView.pbDemo.visibility = View.INVISIBLE
     }
     // endregion
-
 
     //region run action
     suspend fun runAction(
@@ -136,7 +122,6 @@ abstract class BaseActivity : AppCompatActivity() {
     }
     //endregion
 
-
     // region pool helper
     fun createAndOpenPool() {
         // Set protocol version 2 to work with Indy Node 1.4
@@ -146,17 +131,14 @@ abstract class BaseActivity : AppCompatActivity() {
         pool = Pool.openPoolLedger(poolName, "{}").get()
     }
 
-
     fun closePool() {
         pool.closePoolLedger().get()
     }
-
 
     fun deletePoolLedgerConfig() {
         Pool.deletePoolLedgerConfig(poolName).get()
     }
     // endregion
-
 
     // region wallet helper
     fun createAndOpenWallet(walletId: String, walletKey: String): WalletData {
@@ -167,7 +149,6 @@ abstract class BaseActivity : AppCompatActivity() {
         val wallet = Wallet.openWallet(walletConfig, walletCredentials).get()
         return WalletData(wallet, walletConfig, walletCredentials)
     }
-
 
     fun closeAndDeleteWallet(wallet: Wallet, walletId: String, walletKey: String) {
         wallet.closeWallet().get()

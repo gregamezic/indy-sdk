@@ -2,6 +2,7 @@ package org.hyperledger.indy.sdk.ui.ledger
 
 import android.util.Log
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.did.Did
@@ -23,7 +24,6 @@ class LedgerActivity : BaseActivity() {
     private lateinit var myVerkey: String
     private lateinit var nymRequest: String
 
-
     /**
      * startDemo function start all functions for Ledger demo chronological in coroutine default thread
      */
@@ -34,101 +34,89 @@ class LedgerActivity : BaseActivity() {
 
         job = MainScope().launch {
 
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.ledger_create_ledger),
                 { createAndOpenPool() },
                 getString(R.string.ledger_create_ledger_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.ledger_create_open_my_wallet),
                 { createOpenMyWallet() },
                 getString(R.string.ledger_create_open_my_wallet_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.ledger_create_open_trustee_wallet),
                 { createOpenTrusteeWallet() },
                 getString(R.string.ledger_create_open_trustee_wallet_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.ledger_create_my_did),
                 { createMyDID() },
                 getString(R.string.ledger_create_my_did_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.ledger_create_did_from_trustee),
                 { createDIDFromTrustee1Seed() },
                 getString(R.string.ledger_create_did_from_trustee_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.ledger_build_nym_request),
                 { buildNymRequest() },
                 getString(R.string.ledger_build_nym_request_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.ledger_trustee_sign_nym_request),
                 { trusteeSignNymRequest() },
                 getString(R.string.ledger_trustee_sign_nym_request_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.ledger_close_delete_my_wallet),
                 { closeDeleteMyWallet() },
                 getString(R.string.ledger_close_delete_my_wallet_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.ledger_close_delete_their_wallet),
                 { closeDeleteTrusteeWallet() },
                 getString(R.string.ledger_close_delete_their_wallet_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.ledger_close_pool),
                 { closePool() },
                 getString(R.string.ledger_close_pool_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.delete_pool_ledger_config),
                 { deletePoolLedgerConfig() },
                 getString(R.string.delete_pool_ledger_config_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             successToast(getString(R.string.success))
             updateFooter(getString(R.string.ledger_sample_completed))
             Log.d(TAG, "startDemo: Ledger sample -> COMPLETED!")
         }
     }
-
 
     // region demo steps functions
     private fun createOpenMyWallet() {
@@ -192,7 +180,6 @@ class LedgerActivity : BaseActivity() {
         )
     }
     // endregion
-
 
     private companion object {
         val TAG: String = LedgerActivity::class.java.name

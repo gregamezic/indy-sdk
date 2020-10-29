@@ -2,6 +2,7 @@ package org.hyperledger.indy.sdk.ui.endorser
 
 import android.util.Log
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.anoncreds.Anoncreds
@@ -35,7 +36,6 @@ class EndorserActivity : BaseActivity() {
     private lateinit var schemaRequestWithEndorserAuthorSigned: String
     private lateinit var schemaRequestWithEndorserSigned: String
 
-
     /**
      * startDemo function start all functions fro Anoncreds chronological in coroutine default thread
      */
@@ -47,190 +47,166 @@ class EndorserActivity : BaseActivity() {
         // Start
         job = MainScope().launch {
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.create_pool),
                 { createAndOpenPool() },
                 getString(R.string.create_pool_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_create_open_author_wallet),
                 { createOpenAuthorWallet() },
                 getString(R.string.endorser_create_open_author_wallet_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_create_open_endorser_wallet),
                 { createOpenEndorserWallet() },
                 getString(R.string.endorser_create_open_endorser_wallet_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_create_open_trustee_wallet),
                 { createOpenTrusteeWallet() },
                 getString(R.string.endorser_create_open_trustee_wallet_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_create_trustee_did),
                 { createTrusteeDID() },
                 getString(R.string.endorser_create_trustee_did_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_create_author_did),
                 { createAuthorDID() },
                 getString(R.string.endorser_create_author_did_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_create_endorser_did),
                 { createEndorserDID() },
                 getString(R.string.endorser_create_endorser_did_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_build_author_nym_request),
                 { buildAuthorNymRequest() },
                 getString(R.string.endorser_build_author_nym_request_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_trustee_sign_author_nym_request),
                 { trusteeSignAuthorNymRequest() },
                 getString(R.string.endorser_trustee_sign_author_nym_request_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_build_endorser_nym_request),
                 { buildEndorserNymRequest() },
                 getString(R.string.endorser_build_endorser_nym_request_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_trustee_sign_endorser_nym),
                 { trusteeSingEndorserNymRequest() },
                 getString(R.string.endorser_trustee_sign_endorser_nym_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_create_schema_endorser),
                 { createSchemaWithEndorser() },
                 getString(R.string.endorser_create_schema_endorser_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_transaction_author_builds_schema_request),
                 { transactionAuthorBuildsSchemaRequest() },
                 getString(R.string.endorser_transaction_author_builds_schema_request_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_transaction_author_append_DID_request),
                 { transactionAuthorSignsRequestDID() },
                 getString(R.string.endorser_transaction_author_append_DID_request_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_transaction_author_sign_with_endorser),
                 { transactionAuthorSignEndorser() },
                 getString(R.string.endorser_transaction_author_sign_with_endorser_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_transaction_endorser_sign_request),
                 { transactionEndorserSignRequest() },
                 getString(R.string.endorser_transaction_endorser_sign_request_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_transaction_endorser_send_request),
                 { transactionEndorserSendRequest() },
                 getString(R.string.endorser_transaction_endorser_send_request_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_close_delete_author_wallet),
                 { closeAuthorWallet() },
                 getString(R.string.endorser_close_delete_author_wallet_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_close_delete_endorser_wallet),
                 { closeEndorserWallet() },
                 getString(R.string.endorser_close_delete_endorser_wallet_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.endorser_close_delete_trustee_wallet),
                 { closeTrusteeWallet() },
                 getString(R.string.endorser_close_delete_trustee_wallet_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.close_pool),
                 { closePool() },
                 getString(R.string.close_pool_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             runAction(
                 getString(R.string.delete_pool_ledger_config),
                 { deletePoolLedgerConfig() },
                 getString(R.string.delete_pool_ledger_config_end)
             )
 
-
-            if (job.isCancelled) return@launch
+            ensureActive()
             successToast(getString(R.string.success))
             updateFooter(getString(R.string.endorser_sample_completed))
             Log.d(TAG, "startDemo: Endorser sample -> COMPLETED!")
         }
     }
-
 
     // region demo steps functions
     private fun createOpenAuthorWallet() {
@@ -336,7 +312,6 @@ class EndorserActivity : BaseActivity() {
         Assert.assertEquals("REPLY", responseJson.getString("op"))
     }
 
-
     private fun closeAuthorWallet() {
         closeAndDeleteWallet(
             authorWallet.wallet,
@@ -344,7 +319,6 @@ class EndorserActivity : BaseActivity() {
             authorWallet.walletCredentials
         )
     }
-
 
     private fun closeEndorserWallet() {
         closeAndDeleteWallet(
@@ -354,7 +328,6 @@ class EndorserActivity : BaseActivity() {
         )
     }
 
-
     private fun closeTrusteeWallet() {
         closeAndDeleteWallet(
             trusteeWallet.wallet,
@@ -363,7 +336,6 @@ class EndorserActivity : BaseActivity() {
         )
     }
     // endregion
-
 
     private companion object {
         val TAG: String = EndorserActivity::class.java.name

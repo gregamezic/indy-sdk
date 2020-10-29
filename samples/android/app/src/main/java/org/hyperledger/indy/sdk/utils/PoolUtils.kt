@@ -19,7 +19,6 @@ object PoolUtils {
     const val PROTOCOL_VERSION = 2
     private val TAG = PoolUtils::class.java.name
 
-
     @Throws(IOException::class)
     private fun createGenesisTxnFile(filename: String, context: Context): File {
         val path = getTmpPath(filename, context)
@@ -45,7 +44,6 @@ object PoolUtils {
         fw.close()
         return file
     }
-
 
     @Throws(
         IOException::class,

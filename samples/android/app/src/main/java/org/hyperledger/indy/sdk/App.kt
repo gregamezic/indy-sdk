@@ -33,7 +33,6 @@ class App : Application() {
         }
     }
 
-
     /**
      * statics constants
      */
