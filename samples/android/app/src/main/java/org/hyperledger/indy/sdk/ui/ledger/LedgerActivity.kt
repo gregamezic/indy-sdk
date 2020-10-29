@@ -7,7 +7,8 @@ import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.did.Did
 import org.hyperledger.indy.sdk.did.DidJSONParameters
 import org.hyperledger.indy.sdk.ledger.Ledger
-import org.hyperledger.indy.sdk.ui.BaseActivity
+import org.hyperledger.indy.sdk.ui.base.BaseActivity
+import org.hyperledger.indy.sdk.ui.base.models.WalletData
 import org.json.JSONObject
 import org.junit.Assert
 
@@ -36,7 +37,7 @@ class LedgerActivity : BaseActivity() {
             if (job.isCancelled) return@launch
             runAction(
                 getString(R.string.ledger_create_ledger),
-                { createOpenPool() },
+                { createAndOpenPool() },
                 getString(R.string.ledger_create_ledger_end)
             )
 
@@ -131,11 +132,11 @@ class LedgerActivity : BaseActivity() {
 
     // region demo steps functions
     private fun createOpenMyWallet() {
-        myWallet = openWallet(myWalletId, myWalletKey)
+        myWallet = createAndOpenWallet("myWallet", "my_wallet_key")
     }
 
     private fun createOpenTrusteeWallet() {
-        trusteeWallet = openWallet(trusteeWalletId, trusteeWalletKey)
+        trusteeWallet = createAndOpenWallet("trusteeWallet", "trustee_wallet_key")
     }
 
     private fun createMyDID() {
@@ -180,11 +181,11 @@ class LedgerActivity : BaseActivity() {
     }
 
     private fun closeDeleteMyWallet() {
-        closeDeleteWallet(myWallet.wallet, myWallet.walletConfig, myWallet.walletCredentials)
+        closeAndDeleteWallet(myWallet.wallet, myWallet.walletConfig, myWallet.walletCredentials)
     }
 
     private fun closeDeleteTrusteeWallet() {
-        closeDeleteWallet(
+        closeAndDeleteWallet(
             trusteeWallet.wallet,
             trusteeWallet.walletConfig,
             trusteeWallet.walletCredentials

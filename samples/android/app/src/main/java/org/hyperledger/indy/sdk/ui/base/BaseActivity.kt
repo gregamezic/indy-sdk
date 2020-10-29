@@ -1,4 +1,4 @@
-package org.hyperledger.indy.sdk.ui
+package org.hyperledger.indy.sdk.ui.base
 
 import android.os.Bundle
 import android.view.View
@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.databinding.ActivityBaseBinding
 import org.hyperledger.indy.sdk.pool.Pool
+import org.hyperledger.indy.sdk.ui.base.models.WalletData
 import org.hyperledger.indy.sdk.utils.PoolUtils
 import org.hyperledger.indy.sdk.wallet.Wallet
 import org.json.JSONObject
@@ -28,38 +29,10 @@ abstract class BaseActivity : AppCompatActivity() {
     val issuerDid = "NcYxiDXkpYi6ov5FcYDi1e"
     val proverDid = "VsKV7grR1BUE29mG2Fm2kX"
 
-    // issuer
-    val issuerWalletId = "issuerWallet"
-    val issuerWalletKey = "issuer_wallet_key"
-
-    // prover
-    //val proverWalletId = "trusteeWallet"
-    val proverWalletId = "proverWallet"
-    val proverWalletKey = "prover_wallet_key"
-
-    // me
-    val myWalletId = "myWallet"
-    val myWalletKey = "my_wallet_key"
-
-    // their
-    val theirWalletId = "theirWallet"
-    val theirWalletKey = "their_wallet_key"
-
-    // trustee
-    val trusteeWalletId = "trusteeWallet"
-    val trusteeWalletKey = "trustee_wallet_key"
-
-    // author
-    val authorWalletId = "authorWallet"
-    val authorWalletKey = "author_wallet_key"
-
-    // endorser
-    val endorserWalletId = "endorserWallet"
-    val endorserWalletKey = "endorser_wallet_key"
-
     // pool
     lateinit var pool: Pool
-    lateinit var poolName: String
+    private lateinit var poolName: String
+
 
     // on start demo function
     abstract fun onStartDemo()
@@ -165,7 +138,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
 
     // region pool helper
-    fun createOpenPool() {
+    fun createAndOpenPool() {
         // Set protocol version 2 to work with Indy Node 1.4
         Pool.setProtocolVersion(PoolUtils.PROTOCOL_VERSION).get()
 
@@ -186,7 +159,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
 
     // region wallet helper
-    fun openWallet(walletId: String, walletKey: String): WalletData {
+    fun createAndOpenWallet(walletId: String, walletKey: String): WalletData {
         // Issuer Create and Open Wallet
         val walletConfig = JSONObject().put("id", walletId).toString()
         val walletCredentials = JSONObject().put("key", walletKey).toString()
@@ -196,16 +169,9 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
 
-    fun closeDeleteWallet(wallet: Wallet, walletId: String, walletKey: String) {
+    fun closeAndDeleteWallet(wallet: Wallet, walletId: String, walletKey: String) {
         wallet.closeWallet().get()
         Wallet.deleteWallet(walletId, walletKey).get()
     }
     // endregion
-
-
-    data class WalletData(
-        val wallet: Wallet,
-        val walletConfig: String,
-        val walletCredentials: String
-    )
 }

@@ -6,7 +6,8 @@ import kotlinx.coroutines.launch
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.crypto.Crypto
 import org.hyperledger.indy.sdk.did.Did
-import org.hyperledger.indy.sdk.ui.BaseActivity
+import org.hyperledger.indy.sdk.ui.base.BaseActivity
+import org.hyperledger.indy.sdk.ui.base.models.WalletData
 import org.json.JSONObject
 import org.junit.Assert
 import java.util.*
@@ -36,7 +37,7 @@ class CryptoActivity : BaseActivity() {
             if (job.isCancelled) return@launch
             runAction(
                 getString(R.string.create_pool),
-                { createOpenPool() },
+                { createAndOpenPool() },
                 getString(R.string.create_pool_end)
             )
 
@@ -131,11 +132,11 @@ class CryptoActivity : BaseActivity() {
 
     // region demo steps functions
     private fun createOpenMyWallet() {
-        myWallet = openWallet(myWalletId, myWalletKey)
+        myWallet = createAndOpenWallet("myWallet", "my_wallet_key")
     }
 
     private fun createOpenTheirWallet() {
-        theirWallet = openWallet(theirWalletId, theirWalletKey)
+        theirWallet = createAndOpenWallet("theirWallet", "their_wallet_key")
     }
 
     private fun createMyDID() {
@@ -176,11 +177,11 @@ class CryptoActivity : BaseActivity() {
     }
 
     private fun closeDeleteMyWallet() {
-        closeDeleteWallet(myWallet.wallet, myWallet.walletConfig, myWallet.walletCredentials)
+        closeAndDeleteWallet(myWallet.wallet, myWallet.walletConfig, myWallet.walletCredentials)
     }
 
     private fun closeDeleteTheirWallet() {
-        closeDeleteWallet(
+        closeAndDeleteWallet(
             theirWallet.wallet,
             theirWallet.walletConfig,
             theirWallet.walletCredentials

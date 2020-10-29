@@ -9,7 +9,8 @@ import org.hyperledger.indy.sdk.did.Did
 import org.hyperledger.indy.sdk.did.DidJSONParameters
 import org.hyperledger.indy.sdk.did.DidResults
 import org.hyperledger.indy.sdk.ledger.Ledger
-import org.hyperledger.indy.sdk.ui.BaseActivity
+import org.hyperledger.indy.sdk.ui.base.BaseActivity
+import org.hyperledger.indy.sdk.ui.base.models.WalletData
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert
@@ -50,7 +51,7 @@ class EndorserActivity : BaseActivity() {
             if (job.isCancelled) return@launch
             runAction(
                 getString(R.string.create_pool),
-                { createOpenPool() },
+                { createAndOpenPool() },
                 getString(R.string.create_pool_end)
             )
 
@@ -233,15 +234,15 @@ class EndorserActivity : BaseActivity() {
 
     // region demo steps functions
     private fun createOpenAuthorWallet() {
-        authorWallet = openWallet(authorWalletId, authorWalletKey)
+        authorWallet = createAndOpenWallet("authorWallet", "author_wallet_key")
     }
 
     private fun createOpenEndorserWallet() {
-        openWallet(endorserWalletId, endorserWalletKey)
+        createAndOpenWallet("endorserWallet", "endorser_wallet_key")
     }
 
     private fun createOpenTrusteeWallet() {
-        openWallet(trusteeWalletId, trusteeWalletKey)
+        createAndOpenWallet("trusteeWallet", "trustee_wallet_key")
     }
 
     private fun createTrusteeDID() {
@@ -337,7 +338,7 @@ class EndorserActivity : BaseActivity() {
 
 
     private fun closeAuthorWallet() {
-        closeDeleteWallet(
+        closeAndDeleteWallet(
             authorWallet.wallet,
             authorWallet.walletConfig,
             authorWallet.walletCredentials
@@ -346,7 +347,7 @@ class EndorserActivity : BaseActivity() {
 
 
     private fun closeEndorserWallet() {
-        closeDeleteWallet(
+        closeAndDeleteWallet(
             endorserWallet.wallet,
             endorserWallet.walletConfig,
             endorserWallet.walletCredentials
@@ -355,7 +356,7 @@ class EndorserActivity : BaseActivity() {
 
 
     private fun closeTrusteeWallet() {
-        closeDeleteWallet(
+        closeAndDeleteWallet(
             trusteeWallet.wallet,
             trusteeWallet.walletConfig,
             trusteeWallet.walletCredentials

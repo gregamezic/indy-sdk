@@ -5,7 +5,8 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq
-import org.hyperledger.indy.sdk.ui.BaseActivity
+import org.hyperledger.indy.sdk.ui.base.BaseActivity
+import org.hyperledger.indy.sdk.ui.base.models.WalletData
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert
@@ -49,7 +50,7 @@ class AnoncredsActivity : BaseActivity() {
             if (job.isCancelled) return@launch
             runAction(
                 getString(R.string.create_pool),
-                { createOpenPool() },
+                { createAndOpenPool() },
                 getString(R.string.create_pool_end)
             )
 
@@ -193,11 +194,11 @@ class AnoncredsActivity : BaseActivity() {
 
     // region demo steps functions
     private fun issuerCreate() {
-        issuerWallet = openWallet(issuerWalletId, issuerWalletKey)
+        issuerWallet = createAndOpenWallet("issuerWallet", "issuer_wallet_key")
     }
 
     private fun proverCreate() {
-        proverWallet = openWallet(proverWalletId, proverWalletKey)
+        proverWallet = createAndOpenWallet("proverWalletId", "prover_wallet_key")
     }
 
     private fun issuerCreateCredentialSchema() {
@@ -444,7 +445,7 @@ class AnoncredsActivity : BaseActivity() {
 
     private fun closeDeleteIssuerWallet() {
 
-        closeDeleteWallet(
+        closeAndDeleteWallet(
             issuerWallet.wallet,
             issuerWallet.walletConfig,
             issuerWallet.walletCredentials
@@ -452,7 +453,7 @@ class AnoncredsActivity : BaseActivity() {
     }
 
     private fun closeDeleteProverWallet() {
-        closeDeleteWallet(
+        closeAndDeleteWallet(
             proverWallet.wallet,
             proverWallet.walletConfig,
             proverWallet.walletCredentials

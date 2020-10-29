@@ -8,7 +8,8 @@ import org.hyperledger.indy.sdk.anoncreds.Anoncreds
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq
 import org.hyperledger.indy.sdk.blob_storage.BlobStorageReader
 import org.hyperledger.indy.sdk.blob_storage.BlobStorageWriter
-import org.hyperledger.indy.sdk.ui.BaseActivity
+import org.hyperledger.indy.sdk.ui.base.BaseActivity
+import org.hyperledger.indy.sdk.ui.base.models.WalletData
 import org.hyperledger.indy.sdk.utils.EnvironmentUtils
 import org.json.JSONArray
 import org.json.JSONObject
@@ -59,7 +60,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
             if (job.isCancelled) return@launch
             runAction(
                 getString(R.string.create_pool),
-                { createOpenPool() },
+                { createAndOpenPool() },
                 getString(R.string.create_pool_end)
             )
 
@@ -206,11 +207,11 @@ class AnoncredsRevocationActivity : BaseActivity() {
 
     // region demo steps functions
     private fun issuerCreateOpenWallet() {
-        issuerWallet = openWallet(issuerWalletId, issuerWalletKey)
+        issuerWallet = createAndOpenWallet("issuerWallet", "issuer_wallet_key")
     }
 
     private fun proverCreateOpenWallet() {
-        proverWallet = openWallet(proverWalletId, proverWalletKey)
+        proverWallet = createAndOpenWallet("proverWalletId", "prover_wallet_key")
     }
 
     private fun issuerCreateCredentialSchema() {
@@ -465,7 +466,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
 
     private fun closeDeleteIssuerWallet() {
-        closeDeleteWallet(
+        closeAndDeleteWallet(
             issuerWallet.wallet,
             issuerWallet.walletConfig,
             issuerWallet.walletCredentials
@@ -473,7 +474,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
 
     private fun closeDeleteProverWallet() {
-        closeDeleteWallet(
+        closeAndDeleteWallet(
             proverWallet.wallet,
             proverWallet.walletConfig,
             proverWallet.walletCredentials
