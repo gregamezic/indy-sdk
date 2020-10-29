@@ -52,12 +52,12 @@ class AnoncredsRevocationActivity : BaseActivity() {
      * startDemo function start all functions for Anoncreds Revocation demo chronological in coroutine default thread
      */
     override fun onStartDemo() {
-
         Log.d(TAG, "startDemo: Anoncreds Revocation sample -> STARTED!")
         updateHeader(getString(R.string.anoncreds_revocation_sample_start))
 
         job = MainScope().launch {
 
+            // 1. Create and Open Pool
             ensureActive()
             runAction(
                 getString(R.string.create_pool),
@@ -65,13 +65,15 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.create_pool_end)
             )
 
+            // 2. Issuer Create and Open Wallet
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_create_open_wallet),
-                { issuerCreateOpenWallet() },
+                { issuerCreateAndOpenWallet() },
                 getString(R.string.anoncreds_revocation_create_open_wallet_end)
             )
 
+            // 3. Prover Create and Open Wallet
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_prover_create_open_wallet),
@@ -79,6 +81,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_prover_create_open_wallet_end)
             )
 
+            // 4. Issuer Creates Credential Schema
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_issuer_create_credential_schema),
@@ -86,6 +89,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_issuer_create_credential_schema_end)
             )
 
+            // 5. Issuer create Credential Definition
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_issuer_create_credential_definition),
@@ -93,6 +97,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_issuer_create_credential_definition_end)
             )
 
+            // 6. Issuer create Revocation Registry
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_issuer_create_revocation_registry),
@@ -100,6 +105,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_issuer_create_revocation_registry_end)
             )
 
+            // 7. Prover create Master Secret
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_prover_create_master_secret),
@@ -107,6 +113,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_prover_create_master_secret_end)
             )
 
+            // 8. Issuer Creates Credential Offer
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_issuer_create_credential_offer),
@@ -114,6 +121,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_issuer_create_credential_offer_end)
             )
 
+            // 9. Prover Creates Credential Request
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_prover_create_credential_request),
@@ -121,6 +129,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_prover_create_credential_request_end)
             )
 
+            // 10. Issuer open Tails Reader
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_issuer_open_tails_reader),
@@ -128,6 +137,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_issuer_open_tails_reader_end)
             )
 
+            // 11. Issuer create Credential
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_issuer_create_credential),
@@ -135,6 +145,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_issuer_create_credential_end)
             )
 
+            // 12. Prover Stores Credential
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_prover_stores_credential),
@@ -142,6 +153,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_prover_stores_credential_end)
             )
 
+            // 13. Prover Gets Credentials for Proof Request
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_prover_get_credential_proof_request),
@@ -149,6 +161,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_prover_get_credential_proof_request_end)
             )
 
+            // 14. Prover create RevocationState
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_prover_create_revocation_state),
@@ -156,6 +169,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_prover_create_revocation_state_end)
             )
 
+            // 15. Prover Creates Proof
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_prover_creates_proof),
@@ -163,6 +177,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_prover_creates_proof_end)
             )
 
+            // 16. Verifier verify Proof
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_verifier_verify_proof),
@@ -170,6 +185,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_verifier_verify_proof_end)
             )
 
+            // 17. Close and delete Issuer Wallet
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_close_delete_issuer_wallet),
@@ -177,6 +193,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_close_delete_issuer_wallet_end)
             )
 
+            // 18. Close and delete Prover Wallet
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_revocation_close_delete_prover_wallet),
@@ -184,6 +201,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.anoncreds_revocation_close_delete_prover_wallet_end)
             )
 
+            // 19. Close Pool
             ensureActive()
             runAction(
                 getString(R.string.close_pool),
@@ -191,6 +209,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
                 getString(R.string.close_pool_end)
             )
 
+            // 20. Delete Pool ledger configuration
             ensureActive()
             runAction(
                 getString(R.string.delete_pool_ledger_config),
@@ -206,7 +225,7 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
 
     // region demo steps functions
-    private fun issuerCreateOpenWallet() {
+    private fun issuerCreateAndOpenWallet() {
         issuerWallet = createAndOpenWallet("issuerWallet", "issuer_wallet_key")
     }
 
@@ -215,7 +234,6 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
 
     private fun issuerCreateCredentialSchema() {
-        //4. Issuer Creates Credential Schema
         val schemaName = "gvt"
         val schemaVersion = "1.0"
         val schemaAttributes =
@@ -228,7 +246,6 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
 
     private fun issuerCreateCredentialDefinition() {
-        //5. Issuer create Credential Definition
         val credDefTag = "Tag1"
         val credDefConfigJson = JSONObject().put("support_revocation", true).toString()
         val createCredDefResult = Anoncreds.issuerCreateAndStoreCredentialDef(
@@ -244,7 +261,6 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
 
     private fun issuerCreateRevocationRegistry() {
-        //6. Issuer create Revocation Registry
         val revRegDefConfig = JSONObject()
             .put("issuance_type", "ISSUANCE_ON_DEMAND")
             .put("max_cred_num", 5)
@@ -275,17 +291,14 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
 
     private fun proverCreateMasterSecret() {
-        //7. Prover create Master Secret
         masterSecretId = Anoncreds.proverCreateMasterSecret(proverWallet.wallet, null).get()
     }
 
     private fun issuerCreateCredentialOffer() {
-        //8. Issuer Creates Credential Offer
         credOffer = Anoncreds.issuerCreateCredentialOffer(issuerWallet.wallet, credDefId).get()
     }
 
     private fun proverCreateCredentialRequest() {
-        //9. Prover Creates Credential Request
         val createCredReqResult = Anoncreds.proverCreateCredentialReq(
             proverWallet.wallet,
             proverDid,
@@ -298,13 +311,11 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
 
     private fun issuerOpenTailsReader() {
-        //10. Issuer open Tails Reader
         val blobStorageReaderCfg = BlobStorageReader.openReader("default", tailsWriterConfig).get()
         blobStorageReaderHandle = blobStorageReaderCfg.blobStorageReaderHandle
     }
 
     private fun issuerCreateCredential() {
-        //11. Issuer create Credential
         //    note that encoding is not standardized by Indy except that 32-bit integers are encoded as themselves. IS-786
         val credValuesJson = JSONObject()
             .put(
@@ -337,7 +348,6 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
 
     private fun proverStoresCredential() {
-        //12. Prover Stores Credential
         Anoncreds.proverStoreCredential(
             proverWallet.wallet,
             null,
@@ -349,7 +359,6 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
 
     private fun proverGetCredentialsForProofRequest() {
-        //13. Prover Gets Credentials for Proof Request
         timestamp = System.currentTimeMillis() / 1000
         val nonce = Anoncreds.generateNonce().get()
         proofRequestJson = JSONObject()
@@ -391,7 +400,6 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
 
     private fun proverCreateRevocationState() {
-        //14. Prover create RevocationState
         revStateJson = Anoncreds.createRevocationState(
             blobStorageReaderHandle,
             revRegDefJson,
@@ -402,7 +410,6 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
 
     private fun proverCreateProof() {
-        //15. Prover Creates Proof
         val requestedCredentialsJson = JSONObject()
             .put("self_attested_attributes", JSONObject())
             .put(
@@ -443,7 +450,6 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
 
     private fun verifierVerifyProof() {
-        //16. Verifier verify Proof
         val revealedAttr1 = proof.getJSONObject("requested_proof").getJSONObject("revealed_attrs")
             .getJSONObject("attr1_referent")
         Assert.assertEquals("Alex", revealedAttr1.getString("raw"))

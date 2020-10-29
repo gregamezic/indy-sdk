@@ -28,12 +28,12 @@ class LedgerActivity : BaseActivity() {
      * startDemo function start all functions for Ledger demo chronological in coroutine default thread
      */
     override fun onStartDemo() {
-
         Log.d(TAG, "startDemo: Ledger sample -> STARTED!")
         updateHeader(getString(R.string.ledger_sample_start))
 
         job = MainScope().launch {
 
+            // 1. Create and Open Pool
             ensureActive()
             runAction(
                 getString(R.string.ledger_create_ledger),
@@ -41,6 +41,7 @@ class LedgerActivity : BaseActivity() {
                 getString(R.string.ledger_create_ledger_end)
             )
 
+            // 2. Create and Open My Wallet
             ensureActive()
             runAction(
                 getString(R.string.ledger_create_open_my_wallet),
@@ -48,6 +49,7 @@ class LedgerActivity : BaseActivity() {
                 getString(R.string.ledger_create_open_my_wallet_end)
             )
 
+            // 3. Create and Open Trustee Wallet
             ensureActive()
             runAction(
                 getString(R.string.ledger_create_open_trustee_wallet),
@@ -55,6 +57,7 @@ class LedgerActivity : BaseActivity() {
                 getString(R.string.ledger_create_open_trustee_wallet_end)
             )
 
+            // 4. Create My Did
             ensureActive()
             runAction(
                 getString(R.string.ledger_create_my_did),
@@ -62,6 +65,7 @@ class LedgerActivity : BaseActivity() {
                 getString(R.string.ledger_create_my_did_end)
             )
 
+            // 5. Create Did from Trustee1 seed
             ensureActive()
             runAction(
                 getString(R.string.ledger_create_did_from_trustee),
@@ -69,6 +73,7 @@ class LedgerActivity : BaseActivity() {
                 getString(R.string.ledger_create_did_from_trustee_end)
             )
 
+            // 6. Build Nym Request
             ensureActive()
             runAction(
                 getString(R.string.ledger_build_nym_request),
@@ -76,6 +81,7 @@ class LedgerActivity : BaseActivity() {
                 getString(R.string.ledger_build_nym_request_end)
             )
 
+            // 7. Trustee Sign Nym Request
             ensureActive()
             runAction(
                 getString(R.string.ledger_trustee_sign_nym_request),
@@ -83,6 +89,7 @@ class LedgerActivity : BaseActivity() {
                 getString(R.string.ledger_trustee_sign_nym_request_end)
             )
 
+            // 8. Close and delete My Wallet
             ensureActive()
             runAction(
                 getString(R.string.ledger_close_delete_my_wallet),
@@ -90,6 +97,7 @@ class LedgerActivity : BaseActivity() {
                 getString(R.string.ledger_close_delete_my_wallet_end)
             )
 
+            // 9. Close and delete Their Wallet
             ensureActive()
             runAction(
                 getString(R.string.ledger_close_delete_their_wallet),
@@ -97,6 +105,7 @@ class LedgerActivity : BaseActivity() {
                 getString(R.string.ledger_close_delete_their_wallet_end)
             )
 
+            // 10. Close Pool
             ensureActive()
             runAction(
                 getString(R.string.ledger_close_pool),
@@ -104,6 +113,7 @@ class LedgerActivity : BaseActivity() {
                 getString(R.string.ledger_close_pool_end)
             )
 
+            // 11. Delete Pool ledger config
             ensureActive()
             runAction(
                 getString(R.string.delete_pool_ledger_config),
@@ -128,14 +138,12 @@ class LedgerActivity : BaseActivity() {
     }
 
     private fun createMyDID() {
-        // 4. Create My Did
         val createMyDidResult = Did.createAndStoreMyDid(myWallet.wallet, "{}").get()
         myDid = createMyDidResult.did
         myVerkey = createMyDidResult.verkey
     }
 
     private fun createDIDFromTrustee1Seed() {
-        // 5. Create Did from Trustee1 seed
         val theirDidJson =
             DidJSONParameters.CreateAndStoreMyDidJSONParameter(null, trusteeSeed, null, null)
 
@@ -145,12 +153,10 @@ class LedgerActivity : BaseActivity() {
     }
 
     private fun buildNymRequest() {
-        // 6. Build Nym Request
         nymRequest = Ledger.buildNymRequest(trusteeDid, myDid, myVerkey, null, null).get()
     }
 
     private fun trusteeSignNymRequest() {
-        // 7. Trustee Sign Nym Request
         val nymResponseJson =
             Ledger.signAndSubmitRequest(pool, trusteeWallet.wallet, trusteeDid, nymRequest).get()
 

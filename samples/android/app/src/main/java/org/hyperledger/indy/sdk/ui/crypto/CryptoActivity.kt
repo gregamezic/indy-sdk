@@ -27,13 +27,12 @@ class CryptoActivity : BaseActivity() {
      * startDemo function start all functions for Crypto Revocation demo chronological in coroutine default thread
      */
     override fun onStartDemo() {
-
         Log.d(TAG, "startDemo: Crypto sample -> STARTED!")
         updateHeader(getString(R.string.crypto_sample_start))
 
-        // Start
         job = MainScope().launch {
 
+            // 1. Create and Open Pool
             ensureActive()
             runAction(
                 getString(R.string.create_pool),
@@ -41,6 +40,7 @@ class CryptoActivity : BaseActivity() {
                 getString(R.string.create_pool_end)
             )
 
+            // 2. Create and Open My Wallet
             ensureActive()
             runAction(
                 getString(R.string.crypto_create_open_my_wallet),
@@ -48,6 +48,7 @@ class CryptoActivity : BaseActivity() {
                 getString(R.string.crypto_create_open_my_wallet_end)
             )
 
+            // 3. Create and Open Trustee Wallet
             ensureActive()
             runAction(
                 getString(R.string.crypto_create_open_their_wallet),
@@ -55,6 +56,7 @@ class CryptoActivity : BaseActivity() {
                 getString(R.string.crypto_create_open_their_wallet_end)
             )
 
+            // 4. Create my DID
             ensureActive()
             runAction(
                 getString(R.string.crypto_create_my_did),
@@ -62,6 +64,7 @@ class CryptoActivity : BaseActivity() {
                 getString(R.string.crypto_create_my_did_end)
             )
 
+            // 5. Create Their Did
             ensureActive()
             runAction(
                 getString(R.string.crypto_create_their_did),
@@ -69,6 +72,7 @@ class CryptoActivity : BaseActivity() {
                 getString(R.string.crypto_create_their_did_end)
             )
 
+            // 6. Their auth encrypt message
             ensureActive()
             runAction(
                 getString(R.string.crypto_their_auth_encrypt_message),
@@ -76,6 +80,7 @@ class CryptoActivity : BaseActivity() {
                 getString(R.string.crypto_their_auth_encrypt_message_end)
             )
 
+            // 7. I decrypt message
             ensureActive()
             runAction(
                 getString(R.string.crypto_i_decrypt_message),
@@ -83,20 +88,23 @@ class CryptoActivity : BaseActivity() {
                 getString(R.string.crypto_i_decrypt_message_end)
             )
 
+            // 8. Close and delete my Wallet
             ensureActive()
             runAction(
                 getString(R.string.crypto_close_delete_my_wallet),
-                { closeDeleteMyWallet() },
+                { closeAndDeleteMyWallet() },
                 getString(R.string.crypto_close_delete_my_wallet_end)
             )
 
+            // 9. Close and delete their Wallet
             ensureActive()
             runAction(
                 getString(R.string.crypto_close_delete_their_wallet),
-                { closeDeleteTheirWallet() },
+                { closeAndDeleteTheirWallet() },
                 getString(R.string.crypto_close_delete_their_wallet_end)
             )
 
+            // 10. Close Pool
             ensureActive()
             runAction(
                 getString(R.string.close_pool),
@@ -104,6 +112,7 @@ class CryptoActivity : BaseActivity() {
                 getString(R.string.close_pool_end)
             )
 
+            // 11. Delete Pool ledger configuration
             ensureActive()
             runAction(
                 getString(R.string.delete_pool_ledger_config),
@@ -128,19 +137,16 @@ class CryptoActivity : BaseActivity() {
     }
 
     private fun createMyDID() {
-        // 4. Create My Did
         val myDid = Did.createAndStoreMyDid(myWallet.wallet, "{}").get()
         myVerkey = myDid.verkey
     }
 
     private fun createTheirDID() {
-        // 5. Create Their Did
         val createTheirDidResult = Did.createAndStoreMyDid(theirWallet.wallet, "{}").get()
         theirVerkey = createTheirDidResult.verkey
     }
 
     private fun theirAuthEncryptMessage() {
-        // 6. Their auth encrypt message
         msg = JSONObject()
             .put("reqId", "1495034346617224651")
             .put("identifier", "GJ1SzoWzavQYfNL9XkaJdrQejfztN4XqdsiV4ct3LXKL")
@@ -156,7 +162,6 @@ class CryptoActivity : BaseActivity() {
     }
 
     private fun iDecryptMessage() {
-        // 7. I decrypt message
         val authDecryptResult =
             Crypto.authDecrypt(myWallet.wallet, myVerkey, encryptedMessage).get()
 
@@ -164,11 +169,11 @@ class CryptoActivity : BaseActivity() {
         Assert.assertEquals(theirVerkey, authDecryptResult.verkey)
     }
 
-    private fun closeDeleteMyWallet() {
+    private fun closeAndDeleteMyWallet() {
         closeAndDeleteWallet(myWallet.wallet, myWallet.walletConfig, myWallet.walletCredentials)
     }
 
-    private fun closeDeleteTheirWallet() {
+    private fun closeAndDeleteTheirWallet() {
         closeAndDeleteWallet(
             theirWallet.wallet,
             theirWallet.walletConfig,

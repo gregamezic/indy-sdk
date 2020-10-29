@@ -4,7 +4,6 @@ import android.util.Log
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq
 import org.hyperledger.indy.sdk.ui.base.BaseActivity
@@ -49,6 +48,8 @@ class AnoncredsActivity : BaseActivity() {
 
         // Start
         job = MainScope().launch {
+
+            // 1. Create and Open Pool
             ensureActive()
             runAction(
                 getString(R.string.create_pool),
@@ -56,20 +57,23 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.create_pool_end)
             )
 
+            // 2. Issuer Create and Open Wallet
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_create_open_wallet),
-                { issuerCreate() },
+                { issuerCreateAndOpenWallet() },
                 getString(R.string.anoncreds_create_open_wallet_end)
             )
 
+            // 3. Prover Create and Open Wallet
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_prover_create_open_wallet),
-                { proverCreate() },
+                { proverCreateAndOpenWallet() },
                 getString(R.string.anoncreds_prover_create_open_wallet_end)
             )
 
+            // 4. Issuer Creates Credential Schema
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_issuer_create_credential_schema),
@@ -77,6 +81,7 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.anoncreds_issuer_create_credential_schema_end)
             )
 
+            // 5. Issuer create Credential Definition
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_issuer_create_credential_definition),
@@ -84,6 +89,7 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.anoncreds_issuer_create_credential_definition_end)
             )
 
+            // 6. Prover create Master Secret
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_prover_master_secret),
@@ -91,6 +97,7 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.anoncreds_prover_master_secret_end)
             )
 
+            // 7. Issuer Creates Credential Offer
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_issuer_create_credential_offer),
@@ -98,6 +105,7 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.anoncreds_issuer_create_credential_offer_end)
             )
 
+            // 8. Prover Creates Credential Request
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_prover_create_credential_request),
@@ -105,6 +113,7 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.anoncreds_prover_create_credential_request_end)
             )
 
+            // 9. Issuer create Credential
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_issuer_create_credential),
@@ -112,6 +121,7 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.anoncreds_issuer_create_credential_end)
             )
 
+            // 10. Prover Stores Credential
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_prover_stores_credential),
@@ -119,6 +129,7 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.anoncreds_prover_stores_credential_end)
             )
 
+            // 11. Prover Gets Credentials for Proof Request
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_prover_get_credential_proof_request),
@@ -126,6 +137,7 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.anoncreds_prover_get_credential_proof_request_end)
             )
 
+            // 12. Prover Creates Proof
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_prover_creates_proof),
@@ -133,6 +145,7 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.anoncreds_prover_creates_proof_end)
             )
 
+            // 13. Verifier verify Proof
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_verifier_verify_proof),
@@ -140,6 +153,7 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.anoncreds_verifier_verify_proof_end)
             )
 
+            // 14. Close and delete Issuer wallet
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_close_delete_issuer_wallet),
@@ -147,6 +161,7 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.anoncreds_close_delete_issuer_wallet_end)
             )
 
+            // 15. Close and delete Prover wallet
             ensureActive()
             runAction(
                 getString(R.string.anoncreds_close_delete_prover_wallet),
@@ -154,6 +169,7 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.anoncreds_close_delete_prover_wallet_end)
             )
 
+            // 16. Close Pool
             ensureActive()
             runAction(
                 getString(R.string.close_pool),
@@ -161,6 +177,7 @@ class AnoncredsActivity : BaseActivity() {
                 getString(R.string.close_pool_end)
             )
 
+            //17. Delete Pool ledger config
             ensureActive()
             runAction(
                 getString(R.string.delete_pool_ledger_config),
@@ -176,17 +193,15 @@ class AnoncredsActivity : BaseActivity() {
     }
 
     // region demo steps functions
-    private fun issuerCreate() {
+    private fun issuerCreateAndOpenWallet() {
         issuerWallet = createAndOpenWallet("issuerWallet", "issuer_wallet_key")
     }
 
-    private fun proverCreate() {
+    private fun proverCreateAndOpenWallet() {
         proverWallet = createAndOpenWallet("proverWalletId", "prover_wallet_key")
     }
 
     private fun issuerCreateCredentialSchema() {
-
-        //4. Issuer Creates Credential Schema
         val schemaName = "gvt"
         val schemaVersion = "1.0"
         val schemaAttributes =
@@ -202,8 +217,6 @@ class AnoncredsActivity : BaseActivity() {
     }
 
     private fun issuerCreateCredentialDefinition() {
-
-        //5. Issuer create Credential Definition
         val credDefTag = "Tag1"
         val credDefConfigJson = JSONObject().put("support_revocation", false).toString()
         val createCredDefResult =
@@ -220,8 +233,6 @@ class AnoncredsActivity : BaseActivity() {
     }
 
     private fun proverCreateMasterSecret() {
-
-        //6. Prover create Master Secret
         masterSecretId = org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateMasterSecret(
             proverWallet.wallet,
             null
@@ -229,8 +240,6 @@ class AnoncredsActivity : BaseActivity() {
     }
 
     private fun issuerCreateCredentialOffer() {
-
-        //7. Issuer Creates Credential Offer
         credOffer = org.hyperledger.indy.sdk.anoncreds.Anoncreds.issuerCreateCredentialOffer(
             issuerWallet.wallet,
             credDefId
@@ -238,8 +247,6 @@ class AnoncredsActivity : BaseActivity() {
     }
 
     private fun proverCreateCredentialRequest() {
-
-        //8. Prover Creates Credential Request
         val createCredReqResult =
             org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverCreateCredentialReq(
                 proverWallet.wallet,
@@ -253,9 +260,7 @@ class AnoncredsActivity : BaseActivity() {
     }
 
     private fun issuerCreateCredential() {
-
-        //9. Issuer create Credential
-        //   note that encoding is not standardized by Indy except that 32-bit integers are encoded as themselves. IS-786
+        // note that encoding is not standardized by Indy except that 32-bit integers are encoded as themselves. IS-786
         val credValuesJson = JSONObject()
             .put(
                 "sex",
@@ -286,8 +291,6 @@ class AnoncredsActivity : BaseActivity() {
     }
 
     private fun proverStoresCredential() {
-
-        //10. Prover Stores Credential
         org.hyperledger.indy.sdk.anoncreds.Anoncreds.proverStoreCredential(
             proverWallet.wallet,
             null,
@@ -299,8 +302,6 @@ class AnoncredsActivity : BaseActivity() {
     }
 
     private fun proverCredentialsForProofRequest() {
-
-        //11. Prover Gets Credentials for Proof Request
         val nonce = org.hyperledger.indy.sdk.anoncreds.Anoncreds.generateNonce().get()
         proofRequestJson = JSONObject()
             .put("nonce", nonce)
@@ -351,8 +352,6 @@ class AnoncredsActivity : BaseActivity() {
     }
 
     private fun proverCreateProof() {
-
-        //12. Prover Creates Proof
         selfAttestedValue = "8-800-300"
         val requestedCredentialsJson = JSONObject()
             .put("self_attested_attributes", JSONObject().put("attr3_referent", selfAttestedValue))
@@ -395,8 +394,6 @@ class AnoncredsActivity : BaseActivity() {
     }
 
     private fun verifierVerifyProof() {
-
-        //13. Verifier verify Proof
         val revealedAttr1 = proof.getJSONObject("requested_proof").getJSONObject("revealed_attrs")
             .getJSONObject("attr1_referent")
         Assert.assertEquals("Alex", revealedAttr1.getString("raw"))
@@ -427,7 +424,6 @@ class AnoncredsActivity : BaseActivity() {
     }
 
     private fun closeDeleteIssuerWallet() {
-
         closeAndDeleteWallet(
             issuerWallet.wallet,
             issuerWallet.walletConfig,

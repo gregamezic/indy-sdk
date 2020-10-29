@@ -47,6 +47,7 @@ class EndorserActivity : BaseActivity() {
         // Start
         job = MainScope().launch {
 
+            // 1. Create and Open Pool
             ensureActive()
             runAction(
                 getString(R.string.create_pool),
@@ -54,6 +55,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.create_pool_end)
             )
 
+            // 2. Create and Open Author Wallet
             ensureActive()
             runAction(
                 getString(R.string.endorser_create_open_author_wallet),
@@ -61,6 +63,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_create_open_author_wallet_end)
             )
 
+            // 3. Create and Open Endorser Wallet
             ensureActive()
             runAction(
                 getString(R.string.endorser_create_open_endorser_wallet),
@@ -68,6 +71,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_create_open_endorser_wallet_end)
             )
 
+            // 4. Create and Open Trustee Wallet
             ensureActive()
             runAction(
                 getString(R.string.endorser_create_open_trustee_wallet),
@@ -75,6 +79,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_create_open_trustee_wallet_end)
             )
 
+            // 5. Create Trustee DID
             ensureActive()
             runAction(
                 getString(R.string.endorser_create_trustee_did),
@@ -82,6 +87,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_create_trustee_did_end)
             )
 
+            // 6. Create Author DID
             ensureActive()
             runAction(
                 getString(R.string.endorser_create_author_did),
@@ -89,6 +95,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_create_author_did_end)
             )
 
+            // 7. Create Endorser DID
             ensureActive()
             runAction(
                 getString(R.string.endorser_create_endorser_did),
@@ -96,6 +103,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_create_endorser_did_end)
             )
 
+            // 8. Build Author Nym Request
             ensureActive()
             runAction(
                 getString(R.string.endorser_build_author_nym_request),
@@ -103,6 +111,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_build_author_nym_request_end)
             )
 
+            // 9. Trustee Sign Author Nym Request
             ensureActive()
             runAction(
                 getString(R.string.endorser_trustee_sign_author_nym_request),
@@ -110,6 +119,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_trustee_sign_author_nym_request_end)
             )
 
+            // 10. Build Endorser Nym Request
             ensureActive()
             runAction(
                 getString(R.string.endorser_build_endorser_nym_request),
@@ -117,6 +127,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_build_endorser_nym_request_end)
             )
 
+            // 11. Trustee Sign Endorser Nym Request
             ensureActive()
             runAction(
                 getString(R.string.endorser_trustee_sign_endorser_nym),
@@ -124,6 +135,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_trustee_sign_endorser_nym_end)
             )
 
+            // 12. Create schema with endorser
             ensureActive()
             runAction(
                 getString(R.string.endorser_create_schema_endorser),
@@ -131,6 +143,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_create_schema_endorser_end)
             )
 
+            // 13. Transaction Author builds Schema Request
             ensureActive()
             runAction(
                 getString(R.string.endorser_transaction_author_builds_schema_request),
@@ -138,6 +151,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_transaction_author_builds_schema_request_end)
             )
 
+            // 14. Transaction Author appends Endorser's DID into the request
             ensureActive()
             runAction(
                 getString(R.string.endorser_transaction_author_append_DID_request),
@@ -145,6 +159,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_transaction_author_append_DID_request_end)
             )
 
+            // 15. Transaction Author signs the request with the added endorser field
             ensureActive()
             runAction(
                 getString(R.string.endorser_transaction_author_sign_with_endorser),
@@ -152,6 +167,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_transaction_author_sign_with_endorser_end)
             )
 
+            // 16. Transaction Endorser signs the request
             ensureActive()
             runAction(
                 getString(R.string.endorser_transaction_endorser_sign_request),
@@ -159,6 +175,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_transaction_endorser_sign_request_end)
             )
 
+            // 17. Transaction Endorser sends the request
             ensureActive()
             runAction(
                 getString(R.string.endorser_transaction_endorser_send_request),
@@ -166,6 +183,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_transaction_endorser_send_request_end)
             )
 
+            // 18. Close author Wallet
             ensureActive()
             runAction(
                 getString(R.string.endorser_close_delete_author_wallet),
@@ -173,6 +191,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_close_delete_author_wallet_end)
             )
 
+            // 19. Close endorser Wallet
             ensureActive()
             runAction(
                 getString(R.string.endorser_close_delete_endorser_wallet),
@@ -180,6 +199,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_close_delete_endorser_wallet_end)
             )
 
+            // 20. Close trustee Wallet
             ensureActive()
             runAction(
                 getString(R.string.endorser_close_delete_trustee_wallet),
@@ -187,6 +207,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.endorser_close_delete_trustee_wallet_end)
             )
 
+            // 21. Close Pool
             ensureActive()
             runAction(
                 getString(R.string.close_pool),
@@ -194,6 +215,7 @@ class EndorserActivity : BaseActivity() {
                 getString(R.string.close_pool_end)
             )
 
+            // 22. Delete Pool ledger configuration
             ensureActive()
             runAction(
                 getString(R.string.delete_pool_ledger_config),
@@ -222,7 +244,6 @@ class EndorserActivity : BaseActivity() {
     }
 
     private fun createTrusteeDID() {
-        // 5. Create Trustee DID
         val theirDidJson =
             DidJSONParameters.CreateAndStoreMyDidJSONParameter(null, trusteeSeed, null, null)
         val createTheirDidResult =
@@ -231,43 +252,36 @@ class EndorserActivity : BaseActivity() {
     }
 
     private fun createAuthorDID() {
-        // 6. Create Author DID
         createMyDidResult = Did.createAndStoreMyDid(authorWallet.wallet, "{}").get()
         authorDid = createMyDidResult.did
         authorVerkey = createMyDidResult.verkey
     }
 
     private fun createEndorserDID() {
-        // 7. Create Endorser DID
         createMyDidResult = Did.createAndStoreMyDid(endorserWallet.wallet, "{}").get()
         endorserDid = createMyDidResult.did
         endorserVerkey = createMyDidResult.verkey
     }
 
     private fun buildAuthorNymRequest() {
-        // 8. Build Author Nym Request
         nymRequest =
             Ledger.buildNymRequest(trusteeDid, authorDid, authorVerkey, null, null).get()
     }
 
     private fun trusteeSignAuthorNymRequest() {
-        // 9. Trustee Sign Author Nym Request
         Ledger.signAndSubmitRequest(pool, trusteeWallet.wallet, trusteeDid, nymRequest).get()
     }
 
     private fun buildEndorserNymRequest() {
-        // 10. Build Endorser Nym Request
         nymRequest =
             Ledger.buildNymRequest(trusteeDid, endorserDid, endorserVerkey, null, "ENDORSER").get()
     }
 
     private fun trusteeSingEndorserNymRequest() {
-        // 11. Trustee Sign Endorser Nym Request
         Ledger.signAndSubmitRequest(pool, trusteeWallet.wallet, trusteeDid, nymRequest).get()
     }
 
     private fun createSchemaWithEndorser() {
-        // 12. Create schema with endorser
         val schemaName = "gvt"
         val schemaVersion = "1.0"
         val schemaAttributes =
@@ -280,24 +294,20 @@ class EndorserActivity : BaseActivity() {
     }
 
     private fun transactionAuthorBuildsSchemaRequest() {
-        // 13. Transaction Author builds Schema Request
         schemaRequest = Ledger.buildSchemaRequest(authorDid, schemaJson).get()
     }
 
     private fun transactionAuthorSignsRequestDID() {
-        // 14. Transaction Author appends Endorser's DID into the request
         schemaRequestWithEndorser =
             Ledger.appendRequestEndorser(schemaRequest, endorserDid).get()
     }
 
     private fun transactionAuthorSignEndorser() {
-        // 15. Transaction Author signs the request with the added endorser field
         schemaRequestWithEndorserAuthorSigned =
             Ledger.multiSignRequest(authorWallet.wallet, authorDid, schemaRequestWithEndorser).get()
     }
 
     private fun transactionEndorserSignRequest() {
-        // 16. Transaction Endorser signs the request
         schemaRequestWithEndorserSigned = Ledger.multiSignRequest(
             endorserWallet.wallet,
             endorserDid,
@@ -306,7 +316,6 @@ class EndorserActivity : BaseActivity() {
     }
 
     private fun transactionEndorserSendRequest() {
-        // 17. Transaction Endorser sends the request
         val response = Ledger.submitRequest(pool, schemaRequestWithEndorserSigned).get()
         val responseJson = JSONObject(response)
         Assert.assertEquals("REPLY", responseJson.getString("op"))
