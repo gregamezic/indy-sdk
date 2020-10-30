@@ -1,5 +1,7 @@
 package org.hyperledger.indy.sdk.ui.anoncreds_revocation
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.ensureActive
@@ -9,6 +11,7 @@ import org.hyperledger.indy.sdk.anoncreds.Anoncreds
 import org.hyperledger.indy.sdk.anoncreds.CredentialsSearchForProofReq
 import org.hyperledger.indy.sdk.blob_storage.BlobStorageReader
 import org.hyperledger.indy.sdk.blob_storage.BlobStorageWriter
+import org.hyperledger.indy.sdk.ui.anoncreds.AnoncredsActivity
 import org.hyperledger.indy.sdk.ui.base.BaseActivity
 import org.hyperledger.indy.sdk.ui.base.models.WalletData
 import org.hyperledger.indy.sdk.utils.EnvironmentUtils
@@ -488,7 +491,11 @@ class AnoncredsRevocationActivity : BaseActivity() {
     }
     // endregion
 
-    private companion object {
-        val TAG: String = AnoncredsRevocationActivity::class.java.name
+    companion object {
+        private val TAG: String = AnoncredsRevocationActivity::class.java.name
+
+        fun getIntent(context: Context): Intent {
+            return Intent(context, AnoncredsRevocationActivity::class.java)
+        }
     }
 }

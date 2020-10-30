@@ -1,5 +1,7 @@
 package org.hyperledger.indy.sdk.ui.anoncreds
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.ensureActive
@@ -440,7 +442,11 @@ class AnoncredsActivity : BaseActivity() {
     }
     // endregion  function
 
-    private companion object {
-        val TAG: String = AnoncredsActivity::class.java.name
+    companion object {
+        private val TAG: String = AnoncredsActivity::class.java.name
+
+        fun getIntent(context: Context): Intent {
+            return Intent(context, AnoncredsActivity::class.java)
+        }
     }
 }

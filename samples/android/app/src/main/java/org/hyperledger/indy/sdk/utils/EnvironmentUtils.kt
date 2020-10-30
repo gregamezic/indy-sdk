@@ -3,6 +3,7 @@ package org.hyperledger.indy.sdk.utils
 import android.content.Context
 
 object EnvironmentUtils {
+
     val testPoolIP: String
         get() {
             val testPoolIp = System.getenv("TEST_POOL_IP")
@@ -21,7 +22,6 @@ object EnvironmentUtils {
         return context.cacheDir.absolutePath + "/tmp/"
     }
 
-    @JvmStatic
     fun getTmpPath(filename: String, context: Context): String {
         return getTmpPath(context) + filename
     }

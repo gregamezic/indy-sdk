@@ -1,5 +1,7 @@
 package org.hyperledger.indy.sdk.ui.crypto
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.ensureActive
@@ -7,6 +9,7 @@ import kotlinx.coroutines.launch
 import org.hyperledger.indy.sdk.R
 import org.hyperledger.indy.sdk.crypto.Crypto
 import org.hyperledger.indy.sdk.did.Did
+import org.hyperledger.indy.sdk.ui.anoncreds.AnoncredsActivity
 import org.hyperledger.indy.sdk.ui.base.BaseActivity
 import org.hyperledger.indy.sdk.ui.base.models.WalletData
 import org.json.JSONObject
@@ -182,7 +185,11 @@ class CryptoActivity : BaseActivity() {
     }
     // endregion
 
-    private companion object {
-        val TAG: String = CryptoActivity::class.java.name
+    companion object {
+        private val TAG: String = CryptoActivity::class.java.name
+
+        fun getIntent(context: Context): Intent {
+            return Intent(context, CryptoActivity::class.java)
+        }
     }
 }

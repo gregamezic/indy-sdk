@@ -25,8 +25,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private lateinit var baseBinding: ActivityBaseBinding
     private lateinit var mainContentView: View
     lateinit var job: Job
-
-    // pool
+    // pool vars
     lateinit var pool: Pool
     private lateinit var poolName: String
 
@@ -52,7 +51,6 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun errorToast(msg: String) {
-
         Snackbar.make(baseBinding.coordinatorMain, msg, Snackbar.LENGTH_INDEFINITE).apply {
             // To change background color to red
             view.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.errorColor))
