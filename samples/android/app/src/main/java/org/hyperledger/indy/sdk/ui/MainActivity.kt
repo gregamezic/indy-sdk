@@ -27,23 +27,23 @@ class MainActivity : AppCompatActivity() {
      */
     private fun initClickListeners() {
         binding.btnAnoncreds.setOnClickListener {
-            startActivity(Intent(AnoncredsActivity.getIntent(this)))
+            startActivity(AnoncredsActivity.getIntent(this))
         }
 
         binding.btnAnoncredsRevocation.setOnClickListener {
-            startActivity(Intent(AnoncredsRevocationActivity.getIntent(this)))
+            startActivity(AnoncredsRevocationActivity.getIntent(this))
         }
 
         binding.btnCrypto.setOnClickListener {
-            startActivity(Intent(CryptoActivity.getIntent(this)))
+            startActivity(CryptoActivity.getIntent(this))
         }
 
         binding.btnEndorser.setOnClickListener {
-            startActivity(Intent(EndorserActivity.getIntent(this)))
+            startActivity(EndorserActivity.getIntent(this))
         }
 
         binding.btnLedger.setOnClickListener {
-            startActivity(Intent(LedgerActivity.getIntent(this)))
+            startActivity(LedgerActivity.getIntent(this))
         }
     }
 }
